@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"target": "es5",
-		"outDir": "build",
 		"lib": [ "esnext" ],
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -25,6 +24,7 @@
 		"strictNullChecks": true,
 		"strictFunctionTypes": true,
 		"strictPropertyInitialization": true,
+		"outDir": "build",
 		"baseUrl": "./src",
 		"paths": {
 			"~/*": [ "./*" ]
