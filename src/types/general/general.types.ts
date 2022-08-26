@@ -4,6 +4,30 @@ import { Types } from 'mongoose';
 
 import { UserWithoutPassword } from '~/models/user';
 
+export interface EnvironmentConfig {
+	PORT?: string,
+	DB_URI?: string,
+	HASHING_ITERATIONS?: string,
+	HASHING_PEPPER?: string,
+	ACCESS_TOKEN_AGE?: string,
+	REFRESH_TOKEN_AGE?: string,
+	PUBLIC_KEY?: string,
+	PRIVATE_KEY?: string,
+}
+
+export interface Config {
+	port: number,
+	dbUri: string,
+	hashing: {
+		iterations: number,
+		pepper: string,
+	},
+	accessTokenAge: string,
+	refreshTokenAge: string,
+	publicKey: string,
+	privateKey: string,
+}
+
 export type ReadableTypeOf = (
 	| 'undefined'
 	| 'boolean'
