@@ -26,5 +26,5 @@ export const findAndUpdateProduct = async (
 export const deleteProduct = async (
 	query: FilterQuery<ProductWithId>
 ) => {
-	return ProductModel.deleteOne(query);
+	return ProductModel.findOneAndRemove(query);
 };

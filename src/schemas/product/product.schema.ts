@@ -1,6 +1,13 @@
-import { number, object, string, TypeOf } from 'zod';
+import {
+	number,
+	strictObject,
+	string,
+	TypeOf,
+} from 'zod';
 
-const body = object({
+import { requestSchema } from '~/helpers/type';
+
+const body = strictObject({
 	title: string({
 		required_error: 'title is required',
 	}),
@@ -15,26 +22,26 @@ const body = object({
 	}),
 });
 
-const params = object({
+const params = strictObject({
 	_id: string({
 		required_error: 'product id is required',
 	}),
 });
 
-export const createProductSchema = object({
+export const createProductSchema = requestSchema({
 	body,
 });
 
-export const updateProductSchema = object({
+export const updateProductSchema = requestSchema({
 	body,
 	params,
 });
 
-export const getProductSchema = object({
+export const getProductSchema = requestSchema({
 	params,
 });
 
-export const deleteProductSchema = object({
+export const deleteProductSchema = requestSchema({
 	params,
 });
 

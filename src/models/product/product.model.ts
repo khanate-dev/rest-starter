@@ -21,6 +21,7 @@ const productSchema = new Schema<ProductWithId>(
 		title: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		description: {
 			type: String,
