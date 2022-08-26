@@ -1,12 +1,15 @@
 import jwt from 'jsonwebtoken';
-import config from 'config';
+
+import config from '~/config';
 
 import { assertJwt } from '~/helpers/type';
 
-import { Jwt, JwtInput } from '~/types/general';
+import { Jwt, JwtInput } from '~/types';
 
-const privateKey = config.get<string>('privateKey');
-const publicKey = config.get<string>('publicKey');
+const {
+	publicKey,
+	privateKey,
+} = config;
 
 export const signJwt = (
 	object: JwtInput,

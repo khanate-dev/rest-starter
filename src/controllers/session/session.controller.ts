@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
-import config from 'config';
+
+import config from '~/config';
 
 import { signJwt, verifyJwt } from '~/helpers/jwt';
 import logger from '~/helpers/logger';
@@ -12,10 +13,10 @@ import { CreateSessionInput } from '~/schemas/session';
 import { createSession, findSessions, updateSession } from '~/services/session';
 import { findUser, validatePassword } from '~/services/user';
 
-import { ProtectedHandler } from '~/types/general';
+import { ProtectedHandler } from '~/types';
 
-const accessExpiresIn = config.get<string>('accessTokenTtl');
-const refreshExpiresIn = config.get<string>('refreshTokenTtl');
+const accessExpiresIn = config.accessTokenAge;
+const refreshExpiresIn = config.refreshTokenAge;
 
 export const createSessionHandler: RequestHandler<any, any, CreateSessionInput['body']> = async (
 	request,

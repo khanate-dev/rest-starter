@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-import { ModelObject, WithMongoId } from '~/types/general';
+import { ModelObject, WithMongoId } from '~/types';
 
 export interface Product extends ModelObject {
 	user: Types.ObjectId,

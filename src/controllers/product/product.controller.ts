@@ -11,7 +11,7 @@ import {
 	findProduct,
 } from '~/services/product';
 
-import { ProtectedHandler } from '~/types/general';
+import { ProtectedHandler } from '~/types';
 
 export const createProductHandler: ProtectedHandler<any, any, CreateProductInput['body']> = async (
 	request,

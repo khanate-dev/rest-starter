@@ -1,17 +1,16 @@
-import config from 'config';
 import crypto from 'crypto';
 
-import { Config } from '~/types/config';
+import config from '~/config';
+
+const {
+	iterations,
+	pepper,
+} = config.hashing;
 
 export const getHash = (
 	password: string,
 	salt: string
 ): string => {
-
-	const {
-		iterations,
-		pepper,
-	} = config.get<Config['hashing']>('hashing');
 
 	const hmac = crypto.pbkdf2Sync(
 		password,

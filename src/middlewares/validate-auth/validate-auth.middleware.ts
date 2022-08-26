@@ -2,7 +2,7 @@ import { verifyJwt } from '~/helpers/jwt';
 
 import { reIssueAccessToken } from '~/controllers/session';
 
-import { ProtectedHandler } from '~/types/general';
+import { ProtectedHandler } from '~/types';
 
 
 const validateAuth: ProtectedHandler = async (
@@ -26,7 +26,6 @@ const validateAuth: ProtectedHandler = async (
 	if (expired) {
 		try {
 			if (!refreshToken) throw new Error('no refresh token');
-			console.log(refreshToken);
 			const newAccessToken = await reIssueAccessToken(
 				Array.isArray(refreshToken)
 					? refreshToken[0] ?? ''

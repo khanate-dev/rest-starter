@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 
 import { getHashedPassword } from '~/helpers/crypto';
 
-import { ModelObject, WithMongoId } from '~/types/general';
+import { ModelObject, WithMongoId } from '~/types';
 
 export interface User extends ModelObject {
 	email: string,
