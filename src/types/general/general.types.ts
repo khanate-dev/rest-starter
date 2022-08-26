@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { ParamsDictionary, Query } from 'express-serve-static-core';
 import { Types } from 'mongoose';
+import { AnyZodObject, ZodObject, ZodTypeAny } from 'zod';
 
 import { UserWithoutPassword } from '~/models/user';
 
@@ -61,17 +61,44 @@ export interface Jwt extends Omit<UserWithoutPassword, '_id'> {
 
 export type AssertFunction<Type> = (value: any) => asserts value is Type;
 
+export type EmptyZodObject = ZodObject<
+	Record<never, never>,
+	'strict',
+	ZodTypeAny,
+	Record<never, never>,
+	Record<never, never>
+>;
+
+export interface RequestSchema<
+	Body extends AnyZodObject,
+	Query extends AnyZodObject,
+	Params extends AnyZodObject
+	> {
+	body?: Body,
+	query?: Query,
+	params?: Params,
+}
+
+export type ErrorResponse = {
+	type: string,
+	message: string,
+	[x: string]: any,
+};
+
+type RequestType = Record<'params' | 'body' | 'query', Record<string, any>>;
+type DefaultRequest = Record<'params' | 'body' | 'query', Record<never, never>>;
+type DefaultResponse = Record<never, never>;
+type LocalsType = Record<string, any>;
+type DefaultLocals = Record<never, never>;
 
 export type ProtectedHandler<
-	Params = ParamsDictionary,
-	ResponseBody = any,
-	RequestBody = any,
-	RequestQuery = Query,
-	Locals extends Record<string, any> = Record<string, any>
+	Request extends RequestType = DefaultRequest,
+	ResponseBody = DefaultResponse,
+	Locals extends LocalsType = DefaultLocals
 	> = RequestHandler<
-		Params,
-		ResponseBody,
-		RequestBody,
-		RequestQuery,
+		Request['params'],
+		ResponseBody | ErrorResponse,
+		Request['body'],
+		Request['query'],
 		{ user: Jwt, } & Locals
 	>;

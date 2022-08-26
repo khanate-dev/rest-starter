@@ -11,7 +11,8 @@ export const createUserHandler: RequestHandler<any, any, CreateUserInput['body']
 	response
 ) => {
 	try {
-		return await createUser(request.body);
+		const user = await createUser(request.body);
+		return response.send(user);
 	}
 	catch (error: any) {
 		logger.error(error);

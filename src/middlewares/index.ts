@@ -1,2 +1,2 @@
 export { default as validateAuth } from './validate-auth';
-export { default as validateResource } from './validate-resource';
+export { default as validateRequest } from './validate-request';

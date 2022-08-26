@@ -2,7 +2,7 @@ import { Express } from 'express';
 
 import logger from '~/helpers/logger';
 
-import { validateResource, validateAuth } from '~/middlewares';
+import { validateRequest, validateAuth } from '~/middlewares';
 
 import {
 	createUserSchema,
@@ -31,9 +31,9 @@ const routes = (app: Express) => {
 		return response.sendStatus(200);
 	});
 
-	app.post('/api/users', validateResource(createUserSchema), createUserHandler);
+	app.post('/api/users', validateRequest(createUserSchema), createUserHandler);
 
-	app.post('/api/sessions', validateResource(createSessionSchema), createSessionHandler);
+	app.post('/api/sessions', validateRequest(createSessionSchema), createSessionHandler);
 
 	app.use(validateAuth);
 
@@ -41,13 +41,13 @@ const routes = (app: Express) => {
 
 	app.delete('/api/sessions', deleteSessionHandler);
 
-	app.post('/api/products', validateResource(createProductSchema), createProductHandler);
+	app.post('/api/products', validateRequest(createProductSchema), createProductHandler);
 
-	app.put('/api/products/:_id', validateResource(updateProductSchema), updateProductHandler);
+	app.put('/api/products/:_id', validateRequest(updateProductSchema), updateProductHandler);
 
-	app.get('/api/products/:_id', validateResource(getProductSchema), getProductHandler);
+	app.get('/api/products/:_id', validateRequest(getProductSchema), getProductHandler);
 
-	app.delete('/api/products/:_id', validateResource(deleteProductSchema), deleteProductHandler);
+	app.delete('/api/products/:_id', validateRequest(deleteProductSchema), deleteProductHandler);
 
 };
 
