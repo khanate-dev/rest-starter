@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { AnyZodObject } from 'zod';
 
-const validateResource = (schema: AnyZodObject): RequestHandler => (
+const validateRequest = (schema: AnyZodObject): RequestHandler => (
 	(request, response, next) => {
 		try {
 			schema.parse({
@@ -17,4 +17,4 @@ const validateResource = (schema: AnyZodObject): RequestHandler => (
 	}
 );
 
-export default validateResource;
+export default validateRequest;
