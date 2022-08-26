@@ -20,28 +20,6 @@ export const readableTypeOf = (
 				: 'object'
 );
 
-type AssertType = <Type extends ReadableTypeOf>(
-	value: any,
-	type: Type | Type[],
-	name?: string,
-) => asserts value is Type;
-
-export const assertTypeOf: AssertType = (value, type, name) => {
-	const checked = readableTypeOf(value);
-
-	const typeArray = Array.isArray(type) ? type : [type];
-	if (!typeArray.includes(checked as any)) {
-		throw new Error(
-			`Invalid ${name ?? 'value'}, expected '${typeArray.join(' | ')}', received '${checked}'`
-		);
-	}
-	if (checked === 'number' && isNaN(value)) {
-		throw new Error(
-			`Invalid ${name ?? 'value'}, expected proper number`
-		);
-	}
-};
-
 export const requestSchema = <
 	Body extends AnyZodObject = EmptyZodObject,
 	Params extends AnyZodObject = EmptyZodObject,
