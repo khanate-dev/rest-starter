@@ -1,4 +1,7 @@
 node_modules
 .DS_Store
 build
-.env
+.vscode
+.env*
+!.env.project
+!.env.vault

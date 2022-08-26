@@ -28,7 +28,8 @@
 		"baseUrl": "./src",
 		"paths": {
 			"~/*": [ "./*" ]
-		}
+		},
+		"typeRoots": [ "./env.d.ts" ]
 	},
 	"exclude": [
 		"node_modules/**/*",
