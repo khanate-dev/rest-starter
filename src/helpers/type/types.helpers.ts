@@ -1,7 +1,11 @@
+import { AnyZodObject, strictObject } from 'zod';
+
 import {
 	AssertFunction,
+	EmptyZodObject,
 	Jwt,
 	ReadableTypeOf,
+	RequestSchema,
 } from '~/types';
 
 export const readableTypeOf = (
@@ -36,6 +40,18 @@ export const assertTypeOf: AssertType = (value, type, name) => {
 			`Invalid ${name ?? 'value'}, expected proper number`
 		);
 	}
+};
+
+export const requestSchema = <
+	Body extends AnyZodObject = EmptyZodObject,
+	Params extends AnyZodObject = EmptyZodObject,
+	Query extends AnyZodObject = EmptyZodObject
+>({
+	body = strictObject({}) as any,
+	query = strictObject({}) as any,
+	params = strictObject({}) as any,
+}: RequestSchema<Body, Params, Query>) => {
+	return strictObject({ body, query, params });
 };
 
 export const assertJwt: AssertFunction<Jwt> = (
