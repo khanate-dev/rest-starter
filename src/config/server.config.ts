@@ -1,5 +1,5 @@
 import logger from '~/helpers/logger';
-import { assertType as assertTypeOf } from '~/helpers/type';
+import { assertTypeOf } from '~/helpers/type';
 
 import { Config, EnvironmentConfig, ReadableTypeOf } from '~/types';
 
