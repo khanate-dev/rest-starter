@@ -5,3 +5,4 @@ build
 .env*
 !.env.project
 !.env.vault
+!.env.example

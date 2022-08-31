@@ -11,7 +11,7 @@
 		"lint": "eslint .",
 		"test": "jest --runInBand",
 		"env:push": "dotenv-vault push",
-		"env:pull": "dotenv-vault pull",
+		"env:pull": "dotenv-vault pull && dotenv-vault pull example .env.example",
 		"env:open": "dotenv-vault open"
 	},
 	"dependencies": {
