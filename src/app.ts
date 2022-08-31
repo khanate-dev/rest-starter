@@ -1,4 +1,5 @@
 import express from 'express';
+import pinoMiddleWare from 'express-pino-logger';
 
 import config from '~/config';
 
@@ -11,6 +12,10 @@ import routes from '~/routes';
 const app = express();
 
 app.use(express.json());
+
+app.use(pinoMiddleWare({
+	logger,
+}));
 
 const server = app.listen(config.port, async () => {
 	logger.info(`App is running at http://localhost:${config.port}`);
