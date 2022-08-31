@@ -1,5 +1,6 @@
 import express from 'express';
 import pinoMiddleWare from 'express-pino-logger';
+import helmet from 'helmet';
 
 import config from '~/config';
 
@@ -12,7 +13,7 @@ import routes from '~/routes';
 const app = express();
 
 app.use(express.json());
-
+app.use(helmet());
 app.use(pinoMiddleWare({
 	logger,
 }));
