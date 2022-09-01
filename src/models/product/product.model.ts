@@ -1,18 +1,24 @@
 import { Schema, model, Types } from 'mongoose';
+import z from 'zod';
 
-import { ModelObject, WithMongoId } from '~/types';
+import { getModelSchema } from '~/helpers/schema';
 
-export interface Product extends ModelObject {
-	user: Types.ObjectId,
-	title: string,
-	description: string,
-	price: number,
-	image: string,
-}
+export const {
+	sansMetaModelSchema: productSansMetaModelSchema,
+	modelSchema: productModelSchema,
+} = getModelSchema({
+	user: z.instanceof(Types.ObjectId),
+	title: z.string(),
+	description: z.string(),
+	price: z.number().positive(),
+	image: z.string().url(),
+});
 
-export type ProductWithId = WithMongoId<Product>;
+export type ProductSansMeta = z.infer<typeof productSansMetaModelSchema>;
 
-const productSchema = new Schema<ProductWithId>(
+export type Product = z.infer<typeof productModelSchema>;
+
+const productSchema = new Schema<Product>(
 	{
 		user: {
 			type: Schema.Types.ObjectId,
