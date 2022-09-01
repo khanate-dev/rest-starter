@@ -1,6 +1,6 @@
 import { FilterQuery, Types, UpdateQuery } from 'mongoose';
 
-import { SessionModel, SessionWithId } from '~/models/session';
+import { SessionModel, Session } from '~/models/session';
 
 export const createSession = async (
 	userId: Types.ObjectId,
@@ -14,14 +14,20 @@ export const createSession = async (
 };
 
 export const findSessions = (
-	query: FilterQuery<SessionWithId>
+	query: FilterQuery<Session>
 ) => {
 	return SessionModel.find(query).lean();
 };
 
+export const findSessionById = (
+	id: string | Types.ObjectId
+) => {
+	return SessionModel.findById(id).lean();
+};
+
 export const updateSession = (
-	query: FilterQuery<SessionWithId>,
-	update: UpdateQuery<SessionWithId>
+	query: FilterQuery<Session>,
+	update: UpdateQuery<Session>
 ) => {
 	return SessionModel.updateOne(query, update);
 };

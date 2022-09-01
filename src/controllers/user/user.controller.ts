@@ -1,4 +1,4 @@
-import { UserWithoutPassword } from '~/models';
+import { UserSansPassword } from '~/models';
 
 import { CreateUserInput } from '~/schemas/user';
 
@@ -8,7 +8,7 @@ import { PublicHandler, Status } from '~/types';
 
 export const createUserHandler: PublicHandler<
 	CreateUserInput,
-	UserWithoutPassword
+	UserSansPassword
 > = async (request) => {
 	const user = await createUser(request.body);
 	return {

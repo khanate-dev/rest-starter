@@ -4,14 +4,24 @@ import { ApiError } from '~/errors';
 import { signJwt, verifyJwt } from '~/helpers/jwt';
 import { assertJwt } from '~/helpers/type';
 
-import { SessionModel, SessionWithId } from '~/models/session';
+import { Session } from '~/models/session';
 
 import { CreateSessionInput } from '~/schemas/session';
 
-import { createSession, findSessions, updateSession } from '~/services/session';
+import {
+	createSession,
+	findSessionById,
+	findSessions,
+	updateSession,
+} from '~/services/session';
 import { findUser, validatePassword } from '~/services/user';
 
-import { DefaultRequest, PrivateHandler, PublicHandler, Status } from '~/types';
+import {
+	DefaultRequest,
+	PrivateHandler,
+	PublicHandler,
+	Status,
+} from '~/types';
 
 const accessExpiresIn = config.accessTokenAge;
 const refreshExpiresIn = config.refreshTokenAge;
@@ -73,7 +83,7 @@ export const createSessionHandler: PublicHandler<
 
 export const getSessionsHandler: PrivateHandler<
 	DefaultRequest,
-	SessionWithId[]
+	Session[]
 > = async (_request, response) => {
 	const userId = response.locals.user._id;
 	const sessions = await findSessions({
@@ -112,7 +122,7 @@ export const reIssueAccessToken = async (
 	if (expired) throw new Error('refresh token expired');
 	assertJwt(decoded);
 
-	const session = await SessionModel.findById(decoded.session);
+	const session = await findSessionById(decoded.session);
 	if (!session?.valid) throw new Error('session is no longer valid');
 
 	const user = await findUser({
