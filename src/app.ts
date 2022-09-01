@@ -7,21 +7,20 @@ import config from '~/config';
 import connectDb from '~/helpers/connect-db';
 import logger from '~/helpers/logger';
 
-import routes from '~/routes';
+import registerRoutes from '~/routes';
 
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(pinoMiddleWare({
-	logger,
-}));
+app.use(pinoMiddleWare({ logger }));
 
 const server = app.listen(config.port, async () => {
 	logger.info(`App is running at http://localhost:${config.port}`);
 	await connectDb();
-	routes(app);
+	registerRoutes(app);
 });
 
 server.on('error', (error) => {
