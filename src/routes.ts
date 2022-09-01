@@ -1,5 +1,6 @@
-import { Express } from 'express';
+import { Express, RequestHandler } from 'express';
 
+import { getErrorResponseAndCode } from './helpers/error';
 import logger from '~/helpers/logger';
 
 import { validateRequest, validateAuth } from '~/middlewares';
@@ -24,31 +25,128 @@ import {
 	updateProductHandler,
 } from '~/controllers';
 
-const routes = (app: Express) => {
+import { PrivateRoute, PublicRoute, Status } from './types';
+import { isDetailedResponse } from './helpers/type';
 
-	app.get('/health-check', (_request, response) => {
-		logger.info('Reached');
-		return response.sendStatus(200);
-	});
+const publicRoutes: PublicRoute[] = [
+	{
+		method: 'get',
+		path: 'health-check',
+		handler: async () => ({
+			success: true,
+			message: 'The api server is up',
+		}),
+	},
+	{
+		method: 'post',
+		path: 'users',
+		schema: createUserSchema,
+		handler: createUserHandler,
+	},
+	{
+		method: 'post',
+		path: 'sessions',
+		schema: createSessionSchema,
+		handler: createSessionHandler,
+	},
+];
 
-	app.post('/api/users', validateRequest(createUserSchema), createUserHandler);
+const privateRoutes: PrivateRoute[] = [
+	{
+		method: 'get',
+		path: 'sessions',
+		handler: getSessionsHandler,
+	},
+	{
+		method: 'delete',
+		path: 'sessions',
+		handler: deleteSessionHandler,
+	},
+	{
+		method: 'post',
+		path: 'products',
+		schema: createProductSchema,
+		handler: createProductHandler,
+	},
+	{
+		method: 'put',
+		path: 'products/:_id',
+		schema: updateProductSchema,
+		handler: updateProductHandler,
+	},
+	{
+		method: 'get',
+		path: 'products/:_id',
+		schema: getProductSchema,
+		handler: getProductHandler,
+	},
+	{
+		method: 'delete',
+		path: 'products/:_id',
+		schema: deleteProductSchema,
+		handler: deleteProductHandler,
+	},
+];
 
-	app.post('/api/sessions', validateRequest(createSessionSchema), createSessionHandler);
+const setupRoute = (
+	app: Express,
+	route: PublicRoute | PrivateRoute
+) => {
 
-	app.use(validateAuth);
+	const { method, path, schema, middleware, handler } = route;
 
-	app.get('/api/sessions', getSessionsHandler);
+	const routePath = `/api/${path}`;
 
-	app.delete('/api/sessions', deleteSessionHandler);
+	const middlewareList = (
+		middleware
+			? Array.isArray(middleware)
+				? middleware
+				: [middleware]
+			: []
+	);
 
-	app.post('/api/products', validateRequest(createProductSchema), createProductHandler);
+	const handlerWrapper: RequestHandler<any, any, any, any, any> = async (
+		request,
+		response,
+		next
+	) => {
+		try {
+			const handlerResponse = await handler(
+				request,
+				response,
+				next
+			);
+			const isDetailed = isDetailedResponse(handlerResponse);
+			const status = isDetailed ? handlerResponse.status : Status.OK;
+			const json = isDetailed ? handlerResponse.json : handlerResponse;
+			response.status(status).json(json);
+		}
+		catch (error: any) {
+			logger.error(error);
+			const { status, json } = getErrorResponseAndCode(error);
+			response.status(status).json(json);
+		}
+	};
 
-	app.put('/api/products/:_id', validateRequest(updateProductSchema), updateProductHandler);
+	app[method](
+		routePath,
+		validateRequest(schema),
+		...middlewareList,
+		handlerWrapper
+	);
 
-	app.get('/api/products/:_id', validateRequest(getProductSchema), getProductHandler);
-
-	app.delete('/api/products/:_id', validateRequest(deleteProductSchema), deleteProductHandler);
+	logger.info(`Registered Route:\t${routePath}`);
 
 };
 
-export default routes;
+const registerRoutes = (app: Express) => {
+
+	for (const route of publicRoutes) setupRoute(app, route);
+
+	app.use(validateAuth);
+
+	for (const route of privateRoutes) setupRoute(app, route);
+
+};
+
+export default registerRoutes;
