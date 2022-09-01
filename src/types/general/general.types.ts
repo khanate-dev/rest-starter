@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { ZodEffects, ZodObject, ZodTypeAny } from 'zod';
+import z from 'zod';
 
-import { UserWithoutPassword } from '~/models/user';
+import { UserSansPassword } from '~/models/user';
 
 import { Status } from '~/types/http';
 
@@ -43,37 +43,28 @@ export type ReadableTypeOf = (
 	| 'object'
 );
 
-export interface ModelObject {
-	createdAt: Date,
-	updatedAt: Date,
-}
-
-export type WithMongoId<Type extends ModelObject> = Type & {
-	_id: Types.ObjectId,
-};
-
-export interface JwtInput extends UserWithoutPassword {
+export interface JwtInput extends UserSansPassword {
 	session: Types.ObjectId,
 }
 
-export interface Jwt extends Omit<UserWithoutPassword, '_id'> {
+export interface Jwt extends Omit<UserSansPassword, '_id'> {
 	_id: string,
 	session: string,
 }
 
 export type AssertFunction<Type> = (value: any) => asserts value is Type;
 
-export type EmptyZodObject = ZodObject<
+export type EmptyZodObject = z.ZodObject<
 	Record<never, never>,
 	'strict',
-	ZodTypeAny,
+	z.ZodTypeAny,
 	Record<never, never>,
 	Record<never, never>
 >;
 
 export type RequestSchemaInputObject = (
-	ZodObject<Record<string, any>, 'strict'>
-	| ZodEffects<ZodObject<Record<string, any>, 'strict'>>
+	z.ZodObject<Record<string, any>, 'strict'>
+	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 );
 
 export interface RequestSchemaInput<
@@ -95,7 +86,7 @@ export type RequestSchema<
 	Body extends RequestSchemaInputObject = RequestSchemaInputObject,
 	Params extends RequestSchemaInputObject = RequestSchemaInputObject,
 	Query extends RequestSchemaInputObject = RequestSchemaInputObject
-	> = ZodObject<
+	> = z.ZodObject<
 		{
 			body: Body,
 			params: Params,
