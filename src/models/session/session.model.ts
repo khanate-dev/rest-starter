@@ -1,16 +1,22 @@
 import { Schema, model, Types } from 'mongoose';
+import z from 'zod';
 
-import { ModelObject, WithMongoId } from '~/types';
+import { getModelSchema } from '~/helpers/schema';
 
-export interface Session extends ModelObject {
-	user: Types.ObjectId,
-	valid: boolean,
-	userAgent: string,
-}
+export const {
+	sansMetaModelSchema: sessionSansMetaModelSchema,
+	modelSchema: sessionModelSchema,
+} = getModelSchema({
+	user: z.instanceof(Types.ObjectId),
+	valid: z.boolean(),
+	userAgent: z.string(),
+});
 
-export type SessionWithId = WithMongoId<Session>;
+export type SessionSansMeta = z.infer<typeof sessionSansMetaModelSchema>;
 
-const sessionSchema = new Schema<SessionWithId>(
+export type Session = z.infer<typeof sessionModelSchema>;
+
+const sessionSchema = new Schema<Session>(
 	{
 		user: {
 			type: Schema.Types.ObjectId,
