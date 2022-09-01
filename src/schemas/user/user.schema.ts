@@ -1,7 +1,9 @@
-import { object, string, TypeOf } from 'zod';
+import { strictObject, string, TypeOf } from 'zod';
 
-export const createUserSchema = object({
-	body: object({
+import { requestSchema } from '~/helpers/type';
+
+export const createUserSchema = requestSchema({
+	body: strictObject({
 		name: string({
 			required_error: 'Name is required',
 		}),
@@ -20,7 +22,4 @@ export const createUserSchema = object({
 	}),
 });
 
-export type CreateUserInput = Omit<
-	TypeOf<typeof createUserSchema>,
-	'passwordConfirmation'
->;
+export type CreateUserInput = TypeOf<typeof createUserSchema>;
