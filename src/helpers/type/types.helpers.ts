@@ -1,11 +1,14 @@
-import { AnyZodObject, strictObject } from 'zod';
+import { strictObject } from 'zod';
 
 import {
 	AssertFunction,
-	EmptyZodObject,
+	DetailedResponse,
 	Jwt,
 	ReadableTypeOf,
 	RequestSchema,
+	RequestSchemaInput,
+	RequestSchemaInputObject,
+	statusCodes,
 } from '~/types';
 
 export const readableTypeOf = (
@@ -20,16 +23,25 @@ export const readableTypeOf = (
 				: 'object'
 );
 
+const defaultObject = strictObject({});
+type DefaultObject = typeof defaultObject;
+
 export const requestSchema = <
-	Body extends AnyZodObject = EmptyZodObject,
-	Params extends AnyZodObject = EmptyZodObject,
-	Query extends AnyZodObject = EmptyZodObject
->({
-	body = strictObject({}) as any,
-	query = strictObject({}) as any,
-	params = strictObject({}) as any,
-}: RequestSchema<Body, Params, Query>) => {
-	return strictObject({ body, query, params });
+	Body extends RequestSchemaInputObject = DefaultObject,
+	Params extends RequestSchemaInputObject = DefaultObject,
+	Query extends RequestSchemaInputObject = DefaultObject
+>(
+	{
+		body = defaultObject as Body,
+		query = defaultObject as Query,
+		params = defaultObject as Params,
+	}: RequestSchemaInput<Body, Params, Query>
+): RequestSchema<Body, Params, Query> => {
+	return strictObject({
+		body,
+		params,
+		query,
+	});
 };
 
 export const assertJwt: AssertFunction<Jwt> = (
@@ -55,4 +67,16 @@ export const assertJwt: AssertFunction<Jwt> = (
 	catch (error: any) {
 		throw new TypeError(`Bad JWT! ${error.message}`);
 	}
+};
+
+export const isDetailedResponse = <Type extends Record<string, any>>(
+	value: Type | DetailedResponse<Type>
+): value is DetailedResponse<Type> => {
+	if (
+		typeof value.status !== 'number'
+		|| !statusCodes.includes(value.status)
+		|| Boolean(value.json)
+		|| typeof value.json !== 'object'
+	) return false;
+	return true;
 };
