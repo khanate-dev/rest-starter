@@ -1,6 +1,6 @@
 import { ApiError } from '~/errors';
 
-import { ProductWithId } from '~/models';
+import { Product } from '~/models';
 
 import {
 	CreateProductInput,
@@ -19,7 +19,7 @@ import { PrivateHandler, Status } from '~/types';
 
 export const createProductHandler: PrivateHandler<
 	CreateProductInput,
-	ProductWithId
+	Product
 > = async (request, response) => {
 	const product = await createProduct({
 		...request.body,
@@ -33,7 +33,7 @@ export const createProductHandler: PrivateHandler<
 
 export const getProductHandler: PrivateHandler<
 	GetProductInput,
-	ProductWithId
+	Product
 > = async (request, response) => {
 
 	const userId = response.locals.user._id;
@@ -51,7 +51,7 @@ export const getProductHandler: PrivateHandler<
 
 export const updateProductHandler: PrivateHandler<
 	UpdateProductInput,
-	ProductWithId
+	Product
 > = async (request, response) => {
 
 	const userId = response.locals.user._id;
@@ -78,7 +78,7 @@ export const updateProductHandler: PrivateHandler<
 
 export const deleteProductHandler: PrivateHandler<
 	GetProductInput,
-	ProductWithId
+	Product
 > = async (request, response) => {
 
 	const userId = response.locals.user._id;
