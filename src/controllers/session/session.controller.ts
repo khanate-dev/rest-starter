@@ -1,98 +1,111 @@
-import { RequestHandler } from 'express';
-
 import config from '~/config';
+import { ApiError } from '~/errors';
 
 import { signJwt, verifyJwt } from '~/helpers/jwt';
-import logger from '~/helpers/logger';
 import { assertJwt } from '~/helpers/type';
 
-import { SessionModel } from '~/models/session';
+import { SessionModel, SessionWithId } from '~/models/session';
 
 import { CreateSessionInput } from '~/schemas/session';
 
 import { createSession, findSessions, updateSession } from '~/services/session';
 import { findUser, validatePassword } from '~/services/user';
 
-import { ProtectedHandler } from '~/types';
+import { DefaultRequest, PrivateHandler, PublicHandler, Status } from '~/types';
 
 const accessExpiresIn = config.accessTokenAge;
 const refreshExpiresIn = config.refreshTokenAge;
 
-export const createSessionHandler: RequestHandler<any, any, CreateSessionInput['body']> = async (
-	request,
-	response
-) => {
-	try {
-		const user = await validatePassword(request.body);
-		if (!user) {
-			return response.status(401).send('Invalid email or password');
-		}
+interface Tokens {
+	accessToken: string,
+	refreshToken: string,
+}
 
-		const session = await createSession(user._id, request.get('user-agent') ?? '');
+interface ClearedTokens {
+	accessToken: null,
+	refreshToken: null,
+}
 
-		const accessToken = signJwt(
-			{
-				...user,
-				session: session._id,
-			},
-			{ expiresIn: accessExpiresIn }
+export const createSessionHandler: PublicHandler<
+	CreateSessionInput,
+	Tokens
+> = async (request) => {
+
+	const user = await validatePassword(request.body);
+
+	if (!user) {
+		throw new ApiError(
+			Status.UNAUTHORIZED,
+			'Invalid email or password'
 		);
+	}
 
-		const refreshToken = signJwt(
-			{
-				...user,
-				session: session._id,
-			},
-			{ expiresIn: refreshExpiresIn }
-		);
+	const session = await createSession(
+		user._id,
+		request.get('user-agent') ?? ''
+	);
 
-		return response.send({
+	const accessToken = signJwt(
+		{
+			...user,
+			session: session._id,
+		},
+		{ expiresIn: accessExpiresIn }
+	);
+
+	const refreshToken = signJwt(
+		{
+			...user,
+			session: session._id,
+		},
+		{ expiresIn: refreshExpiresIn }
+	);
+
+	return {
+		status: Status.CREATED,
+		json: {
 			accessToken,
 			refreshToken,
-		});
-	}
-	catch (error: any) {
-		logger.error(error);
-		return response.status(409).send(error.message ?? error);
-	}
+		},
+	};
+
 };
 
-export const getSessionsHandler: ProtectedHandler = async (
-	_request,
-	response
-) => {
-	try {
-		const userId = response.locals.user._id;
-		const sessions = await findSessions({
-			user: userId,
-			valid: true,
-		});
-		return response.send(sessions);
-	}
-	catch (error: any) {
-		logger.error(error);
-		return response.status(409).send(error.message ?? error);
-	}
+export const getSessionsHandler: PrivateHandler<
+	DefaultRequest,
+	SessionWithId[]
+> = async (_request, response) => {
+	const userId = response.locals.user._id;
+	const sessions = await findSessions({
+		user: userId,
+		valid: true,
+	});
+	return sessions;
 };
 
-export const deleteSessionHandler: ProtectedHandler = async (
-	_request,
-	response
-) => {
+export const deleteSessionHandler: PrivateHandler<
+	DefaultRequest,
+	ClearedTokens
+> = async (_request, response) => {
+
 	const sessionId = response.locals.user.session;
-	await updateSession(
+	const updatedSession = await updateSession(
 		{ _id: sessionId },
 		{ valid: false }
 	);
-	return response.send({
+
+	if (!updatedSession.matchedCount) throw new ApiError(Status.NOT_FOUND);
+
+	return {
 		accessToken: null,
 		refreshToken: null,
-	});
+	};
+
 };
 
 export const reIssueAccessToken = async (
 	refreshToken: string
-) => {
+): Promise<string> => {
 
 	const { decoded, expired } = await verifyJwt(refreshToken);
 
