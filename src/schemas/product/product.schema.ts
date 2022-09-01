@@ -1,29 +1,24 @@
-import {
-	number,
-	strictObject,
-	string,
-	TypeOf,
-} from 'zod';
+import z from 'zod';
 
 import { requestSchema } from '~/helpers/type';
 
-const body = strictObject({
-	title: string({
+const body = z.strictObject({
+	title: z.string({
 		required_error: 'title is required',
 	}),
-	description: string({
+	description: z.string({
 		required_error: 'description is required',
 	}).min(120, 'description should be at least 120 characters long'),
-	price: number({
+	price: z.number({
 		required_error: 'price is required',
 	}),
-	image: string({
+	image: z.string({
 		required_error: 'image is required',
 	}),
 });
 
-const params = strictObject({
-	_id: string({
+const params = z.strictObject({
+	_id: z.string({
 		required_error: 'product id is required',
 	}),
 });
@@ -45,7 +40,7 @@ export const deleteProductSchema = requestSchema({
 	params,
 });
 
-export type CreateProductInput = TypeOf<typeof createProductSchema>;
-export type UpdateProductInput = TypeOf<typeof updateProductSchema>;
-export type GetProductInput = TypeOf<typeof getProductSchema>;
-export type DeleteProductInput = TypeOf<typeof deleteProductSchema>;
+export type CreateProductInput = z.infer<typeof createProductSchema>;
+export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+export type GetProductInput = z.infer<typeof getProductSchema>;
+export type DeleteProductInput = z.infer<typeof deleteProductSchema>;

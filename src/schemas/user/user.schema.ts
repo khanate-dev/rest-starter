@@ -1,19 +1,19 @@
-import { strictObject, string, TypeOf } from 'zod';
+import z from 'zod';
 
 import { requestSchema } from '~/helpers/type';
 
 export const createUserSchema = requestSchema({
-	body: strictObject({
-		name: string({
+	body: z.strictObject({
+		name: z.string({
 			required_error: 'Name is required',
 		}),
-		password: string({
+		password: z.string({
 			required_error: 'Password is required',
 		}).min(6, 'Password too short - should be at least 6 characters'),
-		passwordConfirmation: string({
+		passwordConfirmation: z.string({
 			required_error: 'passwordConfirmation is required',
 		}),
-		email: string({
+		email: z.string({
 			required_error: 'Email is required',
 		}).email('Not a valid email'),
 	}).refine(data => data.password === data.passwordConfirmation, {
@@ -22,4 +22,4 @@ export const createUserSchema = requestSchema({
 	}),
 });
 
-export type CreateUserInput = TypeOf<typeof createUserSchema>;
+export type CreateUserInput = z.infer<typeof createUserSchema>;

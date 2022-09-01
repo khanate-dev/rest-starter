@@ -1,4 +1,4 @@
-import { strictObject } from 'zod';
+import z from 'zod';
 
 import {
 	AssertFunction,
@@ -23,7 +23,7 @@ export const readableTypeOf = (
 				: 'object'
 );
 
-const defaultObject = strictObject({});
+const defaultObject = z.strictObject({});
 type DefaultObject = typeof defaultObject;
 
 export const requestSchema = <
