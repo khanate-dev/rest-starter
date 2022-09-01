@@ -1,5 +1,4 @@
 import { ApiError } from '~/errors';
-import { getErrorResponseAndCode } from '~/helpers/error';
 
 import { ProductWithId } from '~/models';
 
@@ -16,100 +15,87 @@ import {
 	findProduct,
 } from '~/services/product';
 
-import { ProtectedHandler } from '~/types';
+import { PrivateHandler, Status } from '~/types';
 
-export const createProductHandler: ProtectedHandler<
+export const createProductHandler: PrivateHandler<
 	CreateProductInput,
 	ProductWithId
 > = async (request, response) => {
-	try {
-		const post = await createProduct({
-			...request.body,
-			user: response.locals.user._id,
-		});
-		return response.json(post);
-	}
-	catch (error: any) {
-		const { status, json } = getErrorResponseAndCode(error);
-		return response.status(status).json(json);
-	}
+	const product = await createProduct({
+		...request.body,
+		user: response.locals.user._id,
+	});
+	return {
+		status: Status.CREATED,
+		json: product,
+	};
 };
 
-export const getProductHandler: ProtectedHandler<
+export const getProductHandler: PrivateHandler<
 	GetProductInput,
 	ProductWithId
 > = async (request, response) => {
-	try {
-		const userId = response.locals.user._id;
-		const _id = request.params._id;
-		const product = await findProduct({
-			user: userId,
-			_id,
-		});
 
-		if (!product) throw new ApiError(404);
+	const userId = response.locals.user._id;
+	const _id = request.params._id;
+	const product = await findProduct({
+		user: userId,
+		_id,
+	});
 
-		return response.send(product);
-	}
-	catch (error: any) {
-		const { status, json } = getErrorResponseAndCode(error);
-		return response.status(status).json(json);
-	}
+	if (!product) throw new ApiError(Status.NOT_FOUND);
+
+	return product;
+
 };
 
-export const updateProductHandler: ProtectedHandler<
+export const updateProductHandler: PrivateHandler<
 	UpdateProductInput,
-	ProductWithId | null
+	ProductWithId
 > = async (request, response) => {
-	try {
 
-		const userId = response.locals.user._id;
-		const _id = request.params._id;
-		const product = await findProduct({
-			user: userId,
-			_id,
-		});
+	const userId = response.locals.user._id;
+	const _id = request.params._id;
+	const product = await findProduct({
+		user: userId,
+		_id,
+	});
 
-		if (!product) throw new ApiError(404);
-		if (product.user.toJSON() !== userId) throw new ApiError(403);
+	if (!product) throw new ApiError(Status.NOT_FOUND);
+	if (product.user.toJSON() !== userId) throw new ApiError(Status.FORBIDDEN);
 
-		const updatedProduct = await findAndUpdateProduct(
-			{ _id },
-			request.body,
-			{ new: true }
-		);
-		return response.json(updatedProduct);
+	const updatedProduct = await findAndUpdateProduct(
+		{ _id },
+		request.body,
+		{ new: true }
+	);
 
-	}
-	catch (error: any) {
-		const { status, json } = getErrorResponseAndCode(error);
-		return response.status(status).json(json);
-	}
+	if (!updatedProduct) throw new ApiError(Status.NOT_FOUND);
+
+	return updatedProduct;
+
 };
 
-export const deleteProductHandler: ProtectedHandler<
+export const deleteProductHandler: PrivateHandler<
 	GetProductInput,
-	ProductWithId | null
+	ProductWithId
 > = async (request, response) => {
-	try {
 
-		const userId = response.locals.user._id;
-		const _id = request.params._id;
+	const userId = response.locals.user._id;
+	const _id = request.params._id;
 
-		const product = await findProduct({
-			user: userId,
-			_id,
-		});
+	const product = await findProduct({
+		user: userId,
+		_id,
+	});
 
-		if (!product) throw new ApiError(404);
-		if (product.user.toJSON() !== userId) throw new ApiError(403);
+	if (!product) throw new ApiError(Status.NOT_FOUND);
+	if (product.user.toJSON() !== userId) throw new ApiError(Status.FORBIDDEN);
 
-		const deletedProduct = await deleteProduct({ _id });
-		return response.json(deletedProduct);
+	const deletedProduct = await deleteProduct({ _id });
 
-	}
-	catch (error: any) {
-		const { status, json } = getErrorResponseAndCode(error);
-		return response.status(status).json(json);
-	}
+	if (!deletedProduct) throw new ApiError(Status.NOT_FOUND);
+
+	return deletedProduct;
+
 };
