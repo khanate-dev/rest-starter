@@ -1,50 +1,59 @@
+import { RequestHandler } from 'express';
+
 import { verifyJwt } from '~/helpers/jwt';
+import { getErrorResponseAndCode } from '~/helpers/error';
+import logger from '~/helpers/logger';
 
 import { reIssueAccessToken } from '~/controllers/session';
 
-import { ProtectedHandler } from '~/types';
+import { Status } from '~/types';
 
-
-const validateAuth: ProtectedHandler = async (
-	request,
+const validateAuth: RequestHandler = async (
+	{ headers },
 	response,
 	next
 ) => {
-	const accessToken = request.headers.authorization?.replace(/^Bearer\s/, '') ?? '';
-	const refreshToken = request.headers['x-refresh'];
-	if (!accessToken) return next();
-	const { decoded, valid, expired } = verifyJwt(accessToken);
+	try {
 
-	if (decoded) {
+		const accessToken = headers.authorization?.replace(/^Bearer\s/, '') ?? '';
+		const refreshToken = headers['x-refresh'];
+
+		if (!accessToken) throw new Error('You are not logged in');
+
+		const { decoded, valid, expired } = verifyJwt(accessToken);
+
+		if ((!valid && !expired) || !decoded) {
+			throw new Error('Invalid login session');
+		}
+
 		response.locals.user = decoded;
-	}
 
-	if (!valid && !expired) {
-		return response.status(409).send('You are not logged in');
-	}
+		if (expired) {
 
-	if (expired) {
-		try {
-			if (!refreshToken) throw new Error('no refresh token');
+			if (!refreshToken) throw new Error('Login session has expired');
+
 			const newAccessToken = await reIssueAccessToken(
 				Array.isArray(refreshToken)
 					? refreshToken[0] ?? ''
 					: refreshToken
 			);
-			if (!newAccessToken) throw new Error('failed to reissue access token');
-			response.setHeader('x-access-token', newAccessToken);
+
 			const { decoded } = verifyJwt(newAccessToken);
-			if (decoded) {
-				response.locals.user = decoded;
-			}
+			if (!decoded) throw new Error('Failed to reissue access token. Please Login again');
+
+			response.setHeader('x-access-token', newAccessToken);
+			response.locals.user = decoded;
+
 		}
-		catch (error: any) {
-			return response.status(409).send(`Login expired! ${error.message}`);
-		}
+
+		return next();
+
 	}
-
-	return next();
-
+	catch (error: any) {
+		logger.error(error);
+		const { status, json } = getErrorResponseAndCode(error, Status.UNAUTHORIZED);
+		return response.status(status).json(json);
+	}
 };
 
 export default validateAuth;
