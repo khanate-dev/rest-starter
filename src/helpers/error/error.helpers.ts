@@ -1,12 +1,15 @@
-import { ErrorResponse } from '~/types';
+import { ErrorResponse, Status } from '~/types';
 
 interface ErrorResponseAndCode {
-	status: number,
+	status: Status,
 	json: ErrorResponse,
-};
+}
 
-export const getErrorResponseAndCode = (error: any): ErrorResponseAndCode => ({
-	status: error.code ?? 500,
+export const getErrorResponseAndCode = (
+	error: any,
+	defaultStatus: Status = Status.INTERNAL_SERVER_ERROR
+): ErrorResponseAndCode => ({
+	status: error.code ?? defaultStatus,
 	json: {
 		...error,
 		type: error?.name,
