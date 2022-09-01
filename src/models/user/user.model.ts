@@ -1,20 +1,29 @@
 import { Schema, model, Document } from 'mongoose';
+import z from 'zod';
 
 import { getHashedPassword } from '~/helpers/crypto';
 
-import { ModelObject, WithMongoId } from '~/types';
+import { getModelSchema } from '~/helpers/schema';
 
-export interface User extends ModelObject {
-	email: string,
-	name: string,
-	password: string,
-}
+export const {
+	sansMetaModelSchema: userSansMetaModelSchema,
+	modelSchema: userModelSchema,
+} = getModelSchema({
+	email: z.string().email(),
+	name: z.string(),
+	password: z.string(),
+});
 
-export type UserWithId = WithMongoId<User>;
+export type UserSansMeta = z.infer<typeof userSansMetaModelSchema>;
 
-export type UserWithoutPassword = Omit<UserWithId, 'password'>;
+export type User = z.infer<typeof userModelSchema>;
 
-const userSchema = new Schema<UserWithId>(
+export const userSansPasswordModelSchema = userModelSchema.omit({
+	password: true,
+});
+export type UserSansPassword = z.infer<typeof userSansPasswordModelSchema>;
+
+const userSchema = new Schema<User>(
 	{
 		email: {
 			type: String,
@@ -37,7 +46,7 @@ const userSchema = new Schema<UserWithId>(
 
 userSchema.pre('save', async function(next) {
 
-	const user = this as unknown as Document<any, any, User>;
+	const user = this as unknown as Document<any, any, UserSansMeta>;
 	if (!user.isModified('password')) {
 		return next();
 	}
