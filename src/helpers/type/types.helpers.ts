@@ -37,7 +37,7 @@ export const requestSchema = <
 		params = defaultObject as Params,
 	}: RequestSchemaInput<Body, Params, Query>
 ): RequestSchema<Body, Params, Query> => {
-	return strictObject({
+	return z.strictObject({
 		body,
 		params,
 		query,
