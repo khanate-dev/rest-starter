@@ -1,8 +1,10 @@
-import { RequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { AnyZodObject, ZodObject, ZodTypeAny } from 'zod';
+import { ZodEffects, ZodObject, ZodTypeAny } from 'zod';
 
 import { UserWithoutPassword } from '~/models/user';
+
+import { Status } from '~/types/http';
 
 export interface EnvironmentConfig {
 	PORT?: string,
@@ -69,36 +71,104 @@ export type EmptyZodObject = ZodObject<
 	Record<never, never>
 >;
 
-export interface RequestSchema<
-	Body extends AnyZodObject,
-	Query extends AnyZodObject,
-	Params extends AnyZodObject
+export type RequestSchemaInputObject = (
+	ZodObject<Record<string, any>, 'strict'>
+	| ZodEffects<ZodObject<Record<string, any>, 'strict'>>
+);
+
+export interface RequestSchemaInput<
+	Body extends RequestSchemaInputObject,
+	Params extends RequestSchemaInputObject,
+	Query extends RequestSchemaInputObject
 	> {
 	body?: Body,
-	query?: Query,
 	params?: Params,
+	query?: Query,
 }
 
 export type ErrorResponse = {
 	type: string,
 	message: string,
-	[x: string]: any,
 };
 
-type RequestType = Record<'params' | 'body' | 'query', Record<string, any>>;
-type DefaultRequest = Record<'params' | 'body' | 'query', Record<never, never>>;
-type DefaultResponse = Record<never, never>;
-type LocalsType = Record<string, any>;
-type DefaultLocals = Record<never, never>;
-
-export type ProtectedHandler<
-	Request extends RequestType = DefaultRequest,
-	ResponseBody = DefaultResponse,
-	Locals extends LocalsType = DefaultLocals
-	> = RequestHandler<
-		Request['params'],
-		ResponseBody | ErrorResponse,
-		Request['body'],
-		Request['query'],
-		{ user: Jwt, } & Locals
+export type RequestSchema<
+	Body extends RequestSchemaInputObject = RequestSchemaInputObject,
+	Params extends RequestSchemaInputObject = RequestSchemaInputObject,
+	Query extends RequestSchemaInputObject = RequestSchemaInputObject
+	> = ZodObject<
+		{
+			body: Body,
+			params: Params,
+			query: Query,
+		}
+		, 'strict'
 	>;
+
+type RequestType = Record<'params' | 'body' | 'query', Record<string, any>>;
+export type DefaultRequest = Record<'params' | 'body' | 'query', Record<never, never>>;
+
+type ResponseBodyType = Record<string, any>;
+
+type PublicLocals = Record<never, never>;
+type PrivateLocals = { user: Jwt, };
+
+export interface DetailedResponse<Json extends ResponseBodyType> {
+	status: Status,
+	json: Json,
+}
+
+export type CustomHandler<
+	Locals extends PublicLocals | PrivateLocals,
+	RequestObject extends RequestType,
+	ResponseBody extends ResponseBodyType
+	> = (
+		request: Request<
+			RequestObject['params'],
+			ResponseBody,
+			RequestObject['body'],
+			RequestObject['query'],
+			Locals
+		>,
+		response: Response<
+			ResponseBody,
+			Locals
+		>,
+		next: NextFunction
+	) => Promise<ResponseBody | DetailedResponse<ResponseBody>>;
+
+export type PublicHandler<
+	RequestObject extends RequestType,
+	ResponseBody extends ResponseBodyType,
+	> = CustomHandler<
+		PublicLocals,
+		RequestObject,
+		ResponseBody
+	>;
+export type PrivateHandler<
+	RequestObject extends RequestType,
+	ResponseBody extends ResponseBodyType,
+	> = CustomHandler<
+		PrivateLocals,
+		RequestObject,
+		ResponseBody
+	>;
+
+
+type _PublicHandler = PublicHandler<any, ResponseBodyType>;
+type _PrivateHandler = PrivateHandler<any, ResponseBodyType>;
+
+export interface PublicRoute {
+	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+	path: string,
+	schema?: RequestSchema,
+	middleware?: _PublicHandler | _PublicHandler[],
+	handler: _PublicHandler,
+}
+
+export interface PrivateRoute {
+	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+	path: string,
+	schema?: RequestSchema,
+	middleware?: _PrivateHandler | _PrivateHandler[],
+	handler: _PrivateHandler,
+}
