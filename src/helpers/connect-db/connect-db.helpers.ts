@@ -11,12 +11,21 @@ const messageMapper = (message: string) => {
 		.replace(/\n/g, '').replace(/\s{2,}/g, ' ');
 };
 
+const mongooseLogger = (
+	collectionName: string,
+	methodName: string,
+	...methodArgs: any[]
+) => {
+	logger.info(`\x1B[0;36mMongoose:\x1B[0m ${collectionName}.${methodName}` + `(${methodArgs.map(messageMapper).join(', ')})`);
+};
+
 const connectDb = async () => {
 	try {
 		await mongoose.connect(config.dbUri);
-		mongoose.set('debug', (collectionName, methodName, ...methodArgs) => {
-			logger.info(`\x1B[0;36mMongoose:\x1B[0m ${collectionName}.${methodName}` + `(${methodArgs.map(messageMapper).join(', ')})`);
-		});
+
+		if (config.env === 'development') {
+			mongoose.set('debug', mongooseLogger);
+		}
 
 		logger.info('Connected to DB');
 	}
