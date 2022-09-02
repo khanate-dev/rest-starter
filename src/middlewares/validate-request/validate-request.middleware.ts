@@ -1,7 +1,11 @@
 import { RequestHandler } from 'express';
 import z from 'zod';
 
+import { getErrorResponse } from '~/helpers/error';
+
 import { requestSchema } from '~/helpers/type';
+
+import { Status } from '~/types';
 
 const validateRequest = (
 	schema: z.AnyZodObject = requestSchema({})
@@ -16,7 +20,8 @@ const validateRequest = (
 			return next();
 		}
 		catch (error: any) {
-			return response.status(400).send(error.errors);
+			const json = getErrorResponse(error);
+			return response.status(Status.NOT_FOUND).send(json);
 		}
 	}
 );

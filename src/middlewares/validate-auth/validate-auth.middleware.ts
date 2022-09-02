@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 
 import { verifyJwt } from '~/helpers/jwt';
-import { getErrorResponseAndCode } from '~/helpers/error';
+import { getErrorResponse } from '~/helpers/error';
 import logger from '~/helpers/logger';
 
 import { reIssueAccessToken } from '~/controllers/session';
@@ -51,8 +51,8 @@ const validateAuth: RequestHandler = async (
 	}
 	catch (error: any) {
 		logger.error(error);
-		const { status, json } = getErrorResponseAndCode(error, Status.UNAUTHORIZED);
-		return response.status(status).json(json);
+		const json = getErrorResponse(error);
+		return response.status(Status.UNAUTHORIZED).json(json);
 	}
 };
 
