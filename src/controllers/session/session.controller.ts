@@ -4,9 +4,11 @@ import { ApiError } from '~/errors';
 import { signJwt, verifyJwt } from '~/helpers/jwt';
 import { assertJwt } from '~/helpers/type';
 
-import { Session } from '~/models/session';
-
-import { CreateSessionInput } from '~/schemas/session';
+import {
+	CreateSessionSchema,
+	DeleteSessionSchema,
+	GetSessionsSchema,
+} from '~/schemas/session';
 
 import {
 	createSession,
@@ -17,29 +19,20 @@ import {
 import { findUser, validatePassword } from '~/services/user';
 
 import {
-	DefaultRequest,
+	Jwt,
 	PrivateHandler,
 	PublicHandler,
 	Status,
 } from '~/types';
 
-const accessExpiresIn = config.accessTokenAge;
-const refreshExpiresIn = config.refreshTokenAge;
+const {
+	accessTokenAge,
+	refreshTokenAge,
+} = config;
 
-interface Tokens {
-	accessToken: string,
-	refreshToken: string,
-}
-
-interface ClearedTokens {
-	accessToken: null,
-	refreshToken: null,
-}
-
-export const createSessionHandler: PublicHandler<
-	CreateSessionInput,
-	Tokens
-> = async (request) => {
+export const createSessionHandler: PublicHandler<CreateSessionSchema> = async (
+	request
+) => {
 
 	const user = await validatePassword(request.body);
 
@@ -55,20 +48,20 @@ export const createSessionHandler: PublicHandler<
 		request.get('user-agent') ?? ''
 	);
 
+	const token: Jwt = {
+		...user,
+		_id: user._id.toJSON(),
+		session: session._id.toJSON(),
+	};
+
 	const accessToken = signJwt(
-		{
-			...user,
-			session: session._id,
-		},
-		{ expiresIn: accessExpiresIn }
+		token,
+		{ expiresIn: accessTokenAge }
 	);
 
 	const refreshToken = signJwt(
-		{
-			...user,
-			session: session._id,
-		},
-		{ expiresIn: refreshExpiresIn }
+		token,
+		{ expiresIn: refreshTokenAge }
 	);
 
 	return {
@@ -81,10 +74,10 @@ export const createSessionHandler: PublicHandler<
 
 };
 
-export const getSessionsHandler: PrivateHandler<
-	DefaultRequest,
-	Session[]
-> = async (_request, response) => {
+export const getSessionsHandler: PrivateHandler<GetSessionsSchema> = async (
+	_request,
+	response
+) => {
 	const userId = response.locals.user._id;
 	const sessions = await findSessions({
 		user: userId,
@@ -93,10 +86,10 @@ export const getSessionsHandler: PrivateHandler<
 	return sessions;
 };
 
-export const deleteSessionHandler: PrivateHandler<
-	DefaultRequest,
-	ClearedTokens
-> = async (_request, response) => {
+export const deleteSessionHandler: PrivateHandler<DeleteSessionSchema> = async (
+	_request,
+	response
+) => {
 
 	const sessionId = response.locals.user.session;
 	const updatedSession = await updateSession(
@@ -104,7 +97,7 @@ export const deleteSessionHandler: PrivateHandler<
 		{ valid: false }
 	);
 
-	if (!updatedSession.matchedCount) throw new ApiError(Status.NOT_FOUND);
+	if (!updatedSession) throw new ApiError(Status.NOT_FOUND);
 
 	return {
 		accessToken: null,
@@ -133,9 +126,10 @@ export const reIssueAccessToken = async (
 	const accessToken = signJwt(
 		{
 			...user,
-			session: session._id,
+			_id: user._id.toJSON(),
+			session: session._id.toJSON(),
 		},
-		{ expiresIn: refreshExpiresIn }
+		{ expiresIn: refreshTokenAge }
 	);
 
 	return accessToken;

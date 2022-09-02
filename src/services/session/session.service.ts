@@ -5,29 +5,32 @@ import { SessionModel, Session } from '~/models/session';
 export const createSession = async (
 	userId: Types.ObjectId,
 	userAgent: string
-) => {
-	const session = await SessionModel.create({
+): Promise<Session> => {
+	const session = (await SessionModel.create({
 		user: userId,
 		userAgent,
-	});
-	return session.toJSON();
+	})).toJSON();
+	return session;
 };
 
-export const findSessions = (
+export const findSessions = async (
 	query: FilterQuery<Session>
-) => {
-	return SessionModel.find(query).lean();
+): Promise<Session[]> => {
+	const sessions = await SessionModel.find(query).lean();
+	return sessions;
 };
 
-export const findSessionById = (
+export const findSessionById = async (
 	id: string | Types.ObjectId
-) => {
-	return SessionModel.findById(id).lean();
+): Promise<null | Session> => {
+	const session = await SessionModel.findById(id).lean();
+	return session;
 };
 
-export const updateSession = (
+export const updateSession = async (
 	query: FilterQuery<Session>,
 	update: UpdateQuery<Session>
-) => {
-	return SessionModel.updateOne(query, update);
+): Promise<null | Session> => {
+	const updatedSession = await SessionModel.findOneAndUpdate(query, update).lean();
+	return updatedSession;
 };
