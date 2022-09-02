@@ -1,11 +1,11 @@
 import { ApiError } from '~/errors';
 
-import { Product } from '~/models';
-
 import {
-	CreateProductInput,
-	GetProductInput,
-	UpdateProductInput,
+	CreateProductSchema,
+	DeleteProductSchema,
+	GetProductSchema,
+	GetProductsSchema,
+	UpdateProductSchema,
 } from '~/schemas/product';
 
 import {
@@ -13,14 +13,15 @@ import {
 	deleteProduct,
 	findAndUpdateProduct,
 	findProduct,
+	findProducts,
 } from '~/services/product';
 
 import { PrivateHandler, Status } from '~/types';
 
-export const createProductHandler: PrivateHandler<
-	CreateProductInput,
-	Product
-> = async (request, response) => {
+export const createProductHandler: PrivateHandler<CreateProductSchema> = async (
+	request,
+	response
+) => {
 	const product = await createProduct({
 		...request.body,
 		user: response.locals.user._id,
@@ -31,10 +32,27 @@ export const createProductHandler: PrivateHandler<
 	};
 };
 
-export const getProductHandler: PrivateHandler<
-	GetProductInput,
-	Product
-> = async (request, response) => {
+export const getProductsHandler: PrivateHandler<GetProductsSchema> = async (
+	_request,
+	response
+) => {
+
+	console.log('reached');
+	const userId = response.locals.user._id;
+	const products = await findProducts({
+		user: userId,
+	});
+
+	if (!products) throw new ApiError(Status.NOT_FOUND);
+	console.log(products);
+	return products;
+
+};
+
+export const getProductHandler: PrivateHandler<GetProductSchema> = async (
+	request,
+	response
+) => {
 
 	const userId = response.locals.user._id;
 	const _id = request.params._id;
@@ -49,10 +67,10 @@ export const getProductHandler: PrivateHandler<
 
 };
 
-export const updateProductHandler: PrivateHandler<
-	UpdateProductInput,
-	Product
-> = async (request, response) => {
+export const updateProductHandler: PrivateHandler<UpdateProductSchema> = async (
+	request,
+	response
+) => {
 
 	const userId = response.locals.user._id;
 	const _id = request.params._id;
@@ -76,10 +94,10 @@ export const updateProductHandler: PrivateHandler<
 
 };
 
-export const deleteProductHandler: PrivateHandler<
-	GetProductInput,
-	Product
-> = async (request, response) => {
+export const deleteProductHandler: PrivateHandler<DeleteProductSchema> = async (
+	request,
+	response
+) => {
 
 	const userId = response.locals.user._id;
 	const _id = request.params._id;
