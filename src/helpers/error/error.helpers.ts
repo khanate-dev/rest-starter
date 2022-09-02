@@ -5,14 +5,18 @@ interface ErrorResponseAndCode {
 	json: ErrorResponse,
 }
 
+export const getErrorResponse = (
+	error: any
+): ErrorResponse => ({
+	...error,
+	type: error?.name,
+	message: error?.message ?? error,
+});
+
 export const getErrorResponseAndCode = (
 	error: any,
 	defaultStatus: Status = Status.INTERNAL_SERVER_ERROR
 ): ErrorResponseAndCode => ({
 	status: error.statusCode ?? defaultStatus,
-	json: {
-		...error,
-		type: error?.name,
-		message: error?.message ?? error,
-	},
+	json: getErrorResponse(error),
 });
