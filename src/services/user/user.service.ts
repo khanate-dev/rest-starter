@@ -8,8 +8,8 @@ import { UserModel, UserSansMeta, UserSansPassword } from '~/models/user';
 export const createUser = async (
 	input: DocumentDefinition<UserSansMeta>
 ): Promise<UserSansPassword> => {
-	const user = await UserModel.create(input);
-	return omitKey(user.toJSON(), 'password');
+	const user = (await UserModel.create(input)).toJSON();
+	return omitKey(user, 'password');
 };
 
 export const validatePassword = async (

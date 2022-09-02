@@ -2,19 +2,25 @@ import { Express, RequestHandler } from 'express';
 
 import { getErrorResponseAndCode } from './helpers/error';
 import logger from '~/helpers/logger';
+import { isDetailedResponse } from './helpers/type';
 
 import { validateRequest, validateAuth } from '~/middlewares';
 
 import {
+	echoSchema,
 	createUserSchema,
 	createSessionSchema,
 	createProductSchema,
 	deleteProductSchema,
 	getProductSchema,
 	updateProductSchema,
+	getProductsSchema,
+	getSessionsSchema,
+	deleteSessionSchema,
 } from '~/schemas';
 
 import {
+	echoHandler,
 	createUserHandler,
 	createSessionHandler,
 	deleteSessionHandler,
@@ -23,19 +29,17 @@ import {
 	deleteProductHandler,
 	getProductHandler,
 	updateProductHandler,
+	getProductsHandler,
 } from '~/controllers';
 
 import { PrivateRoute, PublicRoute, Status } from './types';
-import { isDetailedResponse } from './helpers/type';
 
 const publicRoutes: PublicRoute[] = [
 	{
 		method: 'get',
-		path: 'health-check',
-		handler: async () => ({
-			success: true,
-			message: 'The api server is up',
-		}),
+		path: 'echo',
+		schema: echoSchema,
+		handler: echoHandler,
 	},
 	{
 		method: 'post',
@@ -55,11 +59,13 @@ const privateRoutes: PrivateRoute[] = [
 	{
 		method: 'get',
 		path: 'sessions',
+		schema: getSessionsSchema,
 		handler: getSessionsHandler,
 	},
 	{
 		method: 'delete',
 		path: 'sessions',
+		schema: deleteSessionSchema,
 		handler: deleteSessionHandler,
 	},
 	{
@@ -69,16 +75,22 @@ const privateRoutes: PrivateRoute[] = [
 		handler: createProductHandler,
 	},
 	{
-		method: 'put',
-		path: 'products/:_id',
-		schema: updateProductSchema,
-		handler: updateProductHandler,
+		method: 'get',
+		path: 'products',
+		schema: getProductsSchema,
+		handler: getProductsHandler,
 	},
 	{
 		method: 'get',
 		path: 'products/:_id',
 		schema: getProductSchema,
 		handler: getProductHandler,
+	},
+	{
+		method: 'put',
+		path: 'products/:_id',
+		schema: updateProductSchema,
+		handler: updateProductHandler,
 	},
 	{
 		method: 'delete',

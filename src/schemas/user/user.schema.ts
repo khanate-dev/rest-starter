@@ -2,6 +2,8 @@ import z from 'zod';
 
 import { requestSchema } from '~/helpers/type';
 
+import { userSansPasswordModelSchema } from '~/models';
+
 export const createUserSchema = requestSchema({
 	body: z.strictObject({
 		name: z.string({
@@ -20,6 +22,7 @@ export const createUserSchema = requestSchema({
 		message: 'Passwords do not match',
 		path: ['passwordConfirmation'],
 	}),
+	response: userSansPasswordModelSchema,
 });
 
-export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type CreateUserSchema = z.infer<typeof createUserSchema>;
