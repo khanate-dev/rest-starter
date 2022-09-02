@@ -6,6 +6,7 @@ const publicKeyPattern = /^-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----$
 const privateKeyPattern = /^-----BEGIN RSA PRIVATE KEY-----.+-----END RSA PRIVATE KEY-----$/s;
 
 export const environmentSchema = z.object({
+	NODE_ENV: z.enum(['development', 'production', 'test']),
 	PORT: z.preprocess(
 		value => Number(value as string) || value,
 		z.number().int().positive().min(3000).max(9999).optional()

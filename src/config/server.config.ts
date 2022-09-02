@@ -21,6 +21,7 @@ const parseConfig = (): Config => {
 	try {
 
 		const {
+			NODE_ENV,
 			PORT,
 			DB_URI,
 			HASHING_ITERATIONS,
@@ -33,12 +34,16 @@ const parseConfig = (): Config => {
 
 		for (const key of optionalEnvironment) {
 			if (process.env[key] === undefined) {
-				const camelized = formatString(key, 'camel');
-				logger.warn(`Optional Environment Variable '${key}' not provided. Using default: ${(defaults as any)[camelized]}`);
+				const camelizedKey = formatString(key, 'camel');
+				logger.warn([
+					`Optional Environment Variable '${key}' not provided`,
+					`Using default: ${(defaults as any)[camelizedKey]}`,
+				].join('. '));
 			}
 		}
 
 		return {
+			env: NODE_ENV,
 			port: PORT || defaults.port,
 			dbUri: DB_URI,
 			hashing: {

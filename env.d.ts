@@ -1,7 +1,5 @@
-import { EnvironmentConfig } from '~/types';
+import { Environment } from '~/schemas/environment';
 
 declare namespace NodeJS {
-	interface ProcessEnv extends EnvironmentConfig {
-		NODE_ENV: 'development' | 'production' | 'test',
-	}
+	type ProcessEnv = Environment;
 }
