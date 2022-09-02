@@ -159,6 +159,11 @@ const registerRoutes = (app: Express) => {
 
 	for (const route of privateRoutes) setupRoute(app, route);
 
+	app.use((_request, response) => {
+		const { json } = getErrorResponseAndCode(new Error('Path not found'));
+		response.status(Status.NOT_FOUND).json(json);
+	});
+
 };
 
 export default registerRoutes;
