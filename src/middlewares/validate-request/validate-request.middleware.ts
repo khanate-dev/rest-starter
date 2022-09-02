@@ -1,15 +1,14 @@
-import { RequestHandler } from 'express';
 import z from 'zod';
 
 import { getErrorResponse } from '~/helpers/error';
 
 import { requestSchema } from '~/helpers/type';
 
-import { Status } from '~/types';
+import { Middleware, Status } from '~/types';
 
 const validateRequest = (
 	schema: z.AnyZodObject = requestSchema({})
-): RequestHandler => (
+): Middleware => (
 	(request, response, next) => {
 		try {
 			schema.omit({ response: true }).parse({

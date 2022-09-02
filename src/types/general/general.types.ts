@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import z from 'zod';
 
 import { UserSansPassword } from '~/models/user';
@@ -99,7 +99,7 @@ export interface DefaultSchema {
 }
 
 type PublicLocals = Record<never, never>;
-type PrivateLocals = { user: Jwt, };
+type PrivateLocals = Record<'user', Jwt>;
 
 export interface DetailedResponse<Json extends RequestSchema['response']> {
 	status: Status,
@@ -137,6 +137,21 @@ export type PrivateHandler<
 		Schema
 	>;
 
+export type Middleware = RequestHandler<
+	never,
+	ErrorResponse,
+	never,
+	never,
+	never
+>;
+
+export type PrivateMiddleware = RequestHandler<
+	never,
+	ErrorResponse,
+	never,
+	never,
+	Partial<PrivateLocals>
+>;
 
 type _PublicHandler = PublicHandler<any>;
 type _PrivateHandler = PrivateHandler<any>;
@@ -145,7 +160,7 @@ export interface PublicRoute {
 	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
 	path: string,
 	schema: ZodRequestSchema,
-	middleware?: _PublicHandler | _PublicHandler[],
+	middleware?: Middleware | Middleware[],
 	handler: _PublicHandler,
 }
 
@@ -153,6 +168,6 @@ export interface PrivateRoute {
 	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
 	path: string,
 	schema: ZodRequestSchema,
-	middleware?: _PrivateHandler | _PrivateHandler[],
+	middleware?: PrivateMiddleware | PrivateMiddleware[],
 	handler: _PrivateHandler,
 }

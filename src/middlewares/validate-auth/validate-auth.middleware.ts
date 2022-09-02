@@ -1,14 +1,12 @@
-import { RequestHandler } from 'express';
-
 import { verifyJwt } from '~/helpers/jwt';
 import { getErrorResponse } from '~/helpers/error';
 import logger from '~/helpers/logger';
 
 import { reIssueAccessToken } from '~/controllers/session';
 
-import { Status } from '~/types';
+import { PrivateMiddleware, Status } from '~/types';
 
-const validateAuth: RequestHandler = async (
+const validateAuth: PrivateMiddleware = async (
 	{ headers },
 	response,
 	next
