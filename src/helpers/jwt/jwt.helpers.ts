@@ -4,7 +4,7 @@ import config from '~/config';
 
 import { assertJwt } from '~/helpers/type';
 
-import { Jwt, JwtInput } from '~/types';
+import { Jwt } from '~/types';
 
 const {
 	publicKey,
@@ -12,7 +12,7 @@ const {
 } = config;
 
 export const signJwt = (
-	object: JwtInput,
+	object: Jwt,
 	options?: jwt.SignOptions
 ) => {
 	return jwt.sign(object, privateKey, {

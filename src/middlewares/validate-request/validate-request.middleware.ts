@@ -8,7 +8,7 @@ const validateRequest = (
 ): RequestHandler => (
 	(request, response, next) => {
 		try {
-			schema.parse({
+			schema.omit({ response: true }).parse({
 				body: request.body,
 				query: request.query,
 				params: request.params,

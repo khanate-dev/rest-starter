@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose';
 import z from 'zod';
 
 import { UserSansPassword } from '~/models/user';
@@ -43,10 +42,6 @@ export type ReadableTypeOf = (
 	| 'object'
 );
 
-export interface JwtInput extends UserSansPassword {
-	session: Types.ObjectId,
-}
-
 export interface Jwt extends Omit<UserSansPassword, '_id'> {
 	_id: string,
 	session: string,
@@ -54,27 +49,30 @@ export interface Jwt extends Omit<UserSansPassword, '_id'> {
 
 export type AssertFunction<Type> = (value: any) => asserts value is Type;
 
-export type EmptyZodObject = z.ZodObject<
-	Record<never, never>,
-	'strict',
-	z.ZodTypeAny,
-	Record<never, never>,
-	Record<never, never>
->;
-
-export type RequestSchemaInputObject = (
+export type ZodRequestObject = (
 	z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 );
 
+export type ZodRequestObjectOrArray = (
+	z.ZodObject<Record<string, any>, 'strict'>
+	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
+	| z.ZodArray<
+		z.ZodObject<Record<string, any>, 'strict'>
+		| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
+	>
+);
+
 export interface RequestSchemaInput<
-	Body extends RequestSchemaInputObject,
-	Params extends RequestSchemaInputObject,
-	Query extends RequestSchemaInputObject
+	Body extends ZodRequestObjectOrArray,
+	Params extends ZodRequestObject,
+	Query extends ZodRequestObject,
+	Response extends ZodRequestObjectOrArray,
 	> {
 	body?: Body,
 	params?: Params,
 	query?: Query,
+	response?: Response,
 }
 
 export type ErrorResponse = {
@@ -82,76 +80,81 @@ export type ErrorResponse = {
 	message: string,
 };
 
-export type RequestSchema<
-	Body extends RequestSchemaInputObject = RequestSchemaInputObject,
-	Params extends RequestSchemaInputObject = RequestSchemaInputObject,
-	Query extends RequestSchemaInputObject = RequestSchemaInputObject
+export type ZodRequestSchema<
+	Body extends ZodRequestObjectOrArray = ZodRequestObjectOrArray,
+	Params extends ZodRequestObject = ZodRequestObject,
+	Query extends ZodRequestObject = ZodRequestObject,
+	Response extends ZodRequestObjectOrArray = ZodRequestObjectOrArray,
 	> = z.ZodObject<
 		{
 			body: Body,
 			params: Params,
 			query: Query,
+			response: Response,
 		}
 		, 'strict'
 	>;
 
-type RequestType = Record<'params' | 'body' | 'query', Record<string, any>>;
-export type DefaultRequest = Record<'params' | 'body' | 'query', Record<never, never>>;
-
-type ResponseBodyType = Record<string, any>;
+interface RequestSchema {
+	body: Record<string, any> | Record<string, any>[],
+	params: Record<string, any>,
+	query: Record<string, any>,
+	response: Record<string, any> | Record<string, any>[] | void,
+}
+export interface DefaultSchema {
+	body: Record<never, never>,
+	params: Record<never, never>,
+	query: Record<never, never>,
+	response: void,
+}
 
 type PublicLocals = Record<never, never>;
 type PrivateLocals = { user: Jwt, };
 
-export interface DetailedResponse<Json extends ResponseBodyType> {
+export interface DetailedResponse<Json extends RequestSchema['response']> {
 	status: Status,
 	json: Json,
 }
 
 export type CustomHandler<
 	Locals extends PublicLocals | PrivateLocals,
-	RequestObject extends RequestType,
-	ResponseBody extends ResponseBodyType
+	Schema extends RequestSchema,
 	> = (
 		request: Request<
-			RequestObject['params'],
-			ResponseBody,
-			RequestObject['body'],
-			RequestObject['query'],
+			Schema['params'],
+			Schema['response'],
+			Schema['body'],
+			Schema['query'],
 			Locals
 		>,
 		response: Response<
-			ResponseBody,
+			Schema['response'],
 			Locals
 		>,
 		next: NextFunction
-	) => Promise<ResponseBody | DetailedResponse<ResponseBody>>;
+	) => Promise<Schema['response'] | DetailedResponse<Schema['response']>>;
 
 export type PublicHandler<
-	RequestObject extends RequestType,
-	ResponseBody extends ResponseBodyType,
+	Schema extends RequestSchema
 	> = CustomHandler<
 		PublicLocals,
-		RequestObject,
-		ResponseBody
+		Schema
 	>;
 export type PrivateHandler<
-	RequestObject extends RequestType,
-	ResponseBody extends ResponseBodyType,
+	Schema extends RequestSchema,
 	> = CustomHandler<
 		PrivateLocals,
-		RequestObject,
-		ResponseBody
+		Schema
 	>;
 
 
-type _PublicHandler = PublicHandler<any, ResponseBodyType>;
-type _PrivateHandler = PrivateHandler<any, ResponseBodyType>;
+type _PublicHandler = PublicHandler<any>;
+type _PrivateHandler = PrivateHandler<any>;
 
 export interface PublicRoute {
 	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
 	path: string,
-	schema?: RequestSchema,
+	schema: ZodRequestSchema,
 	middleware?: _PublicHandler | _PublicHandler[],
 	handler: _PublicHandler,
 }
@@ -159,7 +162,7 @@ export interface PublicRoute {
 export interface PrivateRoute {
 	method: 'get' | 'post' | 'put' | 'patch' | 'delete',
 	path: string,
-	schema?: RequestSchema,
+	schema: ZodRequestSchema,
 	middleware?: _PrivateHandler | _PrivateHandler[],
 	handler: _PrivateHandler,
 }

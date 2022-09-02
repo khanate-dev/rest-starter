@@ -5,10 +5,11 @@ import {
 	DetailedResponse,
 	Jwt,
 	ReadableTypeOf,
-	RequestSchema,
+	ZodRequestSchema,
 	RequestSchemaInput,
-	RequestSchemaInputObject,
+	ZodRequestObject,
 	statusCodes,
+	ZodRequestObjectOrArray,
 } from '~/types';
 
 export const readableTypeOf = (
@@ -27,20 +28,23 @@ const defaultObject = z.strictObject({});
 type DefaultObject = typeof defaultObject;
 
 export const requestSchema = <
-	Body extends RequestSchemaInputObject = DefaultObject,
-	Params extends RequestSchemaInputObject = DefaultObject,
-	Query extends RequestSchemaInputObject = DefaultObject
->(
-	{
-		body = defaultObject as Body,
-		query = defaultObject as Query,
-		params = defaultObject as Params,
-	}: RequestSchemaInput<Body, Params, Query>
-): RequestSchema<Body, Params, Query> => {
+	Body extends ZodRequestObjectOrArray = DefaultObject,
+	Params extends ZodRequestObject = DefaultObject,
+	Query extends ZodRequestObject = DefaultObject,
+	Response extends ZodRequestObjectOrArray = DefaultObject,
+	>(
+		{
+			body = defaultObject as Body,
+			query = defaultObject as Query,
+			params = defaultObject as Params,
+			response = defaultObject as Response,
+		}: RequestSchemaInput<Body, Params, Query, Response>
+	): ZodRequestSchema<Body, Params, Query, Response> => {
 	return z.strictObject({
 		body,
 		params,
 		query,
+		response,
 	});
 };
 
@@ -75,7 +79,7 @@ export const isDetailedResponse = <Type extends Record<string, any>>(
 	if (
 		typeof value.status !== 'number'
 		|| !statusCodes.includes(value.status)
-		|| Boolean(value.json)
+		|| !value.json
 		|| typeof value.json !== 'object'
 	) return false;
 	return true;
