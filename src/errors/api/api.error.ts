@@ -10,7 +10,7 @@ const messages: Partial<Record<Status, string>> = {
 
 class ApiError extends Error {
 
-	code: Status;
+	statusCode: Status;
 
 	constructor(
 		code: Status,
@@ -21,7 +21,7 @@ class ApiError extends Error {
 			message ?? messages[code] ?? defaultMessage,
 			options
 		);
-		this.code = code;
+		this.statusCode = code;
 	}
 
 }

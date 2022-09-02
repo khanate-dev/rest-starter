@@ -9,7 +9,7 @@ export const getErrorResponseAndCode = (
 	error: any,
 	defaultStatus: Status = Status.INTERNAL_SERVER_ERROR
 ): ErrorResponseAndCode => ({
-	status: error.code ?? defaultStatus,
+	status: error.statusCode ?? defaultStatus,
 	json: {
 		...error,
 		type: error?.name,
