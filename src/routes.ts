@@ -32,7 +32,13 @@ import {
 	getProductsHandler,
 } from '~/controllers';
 
-import { PrivateRoute, PublicRoute, Status } from './types';
+import {
+	PrivateRoute,
+	PublicRoute,
+	Status,
+	_PrivateHandler,
+	_PublicHandler,
+} from './types';
 
 const publicRoutes: PublicRoute[] = [
 	{
@@ -100,24 +106,10 @@ const privateRoutes: PrivateRoute[] = [
 	},
 ];
 
-const setupRoute = (
-	app: Express,
-	route: PublicRoute | PrivateRoute
-) => {
-
-	const { method, path, schema, middleware, handler } = route;
-
-	const routePath = `/api/${path}`;
-
-	const middlewareList = (
-		middleware
-			? Array.isArray(middleware)
-				? middleware
-				: [middleware]
-			: []
-	);
-
-	const handlerWrapper: RequestHandler<any, any, any, any, any> = async (
+const asyncHandler = (
+	handler: _PublicHandler | _PrivateHandler
+): RequestHandler<any, any, any, any, any> => (
+	async (
 		request,
 		response,
 		next
@@ -138,13 +130,31 @@ const setupRoute = (
 			const { status, json } = getErrorResponseAndCode(error);
 			response.status(status).json(json);
 		}
-	};
+	}
+);
+
+const setupRoute = (
+	app: Express,
+	route: PublicRoute | PrivateRoute
+) => {
+
+	const { method, path, schema, middleware, handler } = route;
+
+	const routePath = `/api/${path}`;
+
+	const middlewareList = (
+		middleware
+			? Array.isArray(middleware)
+				? middleware
+				: [middleware]
+			: []
+	);
 
 	app[method](
 		routePath,
 		validateRequest(schema),
 		...middlewareList,
-		handlerWrapper
+		asyncHandler(handler)
 	);
 
 	logger.info(`Registered Route:\t${routePath}`);
