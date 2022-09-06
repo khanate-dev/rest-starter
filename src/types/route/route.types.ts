@@ -140,18 +140,23 @@ export type RouteMethod = (
 	| 'delete'
 );
 
-export interface PublicRoute {
+interface BaseRoute {
 	method: RouteMethod,
 	path: string,
 	schema: ZodRouteSchema,
 	middleware?: Middleware | Middleware[],
-	handler: _PublicHandler,
+	handler: _PublicHandler | _PrivateHandler,
+	isPrivate?: boolean,
 }
 
-export interface PrivateRoute {
-	method: RouteMethod,
-	path: string,
-	schema: ZodRouteSchema,
-	middleware?: PrivateMiddleware | PrivateMiddleware[],
-	handler: _PrivateHandler,
+export interface PublicRoute extends BaseRoute {
+	handler: _PublicHandler,
+	isPrivate?: undefined,
 }
+
+export interface PrivateRoute extends BaseRoute {
+	handler: _PrivateHandler,
+	isPrivate: true,
+}
+
+export type Route = PublicRoute | PrivateRoute;

@@ -7,7 +7,7 @@ import config from '~/config';
 import connectDb from '~/helpers/connect-db';
 import logger from '~/helpers/logger';
 
-import registerRoutes from '~/routes';
+import registerRoutes from '~/register-routes';
 
 
 const app = express();
