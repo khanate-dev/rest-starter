@@ -4,12 +4,17 @@ import z from 'zod';
 import { Jwt } from '~/types/general';
 import { Status } from '~/types/http';
 
-export type ZodRouteObject = (
+export type ZodRouteParams = (
 	z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 );
 
-export type ZodRouteObjectOrArray = (
+export type ZodRouteQuery = (
+	z.ZodObject<Record<string, any>, 'strict'>
+	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
+);
+
+export type ZodRouteBody = (
 	z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 	| z.ZodArray<
@@ -18,11 +23,21 @@ export type ZodRouteObjectOrArray = (
 	>
 );
 
+export type ZodRouteResponse = (
+	z.ZodObject<Record<string, any>, 'strict'>
+	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
+	| z.ZodArray<
+		z.ZodObject<Record<string, any>, 'strict'>
+		| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
+	>
+	| z.ZodVoid
+);
+
 export interface RouteSchemaInput<
-	Body extends ZodRouteObjectOrArray,
-	Params extends ZodRouteObject,
-	Query extends ZodRouteObject,
-	Response extends ZodRouteObjectOrArray,
+	Body extends ZodRouteBody,
+	Params extends ZodRouteParams,
+	Query extends ZodRouteQuery,
+	Response extends ZodRouteResponse,
 > {
 	body?: Body,
 	params?: Params,
@@ -36,10 +51,10 @@ export type ErrorResponse = {
 };
 
 export type ZodRouteSchema<
-	Body extends ZodRouteObjectOrArray = ZodRouteObjectOrArray,
-	Params extends ZodRouteObject = ZodRouteObject,
-	Query extends ZodRouteObject = ZodRouteObject,
-	Response extends ZodRouteObjectOrArray = ZodRouteObjectOrArray,
+	Body extends ZodRouteBody = ZodRouteBody,
+	Params extends ZodRouteParams = ZodRouteParams,
+	Query extends ZodRouteQuery = ZodRouteQuery,
+	Response extends ZodRouteResponse = ZodRouteResponse,
 > = z.ZodObject<
 	{
 		body: Body,
@@ -50,12 +65,8 @@ export type ZodRouteSchema<
 	, 'strict'
 >;
 
-interface RouteSchema {
-	body: Record<string, any> | Record<string, any>[],
-	params: Record<string, any>,
-	query: Record<string, any>,
-	response: Record<string, any> | Record<string, any>[] | void,
-}
+type RouteSchema = z.infer<ZodRouteSchema>;
+
 export interface DefaultRouteSchema {
 	body: Record<never, never>,
 	params: Record<never, never>,
