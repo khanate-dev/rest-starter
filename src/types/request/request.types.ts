@@ -4,12 +4,12 @@ import z from 'zod';
 import { Jwt } from '~/types/general';
 import { Status } from '~/types/http';
 
-export type ZodRequestObject = (
+export type ZodRouteObject = (
 	z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 );
 
-export type ZodRequestObjectOrArray = (
+export type ZodRouteObjectOrArray = (
 	z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
 	| z.ZodArray<
@@ -18,12 +18,12 @@ export type ZodRequestObjectOrArray = (
 	>
 );
 
-export interface RequestSchemaInput<
-	Body extends ZodRequestObjectOrArray,
-	Params extends ZodRequestObject,
-	Query extends ZodRequestObject,
-	Response extends ZodRequestObjectOrArray,
-	> {
+export interface RouteSchemaInput<
+	Body extends ZodRouteObjectOrArray,
+	Params extends ZodRouteObject,
+	Query extends ZodRouteObject,
+	Response extends ZodRouteObjectOrArray,
+> {
 	body?: Body,
 	params?: Params,
 	query?: Query,
@@ -35,28 +35,28 @@ export type ErrorResponse = {
 	message: string,
 };
 
-export type ZodRequestSchema<
-	Body extends ZodRequestObjectOrArray = ZodRequestObjectOrArray,
-	Params extends ZodRequestObject = ZodRequestObject,
-	Query extends ZodRequestObject = ZodRequestObject,
-	Response extends ZodRequestObjectOrArray = ZodRequestObjectOrArray,
-	> = z.ZodObject<
-		{
-			body: Body,
-			params: Params,
-			query: Query,
-			response: Response,
-		}
-		, 'strict'
-	>;
+export type ZodRouteSchema<
+	Body extends ZodRouteObjectOrArray = ZodRouteObjectOrArray,
+	Params extends ZodRouteObject = ZodRouteObject,
+	Query extends ZodRouteObject = ZodRouteObject,
+	Response extends ZodRouteObjectOrArray = ZodRouteObjectOrArray,
+> = z.ZodObject<
+	{
+		body: Body,
+		params: Params,
+		query: Query,
+		response: Response,
+	}
+	, 'strict'
+>;
 
-interface RequestSchema {
+interface RouteSchema {
 	body: Record<string, any> | Record<string, any>[],
 	params: Record<string, any>,
 	query: Record<string, any>,
 	response: Record<string, any> | Record<string, any>[] | void,
 }
-export interface DefaultSchema {
+export interface DefaultRouteSchema {
 	body: Record<never, never>,
 	params: Record<never, never>,
 	query: Record<never, never>,
@@ -66,41 +66,41 @@ export interface DefaultSchema {
 type PublicLocals = Record<never, never>;
 type PrivateLocals = Record<'user', Jwt>;
 
-export interface DetailedResponse<Json extends RequestSchema['response']> {
+export interface DetailedResponse<Json extends RouteSchema['response']> {
 	status: Status,
 	json: Json,
 }
 
 export type CustomHandler<
 	Locals extends PublicLocals | PrivateLocals,
-	Schema extends RequestSchema,
-	> = (
-		request: Request<
-			Schema['params'],
-			Schema['response'],
-			Schema['body'],
-			Schema['query'],
-			Locals
-		>,
-		response: Response<
-			Schema['response'],
-			Locals
-		>,
-		next: NextFunction
-	) => Promise<Schema['response'] | DetailedResponse<Schema['response']>>;
+	Schema extends RouteSchema,
+> = (
+	request: Request<
+		Schema['params'],
+		Schema['response'],
+		Schema['body'],
+		Schema['query'],
+		Locals
+	>,
+	response: Response<
+		Schema['response'],
+		Locals
+	>,
+	next: NextFunction
+) => Promise<Schema['response'] | DetailedResponse<Schema['response']>>;
 
 export type PublicHandler<
-	Schema extends RequestSchema
-	> = CustomHandler<
-		PublicLocals,
-		Schema
-	>;
+	Schema extends RouteSchema
+> = CustomHandler<
+	PublicLocals,
+	Schema
+>;
 export type PrivateHandler<
-	Schema extends RequestSchema,
-	> = CustomHandler<
-		PrivateLocals,
-		Schema
-	>;
+	Schema extends RouteSchema,
+> = CustomHandler<
+	PrivateLocals,
+	Schema
+>;
 
 export type Middleware = RequestHandler<
 	never,
@@ -132,7 +132,7 @@ export type RouteMethod = (
 export interface PublicRoute {
 	method: RouteMethod,
 	path: string,
-	schema: ZodRequestSchema,
+	schema: ZodRouteSchema,
 	middleware?: Middleware | Middleware[],
 	handler: _PublicHandler,
 }
@@ -140,7 +140,7 @@ export interface PublicRoute {
 export interface PrivateRoute {
 	method: RouteMethod,
 	path: string,
-	schema: ZodRequestSchema,
+	schema: ZodRouteSchema,
 	middleware?: PrivateMiddleware | PrivateMiddleware[],
 	handler: _PrivateHandler,
 }

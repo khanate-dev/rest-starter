@@ -1,8 +1,8 @@
 import z from 'zod';
 
-import { requestSchema } from '~/helpers/type';
+import { createRouteSchema } from '~/helpers/schema';
 
-export const echoSchema = requestSchema({
+export const echoSchema = createRouteSchema({
 	response: z.strictObject({
 		success: z.literal(true),
 		message: z.literal('The server can be reached'),

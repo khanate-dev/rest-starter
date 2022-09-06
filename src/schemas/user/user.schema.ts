@@ -1,10 +1,10 @@
 import z from 'zod';
 
-import { requestSchema } from '~/helpers/type';
+import { createRouteSchema } from '~/helpers/schema';
 
 import { userSansPasswordModelSchema } from '~/models';
 
-export const createUserSchema = requestSchema({
+export const createUserSchema = createRouteSchema({
 	body: z.strictObject({
 		name: z.string({
 			required_error: 'Name is required',

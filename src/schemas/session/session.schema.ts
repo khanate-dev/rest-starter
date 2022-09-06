@@ -1,9 +1,10 @@
 import z from 'zod';
 
-import { requestSchema } from '~/helpers/type';
+import { createRouteSchema } from '~/helpers/schema';
+
 import { sessionModelSchema } from '~/models';
 
-export const createSessionSchema = requestSchema({
+export const createSessionSchema = createRouteSchema({
 	body: z.strictObject({
 		email: z.string({
 			required_error: 'Email is required',
@@ -18,11 +19,11 @@ export const createSessionSchema = requestSchema({
 	}),
 });
 
-export const getSessionsSchema = requestSchema({
+export const getSessionsSchema = createRouteSchema({
 	response: z.array(sessionModelSchema),
 });
 
-export const deleteSessionSchema = requestSchema({
+export const deleteSessionSchema = createRouteSchema({
 	response: z.strictObject({
 		accessToken: z.null(),
 		refreshToken: z.null(),

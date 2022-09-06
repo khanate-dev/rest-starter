@@ -2,12 +2,12 @@ import z from 'zod';
 
 import { getErrorResponse } from '~/helpers/error';
 
-import { requestSchema } from '~/helpers/type';
+import { createRouteSchema } from '~/helpers/schema';
 
 import { Middleware, Status } from '~/types';
 
 const validateRequest = (
-	schema: z.AnyZodObject = requestSchema({})
+	schema: z.AnyZodObject = createRouteSchema({})
 ): Middleware => (
 	(request, response, next) => {
 		try {

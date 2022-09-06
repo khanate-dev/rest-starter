@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { requestSchema } from '~/helpers/type';
+import { createRouteSchema } from '~/helpers/schema';
 
 import { productModelSchema } from '~/models';
 
@@ -27,27 +27,27 @@ const params = z.strictObject({
 
 const response = productModelSchema;
 
-export const createProductSchema = requestSchema({
+export const createProductSchema = createRouteSchema({
 	body,
 	response,
 });
 
-export const updateProductSchema = requestSchema({
+export const updateProductSchema = createRouteSchema({
 	body,
 	params,
 	response,
 });
 
-export const getProductsSchema = requestSchema({
+export const getProductsSchema = createRouteSchema({
 	response: z.array(response),
 });
 
-export const getProductSchema = requestSchema({
+export const getProductSchema = createRouteSchema({
 	params,
 	response,
 });
 
-export const deleteProductSchema = requestSchema({
+export const deleteProductSchema = createRouteSchema({
 	params,
 	response,
 });

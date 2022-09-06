@@ -1,15 +1,9 @@
-import z from 'zod';
-
 import {
 	AssertFunction,
 	DetailedResponse,
 	Jwt,
 	ReadableTypeOf,
-	ZodRequestSchema,
-	RequestSchemaInput,
-	ZodRequestObject,
 	statusCodes,
-	ZodRequestObjectOrArray,
 } from '~/types';
 
 export const readableTypeOf = (
@@ -23,30 +17,6 @@ export const readableTypeOf = (
 				? 'array'
 				: 'object'
 );
-
-const defaultObject = z.strictObject({});
-type DefaultObject = typeof defaultObject;
-
-export const requestSchema = <
-	Body extends ZodRequestObjectOrArray = DefaultObject,
-	Params extends ZodRequestObject = DefaultObject,
-	Query extends ZodRequestObject = DefaultObject,
-	Response extends ZodRequestObjectOrArray = DefaultObject,
-	>(
-		{
-			body = defaultObject as Body,
-			query = defaultObject as Query,
-			params = defaultObject as Params,
-			response = defaultObject as Response,
-		}: RequestSchemaInput<Body, Params, Query, Response>
-	): ZodRequestSchema<Body, Params, Query, Response> => {
-	return z.strictObject({
-		body,
-		params,
-		query,
-		response,
-	});
-};
 
 export const assertJwt: AssertFunction<Jwt> = (
 	value
