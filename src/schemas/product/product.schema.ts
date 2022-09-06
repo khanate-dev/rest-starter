@@ -32,28 +32,32 @@ export const createProductSchema = createRouteSchema({
 	response,
 });
 
+export type CreateProductSchema = z.infer<typeof createProductSchema>;
+
 export const updateProductSchema = createRouteSchema({
 	body,
 	params,
 	response,
 });
 
+export type UpdateProductSchema = z.infer<typeof updateProductSchema>;
+
 export const getProductsSchema = createRouteSchema({
 	response: z.array(response),
 });
+
+export type GetProductsSchema = z.infer<typeof getProductsSchema>;
 
 export const getProductSchema = createRouteSchema({
 	params,
 	response,
 });
 
+export type GetProductSchema = z.infer<typeof getProductSchema>;
+
 export const deleteProductSchema = createRouteSchema({
 	params,
 	response,
 });
 
-export type CreateProductSchema = z.infer<typeof createProductSchema>;
-export type UpdateProductSchema = z.infer<typeof updateProductSchema>;
-export type GetProductsSchema = z.infer<typeof getProductsSchema>;
-export type GetProductSchema = z.infer<typeof getProductSchema>;
 export type DeleteProductSchema = z.infer<typeof deleteProductSchema>;

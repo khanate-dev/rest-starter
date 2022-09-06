@@ -19,9 +19,13 @@ export const createSessionSchema = createRouteSchema({
 	}),
 });
 
+export type CreateSessionSchema = z.infer<typeof createSessionSchema>;
+
 export const getSessionsSchema = createRouteSchema({
 	response: z.array(sessionModelSchema),
 });
+
+export type GetSessionsSchema = z.infer<typeof getSessionsSchema>;
 
 export const deleteSessionSchema = createRouteSchema({
 	response: z.strictObject({
@@ -30,6 +34,4 @@ export const deleteSessionSchema = createRouteSchema({
 	}),
 });
 
-export type CreateSessionSchema = z.infer<typeof createSessionSchema>;
-export type GetSessionsSchema = z.infer<typeof getSessionsSchema>;
 export type DeleteSessionSchema = z.infer<typeof deleteSessionSchema>;

@@ -4,8 +4,10 @@ import z from 'zod';
 import {
 	ZodRouteSchema as ZodRouteSchema,
 	RouteSchemaInput,
-	ZodRouteObject,
-	ZodRouteObjectOrArray,
+	ZodRouteParams,
+	ZodRouteResponse,
+	ZodRouteQuery,
+	ZodRouteBody,
 } from '~/types';
 
 export const timestampSchema = z.strictObject({
@@ -18,7 +20,10 @@ export const mongoMetaSchema = z.strictObject({
 	__v: z.number().min(0),
 });
 
-export const getModelSchema = <Key extends string, Schema extends Record<Key, z.ZodTypeAny>>(
+export const getModelSchema = <
+	Key extends string,
+	Schema extends Record<Key, z.ZodTypeAny>
+>(
 	schema: Schema
 ) => {
 
@@ -40,17 +45,20 @@ export const getModelSchema = <Key extends string, Schema extends Record<Key, z.
 const defaultObject = z.strictObject({});
 type DefaultObject = typeof defaultObject;
 
+const defaultResponse = z.void();
+type DefaultResponse = typeof defaultResponse;
+
 export const createRouteSchema = <
-	Body extends ZodRouteObjectOrArray = DefaultObject,
-	Params extends ZodRouteObject = DefaultObject,
-	Query extends ZodRouteObject = DefaultObject,
-	Response extends ZodRouteObjectOrArray = DefaultObject,
+	Body extends ZodRouteBody = DefaultObject,
+	Params extends ZodRouteParams = DefaultObject,
+	Query extends ZodRouteQuery = DefaultObject,
+	Response extends ZodRouteResponse = DefaultResponse,
 >(
 	{
 		body = defaultObject as Body,
 		query = defaultObject as Query,
 		params = defaultObject as Params,
-		response = defaultObject as Response,
+		response = defaultResponse as Response,
 	}: RouteSchemaInput<Body, Params, Query, Response>
 ): ZodRouteSchema<Body, Params, Query, Response> => {
 	return z.strictObject({
