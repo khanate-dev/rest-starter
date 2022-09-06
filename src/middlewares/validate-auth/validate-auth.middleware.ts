@@ -1,6 +1,5 @@
 import { verifyJwt } from '~/helpers/jwt';
 import { getErrorResponse } from '~/helpers/error';
-import logger from '~/helpers/logger';
 
 import { reIssueAccessToken } from '~/controllers/session';
 
@@ -20,11 +19,11 @@ const validateAuth: PrivateMiddleware = async (
 
 		const { decoded, valid, expired } = verifyJwt(accessToken);
 
-		if ((!valid && !expired) || !decoded) {
+		if (!valid && !expired) {
 			throw new Error('Invalid login session');
 		}
 
-		response.locals.user = decoded;
+		if (decoded) response.locals.user = decoded;
 
 		if (expired) {
 
@@ -48,7 +47,6 @@ const validateAuth: PrivateMiddleware = async (
 
 	}
 	catch (error: any) {
-		logger.error(error);
 		const json = getErrorResponse(error);
 		return response.status(Status.UNAUTHORIZED).json(json);
 	}
