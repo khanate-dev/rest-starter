@@ -22,7 +22,7 @@ if (config.env === 'production') {
 
 const server = app.listen(config.port, async () => {
 	logger.info(`App is running at http://localhost:${config.port}`);
-	await connectDb();
+	connectDb();
 	registerRoutes(app);
 });
 

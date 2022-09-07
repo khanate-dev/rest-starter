@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Express, RequestHandler } from 'express';
 
 import { getErrorResponseAndCode } from './helpers/error';
@@ -6,14 +7,8 @@ import { isDetailedResponse } from './helpers/type';
 
 import { validateRequest, validateAuth } from '~/middlewares';
 
-import generalRoutes from '~/routes/general';
-import userRoutes from '~/routes/user';
-import productRoutes from '~/routes/product';
-import sessionRoutes from '~/routes/session';
-
 import {
-	PrivateRoute,
-	PublicRoute,
+	Route,
 	Status,
 	_PrivateHandler,
 	_PublicHandler,
@@ -48,7 +43,7 @@ const asyncHandler = (
 
 const setupRoute = (
 	app: Express,
-	route: PublicRoute | PrivateRoute
+	route: Route
 ) => {
 
 	const { method,
@@ -83,14 +78,24 @@ const setupRoute = (
 
 };
 
-const routes = [
-	...generalRoutes,
-	...userRoutes,
-	...productRoutes,
-	...sessionRoutes,
-];
+const registerRoutes = async (app: Express) => {
 
-const registerRoutes = (app: Express) => {
+	const folders = fs.readdirSync('./src/routes', { encoding: 'utf-8' });
+	const routes: Route[] = (await Promise.all(
+		folders.map(async (name) => {
+			try {
+				const route = await import(`~/routes/${name}`);
+				if (!Array.isArray(route?.default)) {
+					throw new Error('file must default export array of routes');
+				}
+				return route.default;
+			}
+			catch (error: any) {
+				logger.error(`Problem Loading ${name} routes: ${error.message ?? error}`);
+				return [];
+			}
+		})
+	)).flat();
 
 	for (const route of routes) {
 		setupRoute(app, route);
