@@ -37,14 +37,12 @@ export const getProductsHandler: PrivateHandler<GetProductsSchema> = async (
 	response
 ) => {
 
-	console.log('reached');
 	const userId = response.locals.user._id;
 	const products = await findProducts({
 		user: userId,
 	});
 
 	if (!products) throw new ApiError(Status.NOT_FOUND);
-	console.log(products);
 	return products;
 
 };
