@@ -3,7 +3,7 @@ import { Express, RequestHandler } from 'express';
 
 import { getErrorResponseAndCode } from './helpers/error';
 import logger from '~/helpers/logger';
-import { isDetailedResponse } from './helpers/type';
+import { assertRoutes, isDetailedResponse } from './helpers/type';
 
 import { validateRequest, validateAuth } from '~/middlewares';
 
@@ -80,18 +80,26 @@ const setupRoute = (
 
 const registerRoutes = async (app: Express) => {
 
-	const folders = fs.readdirSync('./src/routes', { encoding: 'utf-8' });
+	const folders = fs.readdirSync(
+		'./src/routes',
+		{ encoding: 'utf-8' }
+	);
+
 	const routes: Route[] = (await Promise.all(
 		folders.map(async (name) => {
 			try {
-				const route = await import(`~/routes/${name}`);
-				if (!Array.isArray(route?.default)) {
-					throw new Error('file must default export array of routes');
-				}
-				return route.default;
+				const routes = (await import(`~/routes/${name}`))?.default;
+				assertRoutes(routes);
+				const prefix = (
+					name === 'general' ? '' : name
+				);
+				return routes.map(route => ({
+					...route,
+					path: `${prefix}${route.path}`.replace(/^\/|\/$/, ''),
+				}));
 			}
 			catch (error: any) {
-				logger.error(`Problem Loading ${name} routes: ${error.message ?? error}`);
+				logger.error(`Invalid ${name} routes: ${error.message}`);
 				return [];
 			}
 		})

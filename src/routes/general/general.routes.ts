@@ -7,7 +7,7 @@ import { Route } from '~/types';
 const generalRoutes: Route[] = [
 	{
 		method: 'get',
-		path: 'echo',
+		path: '/echo',
 		schema: echoSchema,
 		handler: echoHandler,
 	},

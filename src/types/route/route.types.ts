@@ -132,13 +132,15 @@ export type PrivateMiddleware = RequestHandler<
 export type _PublicHandler = PublicHandler<any>;
 export type _PrivateHandler = PrivateHandler<any>;
 
-export type RouteMethod = (
-	| 'get'
-	| 'post'
-	| 'put'
-	| 'patch'
-	| 'delete'
-);
+export const routeMethods = [
+	'get',
+	'post',
+	'put',
+	'patch',
+	'delete',
+] as const;
+
+export type RouteMethod = typeof routeMethods[number];
 
 interface BaseRoute {
 	method: RouteMethod,

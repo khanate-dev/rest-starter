@@ -7,7 +7,7 @@ import { Route } from '~/types';
 const userRoutes: Route[] = [
 	{
 		method: 'post',
-		path: 'users',
+		path: '/',
 		schema: createUserSchema,
 		handler: createUserHandler,
 	},

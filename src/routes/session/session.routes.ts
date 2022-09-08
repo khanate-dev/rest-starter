@@ -15,20 +15,20 @@ import { Route } from '~/types';
 const sessionRoutes: Route[] = [
 	{
 		method: 'post',
-		path: 'sessions',
+		path: '/',
 		schema: createSessionSchema,
 		handler: createSessionHandler,
 	},
 	{
 		method: 'get',
-		path: 'sessions',
+		path: '/',
 		schema: getSessionsSchema,
 		handler: getSessionsHandler,
 		isPrivate: true,
 	},
 	{
 		method: 'delete',
-		path: 'sessions',
+		path: '/',
 		schema: deleteSessionSchema,
 		handler: deleteSessionHandler,
 		isPrivate: true,

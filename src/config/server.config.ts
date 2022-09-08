@@ -1,4 +1,4 @@
-import { environmentSchema } from '~/schemas/environment';
+import { environmentSchema } from '~/schemas/type';
 
 import logger from '~/helpers/logger';
 import { formatString } from '~/helpers/string';
