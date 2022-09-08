@@ -1,1 +1,1 @@
-export * from './general.schema';
+export * from './general.schemas';

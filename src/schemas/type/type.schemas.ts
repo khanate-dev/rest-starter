@@ -22,5 +22,3 @@ export const environmentSchema = z.object({
 	PUBLIC_KEY: z.string().regex(publicKeyPattern, 'invalid key'),
 	PRIVATE_KEY: z.string().regex(privateKeyPattern, 'invalid key'),
 });
-
-export type Environment = z.infer<typeof environmentSchema>;
