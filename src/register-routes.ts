@@ -63,8 +63,9 @@ const setupRoute = (
 				: [middleware]
 			: []
 	);
+
 	if (isAuthenticated) {
-		middlewares.unshift(validateAuth);
+		middlewares.unshift(validateAuth(route));
 	}
 
 	app[method](
