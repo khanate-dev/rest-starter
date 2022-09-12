@@ -131,7 +131,7 @@ export type AuthenticatedMiddleware = RequestHandler<
 	Partial<AuthenticatedLocals>
 >;
 
-export type _UnauthenticatedHandler = UnAuthenticatedHandler<any>;
+export type _UnAuthenticatedHandler = UnAuthenticatedHandler<any>;
 export type _AuthenticatedHandler = AuthenticatedHandler<any>;
 
 export const routeMethods = [
@@ -149,13 +149,13 @@ interface BaseRoute {
 	path: string,
 	schema: ZodRouteSchema,
 	middleware?: Middleware | Middleware[],
-	handler: _UnauthenticatedHandler | _AuthenticatedHandler,
+	handler: _UnAuthenticatedHandler | _AuthenticatedHandler,
 	isAuthenticated?: boolean,
 	availableTo?: UserType | UserType[],
 }
 
-export interface UnauthenticatedRoute extends BaseRoute {
-	handler: _UnauthenticatedHandler,
+export interface UnAuthenticatedRoute extends BaseRoute {
+	handler: _UnAuthenticatedHandler,
 	isAuthenticated?: undefined,
 	availableTo?: undefined,
 }
@@ -166,4 +166,4 @@ export interface AuthenticatedRoute extends BaseRoute {
 	availableTo?: UserType | UserType[],
 }
 
-export type Route = UnauthenticatedRoute | AuthenticatedRoute;
+export type Route = UnAuthenticatedRoute | AuthenticatedRoute;

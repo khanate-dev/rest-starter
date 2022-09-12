@@ -11,11 +11,11 @@ import {
 	Route,
 	Status,
 	_AuthenticatedHandler,
-	_UnauthenticatedHandler,
+	_UnAuthenticatedHandler,
 } from './types';
 
 const asyncHandler = (
-	handler: _UnauthenticatedHandler | _AuthenticatedHandler
+	handler: _UnAuthenticatedHandler | _AuthenticatedHandler
 ): RequestHandler<any, any, any, any, any> => (
 	async (
 		request,
