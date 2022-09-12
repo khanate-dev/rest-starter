@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import z from 'zod';
 
+import { UserType } from '~/models';
+
 import { Jwt } from '~/types/general';
 import { Status } from '~/types/http';
 
@@ -149,16 +151,19 @@ interface BaseRoute {
 	middleware?: Middleware | Middleware[],
 	handler: _UnauthenticatedHandler | _AuthenticatedHandler,
 	isAuthenticated?: boolean,
+	availableTo?: UserType | UserType[],
 }
 
 export interface UnauthenticatedRoute extends BaseRoute {
 	handler: _UnauthenticatedHandler,
 	isAuthenticated?: undefined,
+	availableTo?: undefined,
 }
 
 export interface AuthenticatedRoute extends BaseRoute {
 	handler: _AuthenticatedHandler,
 	isAuthenticated: true,
+	availableTo?: UserType | UserType[],
 }
 
 export type Route = UnauthenticatedRoute | AuthenticatedRoute;
