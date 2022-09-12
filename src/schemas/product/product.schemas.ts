@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import z from 'zod';
 
 import { createRouteSchema } from '~/helpers/schema';
@@ -20,9 +21,10 @@ const body = z.strictObject({
 });
 
 const params = z.strictObject({
-	_id: z.string({
-		required_error: 'product id is required',
-	}),
+	_id: z.string().refine(
+		isValidObjectId,
+		'parameter must be a valid mongo ObjectID'
+	),
 });
 
 const response = productModelSchema;

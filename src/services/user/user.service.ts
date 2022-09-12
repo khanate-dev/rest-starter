@@ -51,9 +51,9 @@ export const findUser = async (
 };
 
 export const findUserById = async (
-	_id: Types.ObjectId
+	id: string | Types.ObjectId
 ): Promise<null | UserSansPassword> => {
-	const user = await UserModel.findById(_id).lean();
+	const user = await UserModel.findById(id).lean();
 	if (!user) return null;
 	return omitKey(user, 'password');
 };
