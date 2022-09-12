@@ -1,4 +1,4 @@
-import { DocumentDefinition, FilterQuery } from 'mongoose';
+import { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
 
 import { comparePassword } from '~/helpers/crypto';
 import omitKey from '~/helpers/omit-key';
@@ -13,7 +13,7 @@ export const createUser = async (
 };
 
 export const validatePassword = async (
-	{ email, password }: Omit<UserSansMeta, 'name'>
+	{ email, password }: Pick<UserSansMeta, 'email' | 'password'>
 ): Promise<false | UserSansPassword> => {
 
 	const user = await UserModel.findOne({ email }).lean();
@@ -25,10 +25,35 @@ export const validatePassword = async (
 
 };
 
+export const findUsers = async (
+	query?: FilterQuery<UserSansMeta>,
+	options?: QueryOptions
+): Promise<UserSansPassword[]> => {
+	const users = await UserModel.find(
+		query ?? {},
+		{},
+		options
+	).lean();
+	return users.map(user => omitKey(user, 'password'));
+};
+
 export const findUser = async (
-	query: FilterQuery<UserSansMeta>
+	query: FilterQuery<UserSansMeta>,
+	options?: QueryOptions
 ): Promise<null | UserSansPassword> => {
-	const user = await UserModel.findOne(query).lean();
+	const user = await UserModel.findOne(
+		query,
+		{},
+		options
+	).lean();
+	if (!user) return null;
+	return omitKey(user, 'password');
+};
+
+export const findUserById = async (
+	_id: Types.ObjectId
+): Promise<null | UserSansPassword> => {
+	const user = await UserModel.findById(_id).lean();
 	if (!user) return null;
 	return omitKey(user, 'password');
 };

@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import z from 'zod';
 
 import { createRouteSchema } from '~/helpers/schema';
@@ -29,3 +30,21 @@ export const createUserSchema = createRouteSchema({
 });
 
 export type CreateUserSchema = z.infer<typeof createUserSchema>;
+
+export const getUsersSchema = createRouteSchema({
+	response: z.array(userSansPasswordModelSchema),
+});
+
+export type GetUsersSchema = z.infer<typeof getUsersSchema>;
+
+export const getUserSchema = createRouteSchema({
+	params: z.strictObject({
+		_id: z.string().refine(
+			isValidObjectId,
+			'parameter must be a valid mongo ObjectID'
+		),
+	}),
+	response: userSansPasswordModelSchema,
+});
+
+export type GetUserSchema = z.infer<typeof getUserSchema>;
