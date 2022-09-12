@@ -2,7 +2,7 @@ import z from 'zod';
 
 import { createRouteSchema } from '~/helpers/schema';
 
-import { userSansPasswordModelSchema } from '~/models';
+import { userSansPasswordModelSchema, userTypes } from '~/models';
 
 export const createUserSchema = createRouteSchema({
 	body: z.strictObject({
@@ -18,6 +18,9 @@ export const createUserSchema = createRouteSchema({
 		email: z.string({
 			required_error: 'Email is required',
 		}).email('Not a valid email'),
+		userType: z.enum(userTypes, {
+			required_error: 'userType is required',
+		}),
 	}).refine(data => data.password === data.passwordConfirmation, {
 		message: 'Passwords do not match',
 		path: ['passwordConfirmation'],
