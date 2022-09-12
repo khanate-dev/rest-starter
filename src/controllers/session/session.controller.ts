@@ -20,8 +20,8 @@ import { findUser, validatePassword } from '~/services/user';
 
 import {
 	Jwt,
-	PrivateHandler,
-	PublicHandler,
+	AuthenticatedHandler,
+	UnAuthenticatedHandler,
 	Status,
 } from '~/types';
 
@@ -30,7 +30,7 @@ const {
 	refreshTokenAge,
 } = config;
 
-export const createSessionHandler: PublicHandler<CreateSessionSchema> = async (
+export const createSessionHandler: UnAuthenticatedHandler<CreateSessionSchema> = async (
 	request
 ) => {
 
@@ -74,7 +74,7 @@ export const createSessionHandler: PublicHandler<CreateSessionSchema> = async (
 
 };
 
-export const getSessionsHandler: PrivateHandler<GetSessionsSchema> = async (
+export const getSessionsHandler: AuthenticatedHandler<GetSessionsSchema> = async (
 	_request,
 	response
 ) => {
@@ -86,7 +86,7 @@ export const getSessionsHandler: PrivateHandler<GetSessionsSchema> = async (
 	return sessions;
 };
 
-export const deleteSessionHandler: PrivateHandler<DeleteSessionSchema> = async (
+export const deleteSessionHandler: AuthenticatedHandler<DeleteSessionSchema> = async (
 	_request,
 	response
 ) => {

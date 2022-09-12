@@ -74,8 +74,8 @@ export interface DefaultRouteSchema {
 	response: void,
 }
 
-type PublicLocals = Record<never, never>;
-type PrivateLocals = Record<'user', Jwt>;
+type UnAuthenticatedLocals = Record<never, never>;
+type AuthenticatedLocals = Record<'user', Jwt>;
 
 export interface DetailedResponse<Json extends RouteSchema['response']> {
 	status: Status,
@@ -83,7 +83,7 @@ export interface DetailedResponse<Json extends RouteSchema['response']> {
 }
 
 export type CustomHandler<
-	Locals extends PublicLocals | PrivateLocals,
+	Locals extends UnAuthenticatedLocals | AuthenticatedLocals,
 	Schema extends RouteSchema,
 > = (
 	request: Request<
@@ -100,16 +100,16 @@ export type CustomHandler<
 	next: NextFunction
 ) => Promise<Schema['response'] | DetailedResponse<Schema['response']>>;
 
-export type PublicHandler<
+export type UnAuthenticatedHandler<
 	Schema extends RouteSchema
 > = CustomHandler<
-	PublicLocals,
+	UnAuthenticatedLocals,
 	Schema
 >;
-export type PrivateHandler<
+export type AuthenticatedHandler<
 	Schema extends RouteSchema,
 > = CustomHandler<
-	PrivateLocals,
+	AuthenticatedLocals,
 	Schema
 >;
 
@@ -121,16 +121,16 @@ export type Middleware = RequestHandler<
 	never
 >;
 
-export type PrivateMiddleware = RequestHandler<
+export type AuthenticatedMiddleware = RequestHandler<
 	never,
 	ErrorResponse,
 	never,
 	never,
-	Partial<PrivateLocals>
+	Partial<AuthenticatedLocals>
 >;
 
-export type _PublicHandler = PublicHandler<any>;
-export type _PrivateHandler = PrivateHandler<any>;
+export type _UnauthenticatedHandler = UnAuthenticatedHandler<any>;
+export type _AuthenticatedHandler = AuthenticatedHandler<any>;
 
 export const routeMethods = [
 	'get',
@@ -147,18 +147,18 @@ interface BaseRoute {
 	path: string,
 	schema: ZodRouteSchema,
 	middleware?: Middleware | Middleware[],
-	handler: _PublicHandler | _PrivateHandler,
-	isPrivate?: boolean,
+	handler: _UnauthenticatedHandler | _AuthenticatedHandler,
+	isAuthenticated?: boolean,
 }
 
-export interface PublicRoute extends BaseRoute {
-	handler: _PublicHandler,
-	isPrivate?: undefined,
+export interface UnauthenticatedRoute extends BaseRoute {
+	handler: _UnauthenticatedHandler,
+	isAuthenticated?: undefined,
 }
 
-export interface PrivateRoute extends BaseRoute {
-	handler: _PrivateHandler,
-	isPrivate: true,
+export interface AuthenticatedRoute extends BaseRoute {
+	handler: _AuthenticatedHandler,
+	isAuthenticated: true,
 }
 
-export type Route = PublicRoute | PrivateRoute;
+export type Route = UnauthenticatedRoute | AuthenticatedRoute;

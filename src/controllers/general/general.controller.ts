@@ -1,8 +1,8 @@
 import { EchoSchema } from '~/schemas/general';
 
-import { PublicHandler } from '~/types';
+import { UnAuthenticatedHandler } from '~/types';
 
-export const echoHandler: PublicHandler<EchoSchema> = async () => ({
+export const echoHandler: UnAuthenticatedHandler<EchoSchema> = async () => ({
 	success: true,
 	message: 'The server can be reached',
 });

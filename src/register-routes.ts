@@ -10,12 +10,12 @@ import { validateRequest, validateAuth } from '~/middlewares';
 import {
 	Route,
 	Status,
-	_PrivateHandler,
-	_PublicHandler,
+	_AuthenticatedHandler,
+	_UnauthenticatedHandler,
 } from './types';
 
 const asyncHandler = (
-	handler: _PublicHandler | _PrivateHandler
+	handler: _UnauthenticatedHandler | _AuthenticatedHandler
 ): RequestHandler<any, any, any, any, any> => (
 	async (
 		request,
@@ -51,7 +51,7 @@ const setupRoute = (
 		schema,
 		middleware,
 		handler,
-		isPrivate,
+		isAuthenticated,
 	} = route;
 
 	const routePath = `/api/${path}`;
@@ -63,7 +63,7 @@ const setupRoute = (
 				: [middleware]
 			: []
 	);
-	if (isPrivate) {
+	if (isAuthenticated) {
 		middlewares.unshift(validateAuth);
 	}
 

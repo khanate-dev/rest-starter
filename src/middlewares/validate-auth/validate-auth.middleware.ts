@@ -3,9 +3,9 @@ import { getErrorResponse } from '~/helpers/error';
 
 import { reIssueAccessToken } from '~/controllers/session';
 
-import { PrivateMiddleware, Status } from '~/types';
+import { AuthenticatedMiddleware, Status } from '~/types';
 
-const validateAuth: PrivateMiddleware = async (
+const validateAuth: AuthenticatedMiddleware = async (
 	{ headers },
 	response,
 	next

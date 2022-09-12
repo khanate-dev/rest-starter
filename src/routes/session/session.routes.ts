@@ -24,14 +24,14 @@ const sessionRoutes: Route[] = [
 		path: '/',
 		schema: getSessionsSchema,
 		handler: getSessionsHandler,
-		isPrivate: true,
+		isAuthenticated: true,
 	},
 	{
 		method: 'delete',
 		path: '/',
 		schema: deleteSessionSchema,
 		handler: deleteSessionHandler,
-		isPrivate: true,
+		isAuthenticated: true,
 	},
 ];
 

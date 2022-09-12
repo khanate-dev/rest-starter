@@ -16,9 +16,9 @@ import {
 	findProducts,
 } from '~/services/product';
 
-import { PrivateHandler, Status } from '~/types';
+import { AuthenticatedHandler, Status } from '~/types';
 
-export const createProductHandler: PrivateHandler<CreateProductSchema> = async (
+export const createProductHandler: AuthenticatedHandler<CreateProductSchema> = async (
 	request,
 	response
 ) => {
@@ -32,7 +32,7 @@ export const createProductHandler: PrivateHandler<CreateProductSchema> = async (
 	};
 };
 
-export const getProductsHandler: PrivateHandler<GetProductsSchema> = async (
+export const getProductsHandler: AuthenticatedHandler<GetProductsSchema> = async (
 	_request,
 	response
 ) => {
@@ -47,7 +47,7 @@ export const getProductsHandler: PrivateHandler<GetProductsSchema> = async (
 
 };
 
-export const getProductHandler: PrivateHandler<GetProductSchema> = async (
+export const getProductHandler: AuthenticatedHandler<GetProductSchema> = async (
 	request,
 	response
 ) => {
@@ -65,7 +65,7 @@ export const getProductHandler: PrivateHandler<GetProductSchema> = async (
 
 };
 
-export const updateProductHandler: PrivateHandler<UpdateProductSchema> = async (
+export const updateProductHandler: AuthenticatedHandler<UpdateProductSchema> = async (
 	request,
 	response
 ) => {
@@ -92,7 +92,7 @@ export const updateProductHandler: PrivateHandler<UpdateProductSchema> = async (
 
 };
 
-export const deleteProductHandler: PrivateHandler<DeleteProductSchema> = async (
+export const deleteProductHandler: AuthenticatedHandler<DeleteProductSchema> = async (
 	request,
 	response
 ) => {

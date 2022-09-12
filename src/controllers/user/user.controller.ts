@@ -2,9 +2,9 @@ import { CreateUserSchema } from '~/schemas/user';
 
 import { createUser } from '~/services/user';
 
-import { PublicHandler, Status } from '~/types';
+import { UnAuthenticatedHandler, Status } from '~/types';
 
-export const createUserHandler: PublicHandler<CreateUserSchema> = async (
+export const createUserHandler: UnAuthenticatedHandler<CreateUserSchema> = async (
 	request
 ) => {
 	const user = await createUser(request.body);
