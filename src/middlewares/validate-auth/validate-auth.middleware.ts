@@ -62,9 +62,12 @@ const validateAuth = (
 			if (
 				availableTo.length > 0
 				&& user
-				&& !availableTo.includes(user.userType)
+				&& !availableTo.includes(user.role)
 			) {
-				throw new ApiError(Status.FORBIDDEN, 'You do not have access to this resource');
+				throw new ApiError(
+					Status.FORBIDDEN,
+					'You do not have access to this resource'
+				);
 			}
 
 			response.locals.user = user;

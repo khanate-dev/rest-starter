@@ -5,13 +5,13 @@ import { getHashedPassword } from '~/helpers/crypto';
 
 import { getModelSchema } from '~/helpers/schema';
 
-export const userTypes = [
+export const userRoles = [
 	'user',
 	'admin',
 	'guest',
 ] as const;
 
-export type UserType = typeof userTypes[number];
+export type UserRole = typeof userRoles[number];
 
 export const {
 	sansMetaModelSchema: userSansMetaModelSchema,
@@ -20,7 +20,7 @@ export const {
 	email: z.string().email(),
 	name: z.string(),
 	password: z.string(),
-	userType: z.enum(userTypes),
+	role: z.enum(userRoles),
 });
 
 export type UserSansMeta = z.infer<typeof userSansMetaModelSchema>;
@@ -47,9 +47,9 @@ const userSchema = new Schema<User>(
 			type: String,
 			required: true,
 		},
-		userType: {
+		role: {
 			type: String,
-			enum: userTypes,
+			enum: userRoles,
 			required: true,
 		},
 	},
