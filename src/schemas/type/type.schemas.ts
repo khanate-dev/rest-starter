@@ -3,7 +3,7 @@ import z from 'zod';
 const dbUriPattern = /^mongodb:\/\/[a-zA-Z0-9-_.:]+\/[a-zA-Z0-9-_.]+$/i;
 const agePattern = /^[0-9]+\s?(years|year|yrs|y|weeks|week|w|days|day|d|hours|hour|hrs|hr|h|minutes|minute|mins|min|m|seconds|second|secs|sec|s|milliseconds|millisecond|msecs|msec|ms|m)?$/i;
 const publicKeyPattern = /^-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----$/s;
-const privateKeyPattern = /^-----BEGIN RSA PRIVATE KEY-----.+-----END RSA PRIVATE KEY-----$/s;
+const privateKeyPattern = /^-----BEGIN PRIVATE KEY-----.+-----END PRIVATE KEY-----$/s;
 
 export const environmentSchema = z.object({
 	NODE_ENV: z.enum(['development', 'production', 'test']),
