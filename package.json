@@ -10,9 +10,10 @@
 		"start": "node --require tsconfig-paths/register build/src/app.js",
 		"lint": "eslint .",
 		"test": "jest --runInBand",
+		"env:login": "dotenv-vault login -y",
 		"env:push": "dotenv-vault push",
 		"env:pull": "dotenv-vault pull && dotenv-vault pull example .env.example",
-		"env:open": "dotenv-vault open"
+		"env:open": "dotenv-vault open -y"
 	},
 	"dependencies": {
 		"cors": "^2.8.5",
