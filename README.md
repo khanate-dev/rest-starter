@@ -31,6 +31,8 @@ Environment variables are securely stored with dotenv-vault.
 
 Environment example format: [![fork with dotenv-vault](https://badge.dotenv.org/fork.svg?r=1)](https://vault.dotenv.org/project/vlt_2044fec0a36deab104f24264965c998a51566ae69c87c56d8405e2bc1fde303e/example)
 
+Login to dotenv-vault: `yarn env:login`
+
 Open dotenv-vault: `yarn env:open`
 
 Pull environment from dotenv-vault: `yarn env:pull`
