@@ -10,16 +10,14 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
-		'plugin:jest/all',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint', 'jest'],
+	plugins: ['@typescript-eslint'],
 	rules: {
-
 		indent: ['off', 'tab'],
 		'linebreak-style': ['error', 'unix'],
 		quotes: ['error', 'single'],
@@ -34,8 +32,6 @@ module.exports = {
 		'no-console': ['error', {
 			allow: ['warn', 'error', 'info'],
 		}],
-		'jest/prefer-expect-assertions': 'off',
-		'jest/require-top-level-describe': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-inferrable-types': 'off',
 		'@typescript-eslint/no-unnecessary-type-constraint': 'off',
@@ -50,4 +46,15 @@ module.exports = {
 			},
 		}],
 	},
+	overrides: [
+		{
+			files: ['*.test.ts'],
+			extends: ['plugin:jest/all'],
+			plugins: ['jest'],
+			rules: {
+				'jest/prefer-expect-assertions': 'off',
+				'jest/require-top-level-describe': 'off',
+			},
+		},
+	],
 };
