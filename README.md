@@ -1,27 +1,29 @@
 # Typescript-Express-Mongo-Zod REST Boilerplate
 
-Testing out patterns and experimenting with ideas
+A boilerplate to quickly get started with building a REST api.
 
 ## Stack
+
 - Typescript
 - Express
 - Mongo with Mongoose
 - Zod
 - Pino
-- Yarn for package management
+- pnpm for package management
 
 ---
 
 ## Scripts
-Start in Development mode: `yarn dev`
 
-Build: `yarn build`
+Start in Development mode: `pnpm dev`
 
-Start in Production mode : `yarn start`
+Build: `pnpm build`
 
-Lint the code: `yarn lint`
+Start in Production mode : `pnpm start`
 
-Run tests: `yarn test`
+Lint the code: `pnpm lint`
+
+Run tests: `pnpm test`
 
 ---
 
@@ -31,10 +33,10 @@ Environment variables are securely stored with dotenv-vault.
 
 Environment example format: [![fork with dotenv-vault](https://badge.dotenv.org/fork.svg?r=1)](https://vault.dotenv.org/project/vlt_2044fec0a36deab104f24264965c998a51566ae69c87c56d8405e2bc1fde303e/example)
 
-Login to dotenv-vault: `yarn env:login`
+Login to dotenv-vault: `pnpm env:login`
 
-Open dotenv-vault: `yarn env:open`
+Open dotenv-vault: `pnpm env:open`
 
-Pull environment from dotenv-vault: `yarn env:pull`
+Pull environment from dotenv-vault: `pnpm env:pull`
 
-Push environment to dotenv-vault: `yarn env:push`
+Push environment to dotenv-vault: `pnpm env:push`
