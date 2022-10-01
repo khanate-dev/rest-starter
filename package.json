@@ -5,9 +5,9 @@
 	"author": "Saad Khan",
 	"license": "MIT",
 	"scripts": {
-		"dev": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --require dotenv/config src/app.ts",
+		"start": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --require dotenv/config src/app.ts",
 		"build": "rimraf ./build && tsc",
-		"start": "node --require tsconfig-paths/register build/src/app.js",
+		"start:production": "node --require tsconfig-paths/register build/src/app.js",
 		"lint": "eslint .",
 		"test": "jest --runInBand",
 		"env:login": "dotenv-vault login -y",
