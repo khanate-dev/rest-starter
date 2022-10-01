@@ -1,1 +1,2 @@
-export { default } from './server.config';
+export * from './regex.config';
+export * from './server.config';
