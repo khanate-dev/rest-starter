@@ -1,4 +1,4 @@
-import config from '~/config';
+import { config } from '~/config';
 import { ApiError } from '~/errors';
 
 import { signJwt, verifyJwt } from '~/helpers/jwt';

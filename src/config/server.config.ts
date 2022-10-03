@@ -66,6 +66,4 @@ const parseConfig = (): Config => {
 	}
 };
 
-const config = parseConfig();
-
-export default config;
+export const config = parseConfig();

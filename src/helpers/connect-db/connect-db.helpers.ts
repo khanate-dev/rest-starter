@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import util from 'util';
 
-import config from '~/config';
+import { config } from '~/config';
 
 import logger from '~/helpers/logger';
 
