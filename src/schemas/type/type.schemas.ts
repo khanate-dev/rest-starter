@@ -11,7 +11,7 @@ export const environmentSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']),
   PORT: z.preprocess(
     value => Number(value as string) || value,
-    z.number().int().positive().min(3000).max(9999).optional()
+    z.number().int().positive().min(1024).max(65535).optional()
   ),
   DB_URI: z.string().regex(MONGO_URI_REGEX, 'invalid uri pattern'),
   HASHING_ITERATIONS: z.preprocess(
