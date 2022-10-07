@@ -8,7 +8,7 @@
 		"start": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --require dotenv/config src/app.ts",
 		"build": "rimraf ./build && tsc",
 		"start:production": "node --require tsconfig-paths/register build/src/app.js",
-		"lint": "eslint .",
+		"lint": "eslint . --fix",
 		"test": "jest --runInBand",
 		"env:login": "dotenv-vault login -y",
 		"env:push": "dotenv-vault push",

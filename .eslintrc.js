@@ -32,6 +32,13 @@ module.exports = {
 		'no-console': ['error', {
 			allow: ['warn', 'error', 'info'],
 		}],
+		'no-multiple-empty-lines': ['error', {
+			max: 1,
+			maxEOF: 0,
+			maxBOF: 0,
+		}],
+		'eol-last': ['error', 'always'],
+		'quote-props': ['error', 'as-needed'],
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-inferrable-types': 'off',
 		'@typescript-eslint/no-unnecessary-type-constraint': 'off',
