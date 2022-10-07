@@ -10,7 +10,6 @@ import logger from '~/helpers/logger';
 
 import registerRoutes from '~/register-routes';
 
-
 const app = express();
 
 const corsOptions: cors.CorsOptions = {
