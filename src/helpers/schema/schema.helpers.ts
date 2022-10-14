@@ -35,10 +35,10 @@ export const getModelSchema = <
 		...timestampSchema.shape,
 	});
 
-	return {
+	return [
 		sansMetaModelSchema,
 		modelSchema,
-	};
+	] as const;
 
 };
 

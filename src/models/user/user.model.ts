@@ -13,10 +13,10 @@ export const userRoles = [
 
 export type UserRole = typeof userRoles[number];
 
-export const {
-	sansMetaModelSchema: userSansMetaModelSchema,
-	modelSchema: userModelSchema,
-} = getModelSchema({
+export const [
+	userSansMetaModelSchema,
+	userModelSchema,
+] = getModelSchema({
 	email: z.string().email(),
 	name: z.string(),
 	password: z.string(),
@@ -58,7 +58,7 @@ const userSchema = new Schema<User>(
 	}
 );
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
 
 	const user = this as unknown as Document<any, any, UserSansMeta>;
 	if (!user.isModified('password')) {

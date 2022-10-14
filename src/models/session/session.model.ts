@@ -3,10 +3,10 @@ import z from 'zod';
 
 import { getModelSchema } from '~/helpers/schema';
 
-export const {
-	sansMetaModelSchema: sessionSansMetaModelSchema,
-	modelSchema: sessionModelSchema,
-} = getModelSchema({
+export const [
+	sessionSansMetaModelSchema,
+	sessionModelSchema,
+] = getModelSchema({
 	user: z.instanceof(Types.ObjectId),
 	valid: z.boolean(),
 	userAgent: z.string(),
