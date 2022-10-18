@@ -81,9 +81,17 @@ const setupRoute = (
 
 const registerRoutes = async (app: Express) => {
 
-	const folders = fs.readdirSync(
+	const files = fs.readdirSync(
 		'./src/routes',
-		{ encoding: 'utf-8' }
+		{
+			encoding: 'utf-8',
+			withFileTypes: true,
+		}
+	);
+	const folders = (
+		files
+			.filter(file => file.isDirectory())
+			.map(file => file.name)
 	);
 
 	const routes: Route[] = (await Promise.all(
