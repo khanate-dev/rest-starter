@@ -16,7 +16,10 @@ module.exports = {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint'],
+	plugins: [
+		'@typescript-eslint',
+		'unused-imports',
+	],
 	rules: {
 		indent: ['off', 'tab'],
 		'linebreak-style': ['error', 'unix'],
@@ -52,6 +55,16 @@ module.exports = {
 				requireLast: true,
 			},
 		}],
+		'no-duplicate-imports': ['warn', {
+			includeExports: true,
+		}],
+		'no-unused-vars': 'off',
+		'unused-imports/no-unused-imports': 'warn',
+		'unused-imports/no-unused-vars': [
+			'warn',
+			{ vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+		],
+		'@typescript-eslint/no-unused-vars': 'off',
 	},
 	overrides: [
 		{
