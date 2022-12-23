@@ -16,6 +16,7 @@ specifiers:
   dotenv: ^16.0.3
   eslint: ^8.29.0
   eslint-plugin-jest: ^27.1.6
+  eslint-plugin-unused-imports: ^2.0.0
   express: ^4.18.2
   express-pino-logger: ^7.0.0
   helmet: ^6.0.1
@@ -56,6 +57,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.46.1_imrg37k3svwu377c6q7gkarwmi
   '@typescript-eslint/parser': 5.46.1_ha6vam6werchizxrnqvarmz2zu
   eslint: 8.29.0
+  eslint-plugin-unused-imports: 2.0.0_qtuuzt36paziam2rh7fm56vt4y
   jest: 28.1.3_@types+node@18.11.15
   pino-pretty: 9.1.1
   rimraf: 3.0.2
@@ -2429,6 +2431,26 @@ packages:
       - supports-color
       - typescript
     dev: false
+
+  /eslint-plugin-unused-imports/2.0.0_qtuuzt36paziam2rh7fm56vt4y:
+    resolution: {integrity: sha512-3APeS/tQlTrFa167ThtP0Zm0vctjr4M44HMpeg1P4bK6wItarumq0Ma82xorMKdFsWpphQBlRPzw/pxiVELX1A==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^5.0.0
+      eslint: ^8.0.0
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.46.1_imrg37k3svwu377c6q7gkarwmi
+      eslint: 8.29.0
+      eslint-rule-composer: 0.3.0
+    dev: true
+
+  /eslint-rule-composer/0.3.0:
+    resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
+    engines: {node: '>=4.0.0'}
+    dev: true
 
   /eslint-scope/5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
