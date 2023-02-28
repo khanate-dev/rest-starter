@@ -4,12 +4,12 @@ A boilerplate to quickly get started with building a REST api.
 
 ## Stack
 
-- Typescript
-- Express
-- Mongo with Mongoose
-- Zod
-- Pino
-- pnpm for package management
+-   Typescript
+-   Express
+-   Mongo with Mongoose
+-   Zod
+-   Pino
+-   pnpm for package management
 
 ---
 
@@ -20,6 +20,8 @@ Start in Development mode: `pnpm dev`
 Build: `pnpm build`
 
 Start in Production mode : `pnpm start`
+
+Format the code with prettier: `pnpm format`
 
 Lint the code: `pnpm lint`
 
