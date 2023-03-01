@@ -63,6 +63,7 @@ const config = {
 			plugins: ['@typescript-eslint'],
 			extends: ['plugin:@typescript-eslint/recommended'],
 			rules: {
+				'@typescript-eslint-no-extra-semi': 'off',
 				'@typescript-eslint/no-explicit-any': 'off',
 				'@typescript-eslint/no-inferrable-types': 'off',
 				'no-unused-vars': 'off',
