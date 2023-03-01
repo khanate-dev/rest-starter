@@ -1,17 +1,18 @@
 import fs from 'fs';
-import { Express, RequestHandler } from 'express';
 
-import { getErrorResponseAndCode } from './helpers/error';
+import type { Express, RequestHandler } from 'express';
+
 import logger from '~/helpers/logger';
-import { assertRoutes, isDetailedResponse } from './helpers/type';
-
 import { validateRequest, validateAuth } from '~/middlewares';
 
-import {
+import { getErrorResponseAndCode } from './helpers/error';
+import { assertRoutes, isDetailedResponse } from './helpers/type';
+import type {
 	Route,
-	Status,
 	_AuthenticatedHandler,
-	_UnAuthenticatedHandler,
+	_UnAuthenticatedHandler} from './types';
+import {
+	Status
 } from './types';
 
 const asyncHandler = (

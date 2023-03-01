@@ -1,9 +1,10 @@
-import {
+import type {
 	AssertFunction,
 	DetailedResponse,
 	Jwt,
 	ReadableTypeOf,
-	Route,
+	Route} from '~/types';
+import {
 	routeMethods,
 	statusCodes,
 } from '~/types';

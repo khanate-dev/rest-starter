@@ -1,8 +1,8 @@
-import { Schema, model, Document } from 'mongoose';
+import type { Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import z from 'zod';
 
 import { getHashedPassword } from '~/helpers/crypto';
-
 import { getModelSchema } from '~/helpers/schema';
 
 export const userRoles = [

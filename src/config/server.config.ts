@@ -1,9 +1,8 @@
-import { environmentSchema } from '~/schemas/type';
 
 import logger from '~/helpers/logger';
 import { formatString } from '~/helpers/string';
-
-import { Config } from '~/types';
+import { environmentSchema } from '~/schemas/type';
+import type { Config } from '~/types';
 
 const optionalEnvironment = [
 	'PORT',

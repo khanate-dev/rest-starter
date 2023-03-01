@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import z from 'zod';
 
-import {
+import type {
 	ZodRouteSchema as ZodRouteSchema,
 	RouteSchemaInput,
 	ZodRouteParams,

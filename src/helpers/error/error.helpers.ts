@@ -1,4 +1,5 @@
-import { ErrorResponse, Status } from '~/types';
+import type { ErrorResponse} from '~/types';
+import { Status } from '~/types';
 
 interface ErrorResponseAndCode {
 	status: Status,

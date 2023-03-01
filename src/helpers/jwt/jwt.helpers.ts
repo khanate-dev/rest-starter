@@ -1,10 +1,8 @@
 import jwt from 'jsonwebtoken';
 
 import { config } from '~/config';
-
 import { assertJwt } from '~/helpers/type';
-
-import { Jwt } from '~/types';
+import type { Jwt } from '~/types';
 
 const {
 	publicKey,

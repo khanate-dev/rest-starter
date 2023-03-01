@@ -1,16 +1,14 @@
 import {
-	createUserSchema,
-	getUserSchema,
-	getUsersSchema,
-} from '~/schemas/user';
-
-import {
 	createUserHandler,
 	getUserHandler,
 	getUsersHandler,
 } from '~/controllers/user';
-
-import { Route } from '~/types';
+import {
+	createUserSchema,
+	getUserSchema,
+	getUsersSchema,
+} from '~/schemas/user';
+import type { Route } from '~/types';
 
 const userRoutes: Route[] = [
 	{

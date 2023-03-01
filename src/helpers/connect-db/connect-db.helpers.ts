@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
 import util from 'util';
 
-import { config } from '~/config';
+import mongoose from 'mongoose';
 
+import { config } from '~/config';
 import logger from '~/helpers/logger';
 
 const messageMapper = (message: string) => {

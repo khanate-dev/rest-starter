@@ -1,8 +1,6 @@
-import { echoSchema } from '~/schemas/general';
-
 import { echoHandler } from '~/controllers/general';
-
-import { Route } from '~/types';
+import { echoSchema } from '~/schemas/general';
+import type { Route } from '~/types';
 
 const generalRoutes: Route[] = [
 	{

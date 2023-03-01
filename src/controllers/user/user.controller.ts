@@ -1,16 +1,15 @@
 import { ApiError } from '~/errors';
-import {
+import type {
 	CreateUserSchema,
 	GetUserSchema,
 	GetUsersSchema,
 } from '~/schemas/user';
-
 import { createUser, findUserById, findUsers } from '~/services/user';
-
-import {
+import type {
 	UnAuthenticatedHandler,
-	Status,
-	AuthenticatedHandler,
+	AuthenticatedHandler} from '~/types';
+import {
+	Status
 } from '~/types';
 
 export const createUserHandler: UnAuthenticatedHandler<CreateUserSchema> = async (

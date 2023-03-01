@@ -1,4 +1,4 @@
-import { Status } from '~/types';
+import type { Status } from '~/types';
 
 const defaultMessage = 'Something went wrong';
 

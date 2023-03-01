@@ -1,11 +1,12 @@
-import {
+import type {
 	FilterQuery,
 	QueryOptions,
 	Types,
 	UpdateQuery,
 } from 'mongoose';
 
-import { SessionModel, Session } from '~/models/session';
+import type { Session } from '~/models/session';
+import { SessionModel } from '~/models/session';
 
 export const createSession = async (
 	userId: Types.ObjectId,

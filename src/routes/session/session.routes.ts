@@ -1,16 +1,14 @@
 import {
-	createSessionSchema,
-	getSessionsSchema,
-	deleteSessionSchema,
-} from '~/schemas/session';
-
-import {
 	createSessionHandler,
 	getSessionsHandler,
 	deleteSessionHandler,
 } from '~/controllers/session';
-
-import { Route } from '~/types';
+import {
+	createSessionSchema,
+	getSessionsSchema,
+	deleteSessionSchema,
+} from '~/schemas/session';
+import type { Route } from '~/types';
 
 const sessionRoutes: Route[] = [
 	{

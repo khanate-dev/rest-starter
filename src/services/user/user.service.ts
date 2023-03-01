@@ -1,9 +1,9 @@
-import { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
+import type { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
 
 import { comparePassword } from '~/helpers/crypto';
 import omitKey from '~/helpers/omit-key';
-
-import { UserModel, UserSansMeta, UserSansPassword } from '~/models/user';
+import type { UserSansMeta, UserSansPassword } from '~/models/user';
+import { UserModel } from '~/models/user';
 
 export const createUser = async (
 	input: DocumentDefinition<UserSansMeta>

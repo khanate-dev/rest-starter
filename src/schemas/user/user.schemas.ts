@@ -2,7 +2,6 @@ import { isValidObjectId } from 'mongoose';
 import z from 'zod';
 
 import { createRouteSchema } from '~/helpers/schema';
-
 import { userSansPasswordModelSchema, userSansMetaModelSchema } from '~/models';
 
 export const createUserSchema = createRouteSchema({

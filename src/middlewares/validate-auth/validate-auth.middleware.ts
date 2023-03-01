@@ -1,14 +1,13 @@
-import { verifyJwt } from '~/helpers/jwt';
-import { getErrorResponseAndCode } from '~/helpers/error';
-import { ApiError } from '~/errors';
-
 import { reIssueAccessToken } from '~/controllers/session';
-
-import {
+import { ApiError } from '~/errors';
+import { getErrorResponseAndCode } from '~/helpers/error';
+import { verifyJwt } from '~/helpers/jwt';
+import type {
 	AuthenticatedMiddleware,
 	AuthenticatedRoute,
-	Status,
-	Jwt,
+	Jwt} from '~/types';
+import {
+	Status
 } from '~/types';
 
 const validateAuth = (

@@ -1,6 +1,5 @@
-import { EchoSchema } from '~/schemas/general';
-
-import { UnAuthenticatedHandler } from '~/types';
+import type { EchoSchema } from '~/schemas/general';
+import type { UnAuthenticatedHandler } from '~/types';
 
 export const echoHandler: UnAuthenticatedHandler<EchoSchema> = async () => ({
 	success: true,

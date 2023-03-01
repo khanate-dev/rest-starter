@@ -1,13 +1,11 @@
-import express from 'express';
-import pinoHttp from 'pino-http';
-import helmet from 'helmet';
 import cors from 'cors';
+import express from 'express';
+import helmet from 'helmet';
+import pinoHttp from 'pino-http';
 
 import { config } from '~/config';
-
 import connectDb from '~/helpers/connect-db';
 import logger from '~/helpers/logger';
-
 import registerRoutes from '~/register-routes';
 
 const app = express();

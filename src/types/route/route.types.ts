@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import z from 'zod';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type z from 'zod';
 
-import { UserRole } from '~/models';
-
-import { Jwt } from '~/types/general';
-import { Status } from '~/types/http';
+import type { UserRole } from '~/models';
+import type { Jwt } from '~/types/general';
+import type { Status } from '~/types/http';
 
 export type ZodRouteParams = (
 	z.ZodObject<Record<string, any>, 'strict'>

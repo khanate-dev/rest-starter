@@ -15,34 +15,7 @@ const config = {
 	},
 	plugins: ['import', 'unused-imports'],
 	rules: {
-		radix: ['warn', 'as-needed'],
-		'import/extensions': 'warn',
-		'import/order': [
-			'error',
-			{
-				'newlines-between': 'always',
-				groups: [
-					'builtin',
-					'external',
-					'internal',
-					'parent',
-					['sibling', 'index', 'object'],
-					'type',
-				],
-				pathGroups: [
-					{
-						pattern: '~/helpers/**',
-						group: 'internal',
-					},
-				],
-				alphabetize: {
-					order: 'asc',
-					caseInsensitive: true,
-				},
-			},
-		],
-		'import/no-duplicates': 'warn',
-		'import/no-default-export': 'error',
+		indent: ['off', 'tab'],
 		'no-console': [
 			'error',
 			{
@@ -51,20 +24,33 @@ const config = {
 		],
 		'no-unused-vars': 'off',
 		'unused-imports/no-unused-imports': 'warn',
-		'unused-imports/no-unused-vars': [
+		'import/extensions': [
 			'warn',
+			'never',
 			{
-				vars: 'all',
-				varsIgnorePattern: '^_',
-				args: 'after-used',
-				argsIgnorePattern: '^_',
+				helpers: 'always',
+				test: 'always',
+				styles: 'always',
 			},
 		],
+		'import/no-duplicates': 'warn',
+		'import/no-default-export': 'error',
 		'object-shorthand': ['error', 'always'],
 		'no-constant-condition': [
 			'error',
 			{
 				checkLoops: false,
+			},
+		],
+		'no-restricted-imports': [
+			'error',
+			{
+				patterns: [
+					{
+						group: ['../*'],
+						message: 'Usage of relative parent imports is not allowed.',
+					},
+				],
 			},
 		],
 	},
@@ -74,31 +60,41 @@ const config = {
 			parserOptions: {
 				project: './tsconfig.json',
 			},
-			extends: ['plugin:@typescript-eslint/recommended'],
 			plugins: ['@typescript-eslint'],
+			extends: ['plugin:@typescript-eslint/recommended'],
 			rules: {
-				'@typescript-eslint/no-extra-semi': 'off',
 				'@typescript-eslint/no-explicit-any': 'off',
 				'@typescript-eslint/no-inferrable-types': 'off',
-				'@typescript-eslint/no-unnecessary-type-constraint': 'off',
-				'@typescript-eslint/prefer-nullish-coalescing': 'off',
-				'@typescript-eslint/no-unused-vars': 'off',
+				'no-unused-vars': 'off',
+				'@typescript-eslint/no-unused-vars': [
+					'warn',
+					{
+						argsIgnorePattern: '^_',
+						destructuredArrayIgnorePattern: '^_',
+						caughtErrors: 'all',
+					},
+				],
+				'@typescript-eslint/consistent-type-imports': [
+					'error',
+					{
+						prefer: 'type-imports',
+						fixStyle: 'separate-type-imports',
+					},
+				],
 				'@typescript-eslint/no-unnecessary-condition': 'error',
 			},
-			overrides: [
-				{
-					files: ['*.test.ts'],
-					extends: ['plugin:jest/all'],
-					plugins: ['jest'],
-					parserOptions: {
-						project: ['./tsconfig.json'],
-					},
-					rules: {
-						'jest/prefer-expect-assertions': 'off',
-						'jest/require-top-level-describe': 'off',
-					},
-				},
-			],
+		},
+		{
+			files: ['*.test.ts'],
+			extends: ['plugin:jest/all'],
+			plugins: ['jest'],
+			parserOptions: {
+				project: ['./tsconfig.json'],
+			},
+			rules: {
+				'jest/prefer-expect-assertions': 'off',
+				'jest/require-top-level-describe': 'off',
+			},
 		},
 	],
 	settings: {

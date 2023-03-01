@@ -1,15 +1,12 @@
 import { config } from '~/config';
 import { ApiError } from '~/errors';
-
 import { signJwt, verifyJwt } from '~/helpers/jwt';
 import { assertJwt } from '~/helpers/type';
-
-import {
+import type {
 	CreateSessionSchema,
 	DeleteSessionSchema,
 	GetSessionsSchema,
 } from '~/schemas/session';
-
 import {
 	createSession,
 	findSessionById,
@@ -17,11 +14,11 @@ import {
 	updateSession,
 } from '~/services/session';
 import { findUser, validatePassword } from '~/services/user';
-
-import {
+import type {
 	Jwt,
 	AuthenticatedHandler,
-	UnAuthenticatedHandler,
+	UnAuthenticatedHandler} from '~/types';
+import {
 	Status,
 } from '~/types';
 

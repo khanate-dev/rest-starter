@@ -1,7 +1,6 @@
 import z from 'zod';
 
 import { createRouteSchema } from '~/helpers/schema';
-
 import { sessionModelSchema } from '~/models';
 
 export const createSessionSchema = createRouteSchema({

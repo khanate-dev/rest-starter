@@ -1,10 +1,9 @@
-import z from 'zod';
+import type z from 'zod';
 
 import { getErrorResponse } from '~/helpers/error';
-
 import { createRouteSchema } from '~/helpers/schema';
-
-import { Middleware, Status } from '~/types';
+import type { Middleware} from '~/types';
+import { Status } from '~/types';
 
 const validateRequest = (
 	schema: z.AnyZodObject = createRouteSchema({})

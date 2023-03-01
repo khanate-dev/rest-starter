@@ -1,4 +1,4 @@
-import { UserSansPassword } from '~/models/user';
+import type { UserSansPassword } from '~/models/user';
 
 export interface Config {
 	env: 'development' | 'production' | 'test',
