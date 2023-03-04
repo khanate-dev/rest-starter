@@ -2,33 +2,33 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
-enum userRole {
-	user
-	admin
-	guest
+enum UserRole {
+    user
+    admin
+    guest
 }
 
-model user {
-	id    String @id @default(auto()) @map("_id") @db.ObjectId
-	email	String @unique
-	name	String
-	password	String
-	role	userRole
-	sessions session[]
+model User {
+    id       String    @id @default(auto()) @map("_id") @db.ObjectId
+    email    String    @unique
+    name     String
+    password String
+    role     UserRole
+    sessions Session[]
 }
 
-model session {
-	id    String @id @default(auto()) @map("_id") @db.ObjectId
-	userId	String	@db.ObjectId
-	user user @relation(fields: [userId], references: [id])
-	valid	Boolean	@default(true)
-	userAgent	String
+model Session {
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String  @db.ObjectId
+    user      User    @relation(fields: [userId], references: [id])
+    valid     Boolean @default(true)
+    userAgent String
 }
