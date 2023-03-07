@@ -1,23 +1,33 @@
-import type { ErrorResponse} from '~/types';
-import { Status } from '~/types';
+import { STATUS } from '~/types';
+import { ApiError } from '~/errors';
+
+import type { Status, ErrorResponse } from '~/types';
 
 interface ErrorResponseAndCode {
-	status: Status,
-	json: ErrorResponse,
+	status: Status;
+	json: ErrorResponse;
 }
 
-export const getErrorResponse = (
-	error: any
-): ErrorResponse => ({
-	...error,
-	type: error?.name,
-	message: error?.message ?? error,
-});
+export const getErrorMessage = (error: any) => {
+	if (error instanceof Error) return error.message;
+	return String(error);
+};
+
+export const getErrorResponse = (error: any): ErrorResponse => {
+	if (error instanceof Error)
+		return { message: error.message, type: error.name };
+
+	return {
+		message: typeof error === 'string' ? error : 'Something went wrong!',
+		type: 'UnknownError',
+	};
+};
 
 export const getErrorResponseAndCode = (
 	error: any,
-	defaultStatus: Status = Status.INTERNAL_SERVER_ERROR
-): ErrorResponseAndCode => ({
-	status: error.statusCode ?? defaultStatus,
-	json: getErrorResponse(error),
-});
+	defaultStatus: Status = STATUS.internalServerError
+): ErrorResponseAndCode => {
+	const json = getErrorResponse(error);
+	if (error instanceof ApiError) return { json, status: error.statusCode };
+	return { json, status: defaultStatus };
+};

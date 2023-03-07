@@ -3,45 +3,34 @@ import type {
 	DetailedResponse,
 	Jwt,
 	ReadableTypeOf,
-	Route} from '~/types';
-import {
-	routeMethods,
-	statusCodes,
+	Route,
 } from '~/types';
+import { routeMethods, STATUS_CODES } from '~/types';
 
-export const readableTypeOf = (
-	value: any
-): ReadableTypeOf => (
+export const readableTypeOf = (value: any): ReadableTypeOf =>
 	typeof value !== 'object'
 		? typeof value
 		: value === null
-			? 'null'
-			: Array.isArray(value)
-				? 'array'
-				: 'object'
-);
+		? 'null'
+		: Array.isArray(value)
+		? 'array'
+		: 'object';
 
-export const assertJwt: AssertFunction<Jwt> = (
-	value
-) => {
+export const assertJwt: AssertFunction<Jwt> = (value) => {
 	try {
-
 		const type = readableTypeOf(value);
 		if (type !== 'object') {
 			throw new Error(`expected object, received ${typeof value}`);
 		}
 
 		const fields = ['_id', 'email', 'name', 'session'];
-		const missing = fields.filter(field =>
-			!value[field]
-			|| typeof value[field] !== 'string'
+		const missing = fields.filter(
+			(field) => !value[field] || typeof value[field] !== 'string'
 		);
 		if (missing.length > 0) {
 			throw new Error(`missing or invalid values: ${missing.join(', ')}`);
 		}
-
-	}
-	catch (error: any) {
+	} catch (error: any) {
 		throw new TypeError(`Bad JWT! ${error.message}`);
 	}
 };
@@ -50,16 +39,16 @@ export const isDetailedResponse = <Type extends Record<string, any>>(
 	value: Type | DetailedResponse<Type>
 ): value is DetailedResponse<Type> => {
 	if (
-		typeof value.status !== 'number'
-		|| !statusCodes.includes(value.status)
-		|| !value.json
-		|| typeof value.json !== 'object'
-	) return false;
+		typeof value.status !== 'number' ||
+		!STATUS_CODES.includes(value.status) ||
+		!value.json ||
+		typeof value.json !== 'object'
+	)
+		return false;
 	return true;
 };
 
 export const assertRoute: AssertFunction<Route> = (value) => {
-
 	const type = readableTypeOf(value);
 	if (type !== 'object') {
 		throw new TypeError(`expected 'object', received ${type}`);
@@ -72,7 +61,7 @@ export const assertRoute: AssertFunction<Route> = (value) => {
 
 	try {
 		if (!/^\/[a-z0-9/\-_:]*$/i.test(value.path)) {
-			throw new TypeError('path must start with \'/\' and be a valid uri string');
+			throw new TypeError("path must start with '/' and be a valid uri string");
 		}
 		if (!routeMethods.includes(value.method)) {
 			throw new TypeError(`method must be one of [${routeMethods.join(', ')}]`);
@@ -83,11 +72,9 @@ export const assertRoute: AssertFunction<Route> = (value) => {
 		if (typeof value.schema !== 'object') {
 			throw new TypeError('schema must be a zod route schema object');
 		}
-	}
-	catch (error: any) {
+	} catch (error: any) {
 		throw new TypeError(`path '${value.path}': ${error.message}`);
 	}
-
 };
 
 export const assertRoutes: AssertFunction<Route[]> = (value) => {

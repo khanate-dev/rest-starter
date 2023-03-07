@@ -50,10 +50,6 @@ declare global {
 		RepeatedTuple<unknown, N>
 	>;
 
-	interface ComponentWithChildren {
-		children: ReactNode;
-	}
-
 	type AssertFunction<Type> = (value: any) => asserts value is Type;
 
 	type AssertArrayFunction<Type> = (
