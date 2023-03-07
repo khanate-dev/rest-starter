@@ -1,10 +1,11 @@
+/* eslint-disable import/no-commonjs, import/unambiguous */
 // @ts-check
 
 /** @type {import('prettier').Config} */
 const config = {
-	useTabs: true,
-	singleQuote: true,
 	jsxSingleQuote: true,
+	singleQuote: true,
+	useTabs: true,
 };
 
 module.exports = config;
