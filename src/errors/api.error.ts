@@ -1,4 +1,4 @@
-import type { Status } from '~/types';
+import type { Status } from '~/helpers/http';
 
 const DEFAULT_MESSAGE = 'Something went wrong';
 
@@ -11,9 +11,9 @@ const MESSAGES: Partial<Record<Status, string>> = {
 /* eslint-enable @typescript-eslint/naming-convention */
 
 export class ApiError extends Error {
-	statusCode: Status;
-	constructor(code: Status, message?: string, options?: ErrorOptions) {
-		super(message ?? MESSAGES[code] ?? DEFAULT_MESSAGE, options);
-		this.statusCode = code;
+	status: Status;
+	constructor(status: Status, message?: string, options?: ErrorOptions) {
+		super(message ?? MESSAGES[status] ?? DEFAULT_MESSAGE, options);
+		this.status = status;
 	}
 }
