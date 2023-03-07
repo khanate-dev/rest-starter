@@ -1,42 +1,56 @@
-import { reIssueAccessToken } from '~/controllers/session';
 import { ApiError } from '~/errors';
 import { getErrorResponseAndCode } from '~/helpers/error';
-import { verifyJwt } from '~/helpers/jwt';
-import { STATUS } from '~/types';
+import { signJwt, verifyJwt } from '~/helpers/jwt';
+import { STATUS } from '~/helpers/http';
+import { findSessionById, findUserById } from '~/services';
+import { CONFIG } from '~/config';
 
-import type { AuthenticatedMiddleware, AuthenticatedRoute, Jwt } from '~/types';
+import type { Jwt } from '~/helpers/jwt';
+import type { AuthenticatedMiddleware, AuthenticatedRoute } from '~/types';
+
+const reIssueAccessToken: (
+	...params: Parameters<AuthenticatedMiddleware>
+) => Promise<Jwt> = async ({ headers }, response) => {
+	const refreshHeader = headers['x-refresh'];
+	const refreshToken = verifyJwt(
+		(Array.isArray(refreshHeader) ? refreshHeader[0] : refreshHeader) ?? ''
+	);
+	if (!refreshToken.valid && refreshToken.expired)
+		throw new Error('Refresh token expired');
+	if (!refreshToken.valid) throw new Error('Invalid refresh token');
+
+	const session = await findSessionById(refreshToken.payload.sessionId);
+	if (!session?.valid) throw new Error('Session is no longer valid');
+
+	const user = await findUserById(session.userId);
+	if (!user) throw new Error('user not found');
+
+	const payload: Jwt = {
+		...user,
+		sessionId: session.id,
+	};
+	const accessToken = signJwt(payload, { expiresIn: CONFIG.refreshTokenAge });
+	response.setHeader('x-access-token', accessToken);
+	return payload;
+};
 
 export const validateAuth =
 	(route: AuthenticatedRoute): AuthenticatedMiddleware =>
-	async ({ headers }, response, next) => {
+	async (request, response, next) => {
 		try {
-			const accessToken =
-				headers.authorization?.replace(/^Bearer\s/u, '') ?? '';
-			const refreshToken = headers['x-refresh'];
-			let user: Jwt | undefined;
+			const verification = verifyJwt(
+				request.headers.authorization?.replace(/^Bearer\s/u, '') ?? ''
+			);
 
-			if (!accessToken) throw new Error('You are not logged in');
+			if (!verification.valid && !verification.expired)
+				throw new Error('Invalid or missing access token');
 
-			const { decoded, valid, expired } = verifyJwt(accessToken);
+			const user = !verification.valid
+				? await reIssueAccessToken(request, response, next)
+				: verification.payload;
 
-			if (!valid && !expired) throw new Error('Invalid login session');
-
-			if (decoded) user = decoded;
-
-			if (expired) {
-				if (!refreshToken) throw new Error('Login session has expired');
-
-				const newAccessToken = await reIssueAccessToken(
-					Array.isArray(refreshToken) ? refreshToken[0] ?? '' : refreshToken
-				);
-
-				const { decoded: newDecoded } = verifyJwt(newAccessToken);
-				if (!newDecoded)
-					throw new Error('Failed to reissue access token. Please Login again');
-
-				response.setHeader('x-access-token', newAccessToken);
-				user = newDecoded;
-			}
+			// eslint-disable-next-line require-atomic-updates
+			response.locals.user = user;
 
 			const availableTo = route.availableTo
 				? Array.isArray(route.availableTo)
@@ -44,13 +58,12 @@ export const validateAuth =
 					: [route.availableTo]
 				: [];
 
-			if (availableTo.length > 0 && user && !availableTo.includes(user.role))
+			if (availableTo.length > 0 && !availableTo.includes(user.role))
 				throw new ApiError(
 					STATUS.forbidden,
 					'You do not have access to this resource'
 				);
 
-			response.locals.user = user;
 			next();
 			return;
 		} catch (error: any) {

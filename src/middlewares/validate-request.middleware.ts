@@ -1,6 +1,6 @@
 import { getErrorResponse } from '~/helpers/error';
 import { createRouteSchema } from '~/helpers/schema';
-import { STATUS } from '~/types';
+import { STATUS } from '~/helpers/http';
 
 import type { z } from 'zod';
 import type { Middleware } from '~/types';
