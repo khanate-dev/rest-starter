@@ -4,36 +4,31 @@ import helmet from 'helmet';
 import pinoHttp from 'pino-http';
 
 import { CONFIG } from '~/config';
-import connectDb from '~/helpers/connect-db';
-import logger from '~/helpers/logger';
-import registerRoutes from '~/register-routes';
+import { LOGGER } from '~/helpers/logger';
+import { registerRoutes } from '~/register-routes';
 
 const app = express();
 
-const corsOptions: cors.CorsOptions = {
+const CORS_OPTIONS: cors.CorsOptions = {
 	allowedHeaders: ['x-refresh', 'Content-Type', 'Authorization'],
 	exposedHeaders: ['x-access-token'],
 };
 
 // TODO Modify origin to correct production origin
-if (CONFIG.env === 'production') 
-	corsOptions.origin = 'example.com';
+if (CONFIG.env === 'production') CORS_OPTIONS.origin = 'example.com';
 
-
-app.use(cors(corsOptions));
+app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(pinoHttp({ logger }));
+app.use(pinoHttp({ logger: LOGGER }));
 
-const server = app.listen(CONFIG.port, async () => {
-	logger.info(`App is running at http://localhost:${CONFIG.port}`);
-	connectDb();
+const SERVER = app.listen(CONFIG.port, () => {
+	LOGGER.info(`App is running at http://localhost:${CONFIG.port}`);
+	// eslint-disable-next-line @typescript-eslint/no-floating-promises
 	registerRoutes(app);
 });
 
-server.on('error', (error) => {
-	logger.fatal(error);
+SERVER.on('error', (error) => {
+	LOGGER.fatal(error);
 });
-
-export default app;

@@ -1,11 +1,10 @@
 import fs from 'fs';
 
-import logger from '~/helpers/logger';
+import { LOGGER } from '~/helpers/logger';
+import { getErrorMessage, getErrorResponseAndCode } from '~/helpers/error';
+import { assertRoutes, isDetailedResponse } from '~/helpers/type';
+import { STATUS } from '~/helpers/http';
 import { validateRequest, validateAuth } from '~/middlewares';
-
-import { getErrorResponseAndCode } from './helpers/error';
-import { assertRoutes, isDetailedResponse } from './helpers/type';
-import { STATUS } from './types';
 
 import type {
 	Route,
@@ -20,13 +19,15 @@ const asyncHandler =
 	): RequestHandler<any, any, any, any, any> =>
 	async (request, response, next) => {
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const handlerResponse = await handler(request, response, next);
 			const isDetailed = isDetailedResponse(handlerResponse);
 			const status = isDetailed ? handlerResponse.status : STATUS.ok;
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const json = isDetailed ? handlerResponse.json : handlerResponse;
 			response.status(status).json(json);
 		} catch (error: any) {
-			logger.error(error);
+			LOGGER.error(error);
 			const { status, json } = getErrorResponseAndCode(error);
 			response.status(status).json(json);
 		}
@@ -52,10 +53,10 @@ const setupRoute = (app: Express, route: Route) => {
 		asyncHandler(handler)
 	);
 
-	logger.info(`Registered Route:\t${route.method.toUpperCase()}\t${routePath}`);
+	LOGGER.info(`Registered Route:\t${route.method.toUpperCase()}\t${routePath}`);
 };
 
-const registerRoutes = async (app: Express) => {
+export const registerRoutes = async (app: Express) => {
 	const files = fs.readdirSync('./src/routes', {
 		encoding: 'utf-8',
 		withFileTypes: true,
@@ -68,15 +69,16 @@ const registerRoutes = async (app: Express) => {
 		await Promise.all(
 			folders.map(async (name) => {
 				try {
-					const routes = (await import(`~/routes/${name}`))?.default;
-					assertRoutes(routes);
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+					const importedRoutes = (await import(`~/routes/${name}`)).ROUTES;
+					assertRoutes(importedRoutes);
 					const prefix = name === 'general' ? '' : name;
-					return routes.map((route) => ({
+					return importedRoutes.map((route) => ({
 						...route,
-						path: `${prefix}${route.path}`.replace(/^\/|\/$/, ''),
+						path: `${prefix}${route.path}`.replace(/^\/|\/$/u, ''),
 					}));
-				} catch (error: any) {
-					logger.error(`Invalid ${name} routes: ${error.message}`);
+				} catch (error) {
+					LOGGER.error(`Invalid ${name} routes: ${getErrorMessage(error)}`);
 					return [];
 				}
 			})
@@ -90,5 +92,3 @@ const registerRoutes = async (app: Express) => {
 		response.status(STATUS.notFound).json(json);
 	});
 };
-
-export default registerRoutes;
