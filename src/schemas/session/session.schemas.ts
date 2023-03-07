@@ -1,16 +1,25 @@
-import z from 'zod';
+import { z } from 'zod';
 
-import { createRouteSchema } from '~/helpers/schema';
-import { sessionModelSchema } from '~/models';
+import {
+	createRouteSchema,
+	createModelSchema,
+	MONGO_ID_SCHEMA,
+} from '~/helpers/schema';
 
-export const createSessionSchema = createRouteSchema({
+export const [SESSION_SANS_META_SCHEMA, SESSION_SCHEMA] = createModelSchema({
+	userAgent: z.string(),
+	userId: MONGO_ID_SCHEMA,
+	valid: z.boolean(),
+});
+
+export type SessionSansMeta = z.infer<typeof SESSION_SANS_META_SCHEMA>;
+
+export type Session = z.infer<typeof SESSION_SCHEMA>;
+
+export const CREATE_SESSION_SCHEMA = createRouteSchema({
 	body: z.strictObject({
-		email: z.string({
-			required_error: 'Email is required',
-		}).email('Not a valid email'),
-		password: z.string({
-			required_error: 'Password is required',
-		}),
+		email: z.string().email(),
+		password: z.string(),
 	}),
 	response: z.strictObject({
 		accessToken: z.string(),
@@ -18,19 +27,19 @@ export const createSessionSchema = createRouteSchema({
 	}),
 });
 
-export type CreateSessionSchema = z.infer<typeof createSessionSchema>;
+export type CreateSessionSchema = z.infer<typeof CREATE_SESSION_SCHEMA>;
 
-export const getSessionsSchema = createRouteSchema({
-	response: z.array(sessionModelSchema),
+export const GET_SESSIONS_SCHEMA = createRouteSchema({
+	response: z.array(SESSION_SCHEMA),
 });
 
-export type GetSessionsSchema = z.infer<typeof getSessionsSchema>;
+export type GetSessionsSchema = z.infer<typeof GET_SESSIONS_SCHEMA>;
 
-export const deleteSessionSchema = createRouteSchema({
+export const DELETE_SESSION_SCHEMA = createRouteSchema({
 	response: z.strictObject({
 		accessToken: z.null(),
 		refreshToken: z.null(),
 	}),
 });
 
-export type DeleteSessionSchema = z.infer<typeof deleteSessionSchema>;
+export type DeleteSessionSchema = z.infer<typeof DELETE_SESSION_SCHEMA>;
