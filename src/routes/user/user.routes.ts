@@ -8,30 +8,31 @@ import {
 	getUserSchema,
 	getUsersSchema,
 } from '~/schemas/user';
+
 import type { Route } from '~/types';
 
 const userRoutes: Route[] = [
 	{
+		handler: createUserHandler,
 		method: 'post',
 		path: '/',
 		schema: createUserSchema,
-		handler: createUserHandler,
 	},
 	{
+		availableTo: 'admin',
+		handler: getUsersHandler,
+		isAuthenticated: true,
 		method: 'get',
 		path: '/',
 		schema: getUsersSchema,
-		handler: getUsersHandler,
-		isAuthenticated: true,
-		availableTo: 'admin',
 	},
 	{
+		availableTo: 'admin',
+		handler: getUserHandler,
+		isAuthenticated: true,
 		method: 'get',
 		path: '/:_id',
 		schema: getUserSchema,
-		handler: getUserHandler,
-		isAuthenticated: true,
-		availableTo: 'admin',
 	},
 ];
 

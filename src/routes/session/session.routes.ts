@@ -8,28 +8,29 @@ import {
 	getSessionsSchema,
 	deleteSessionSchema,
 } from '~/schemas/session';
+
 import type { Route } from '~/types';
 
 const sessionRoutes: Route[] = [
 	{
+		handler: createSessionHandler,
 		method: 'post',
 		path: '/',
 		schema: createSessionSchema,
-		handler: createSessionHandler,
 	},
 	{
+		handler: getSessionsHandler,
+		isAuthenticated: true,
 		method: 'get',
 		path: '/',
 		schema: getSessionsSchema,
-		handler: getSessionsHandler,
-		isAuthenticated: true,
 	},
 	{
+		handler: deleteSessionHandler,
+		isAuthenticated: true,
 		method: 'delete',
 		path: '/',
 		schema: deleteSessionSchema,
-		handler: deleteSessionHandler,
-		isAuthenticated: true,
 	},
 ];
 

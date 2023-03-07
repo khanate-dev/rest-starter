@@ -15,16 +15,7 @@ export interface Config {
 }
 
 export type ReadableTypeOf = (
-	| 'undefined'
-	| 'boolean'
-	| 'number'
-	| 'bigint'
-	| 'string'
-	| 'symbol'
-	| 'function'
-	| 'array'
-	| 'null'
-	| 'object'
+	'array' | 'bigint' | 'boolean' | 'function' | 'null' | 'number' | 'object' | 'string' | 'symbol' | 'undefined'
 );
 
 export interface Jwt extends Omit<UserSansPassword, '_id'> {

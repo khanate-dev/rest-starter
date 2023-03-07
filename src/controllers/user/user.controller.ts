@@ -1,20 +1,22 @@
 import { ApiError } from '~/errors';
+import { createUser, findUserById, findUsers } from '~/services/user';
+import { STATUS } from '~/types';
+
 import type {
 	CreateUserSchema,
 	GetUserSchema,
 	GetUsersSchema,
 } from '~/schemas/user';
-import { createUser, findUserById, findUsers } from '~/services/user';
 import type { UnAuthenticatedHandler, AuthenticatedHandler } from '~/types';
-import { STATUS } from '~/types';
+
 
 export const createUserHandler: UnAuthenticatedHandler<
 	CreateUserSchema
 > = async (request) => {
 	const user = await createUser(request.body);
 	return {
-		status: STATUS.created,
 		json: user,
+		status: STATUS.created,
 	};
 };
 

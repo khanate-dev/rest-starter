@@ -4,8 +4,8 @@ import { createRouteSchema } from '~/helpers/schema';
 
 export const echoSchema = createRouteSchema({
 	response: z.strictObject({
-		success: z.literal(true),
 		message: z.literal('The server can be reached'),
+		success: z.literal(true),
 	}),
 });
 

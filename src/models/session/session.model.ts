@@ -8,8 +8,8 @@ export const [
 	sessionModelSchema,
 ] = getModelSchema({
 	user: z.instanceof(Types.ObjectId),
-	valid: z.boolean(),
 	userAgent: z.string(),
+	valid: z.boolean(),
 });
 
 export type SessionSansMeta = z.infer<typeof sessionSansMetaModelSchema>;
@@ -19,15 +19,15 @@ export type Session = z.infer<typeof sessionModelSchema>;
 const sessionSchema = new Schema<Session>(
 	{
 		user: {
-			type: Schema.Types.ObjectId,
 			ref: 'User',
-		},
-		valid: {
-			type: Boolean,
-			default: true,
+			type: Schema.Types.ObjectId,
 		},
 		userAgent: {
 			type: String,
+		},
+		valid: {
+			default: true,
+			type: Boolean,
 		},
 	},
 	{

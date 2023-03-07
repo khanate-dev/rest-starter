@@ -16,9 +16,9 @@ const corsOptions: cors.CorsOptions = {
 };
 
 // TODO Modify origin to correct production origin
-if (CONFIG.env === 'production') {
+if (CONFIG.env === 'production') 
 	corsOptions.origin = 'example.com';
-}
+
 
 app.use(cors(corsOptions));
 app.use(express.json());

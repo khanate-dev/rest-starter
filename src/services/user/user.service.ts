@@ -1,9 +1,10 @@
-import type { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
 
 import { comparePassword } from '~/helpers/crypto';
 import omitKey from '~/helpers/omit-key';
-import type { UserSansMeta, UserSansPassword } from '~/models/user';
 import { UserModel } from '~/models/user';
+
+import type { UserSansMeta, UserSansPassword } from '~/models/user';
+import type { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
 
 export const createUser = async (
 	input: DocumentDefinition<UserSansMeta>
@@ -14,7 +15,7 @@ export const createUser = async (
 
 export const validatePassword = async (
 	{ email, password }: Pick<UserSansMeta, 'email' | 'password'>
-): Promise<false | UserSansPassword> => {
+): Promise<UserSansPassword | false> => {
 
 	const user = await UserModel.findOne({ email }).lean();
 	if (!user) return false;
@@ -40,7 +41,7 @@ export const findUsers = async (
 export const findUser = async (
 	query: FilterQuery<UserSansMeta>,
 	options?: QueryOptions
-): Promise<null | UserSansPassword> => {
+): Promise<UserSansPassword | null> => {
 	const user = await UserModel.findOne(
 		query,
 		{},
@@ -51,8 +52,8 @@ export const findUser = async (
 };
 
 export const findUserById = async (
-	id: string | Types.ObjectId
-): Promise<null | UserSansPassword> => {
+	id: Types.ObjectId | string
+): Promise<UserSansPassword | null> => {
 	const user = await UserModel.findById(id).lean();
 	if (!user) return null;
 	return omitKey(user, 'password');

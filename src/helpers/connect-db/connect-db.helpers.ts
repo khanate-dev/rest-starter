@@ -27,9 +27,9 @@ const connectDb = async () => {
 	try {
 		await mongoose.connect(CONFIG.dbUri);
 
-		if (CONFIG.env === 'development') {
+		if (CONFIG.env === 'development') 
 			mongoose.set('debug', mongooseLogger);
-		}
+		
 
 		logger.info('Connected to DB');
 	} catch (error: any) {

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import { CONFIG } from '~/config';
 import { assertJwt } from '~/helpers/type';
+
 import type { Jwt } from '~/types';
 
 const { publicKey, privateKey } = CONFIG;
@@ -30,19 +31,19 @@ interface VerifyJwtError extends VerifyJwtResponse {
 	decoded?: undefined;
 }
 
-export const verifyJwt = (token: string): VerifyJwtSuccess | VerifyJwtError => {
+export const verifyJwt = (token: string): VerifyJwtError | VerifyJwtSuccess => {
 	try {
 		const decoded = jwt.verify(token, publicKey);
 		assertJwt(decoded);
 		return {
-			valid: true,
-			expired: false,
 			decoded,
+			expired: false,
+			valid: true,
 		};
 	} catch (error: any) {
 		return {
-			valid: false,
 			expired: error.message === 'jwt expired',
+			valid: false,
 		};
 	}
 };

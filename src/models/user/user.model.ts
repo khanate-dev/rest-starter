@@ -1,9 +1,10 @@
-import type { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 import z from 'zod';
 
 import { getHashedPassword } from '~/helpers/crypto';
 import { getModelSchema } from '~/helpers/schema';
+
+import type { Document } from 'mongoose';
 
 export const userRoles = [
 	'user',
@@ -35,22 +36,22 @@ export type UserSansPassword = z.infer<typeof userSansPasswordModelSchema>;
 const userSchema = new Schema<User>(
 	{
 		email: {
-			type: String,
 			required: true,
+			type: String,
 			unique: true,
 		},
 		name: {
-			type: String,
 			required: true,
+			type: String,
 		},
 		password: {
-			type: String,
 			required: true,
+			type: String,
 		},
 		role: {
-			type: String,
 			enum: userRoles,
 			required: true,
+			type: String,
 		},
 	},
 	{
@@ -61,15 +62,15 @@ const userSchema = new Schema<User>(
 userSchema.pre('save', async function (next) {
 
 	const user = this as unknown as Document<any, any, UserSansMeta>;
-	if (!user.isModified('password')) {
-		return next();
-	}
+	if (!user.isModified('password')) 
+		{ next(); return; }
+	
 
 	const password = user.get('password').normalize();
 	const hashedPassword = getHashedPassword(password);
 	user.set('password', hashedPassword);
 
-	return next();
+	next();
 
 });
 

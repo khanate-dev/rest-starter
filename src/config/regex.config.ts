@@ -5,12 +5,12 @@ const MONGO_URI_HOST_REGEX = /[a-zA-Z0-9-_.:@]+/i;
 const MONGO_URI_COLLECTION_REGEX = /\/?[a-zA-Z0-9-_.]*/i;
 const MONGO_URI_PARAMS_REGEX = /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/i;
 export const MONGO_URI_REGEX = new RegExp(
-	'^'
-	+ MONGO_URI_PREFIX_REGEX.source
-	+ MONGO_URI_HOST_REGEX.source
-	+ MONGO_URI_COLLECTION_REGEX.source
-	+ MONGO_URI_PARAMS_REGEX.source
-	+ '$',
+	`^${
+	 MONGO_URI_PREFIX_REGEX.source
+	 }${MONGO_URI_HOST_REGEX.source
+	 }${MONGO_URI_COLLECTION_REGEX.source
+	 }${MONGO_URI_PARAMS_REGEX.source
+	 }$`,
 	'i'
 );
 

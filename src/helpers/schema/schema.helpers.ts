@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import z from 'zod';
 
 import type {
-	ZodRouteSchema as ZodRouteSchema,
+	ZodRouteSchema,
 	RouteSchemaInput,
 	ZodRouteParams,
 	ZodRouteResponse,
@@ -16,8 +16,8 @@ export const timestampSchema = z.strictObject({
 });
 
 export const mongoMetaSchema = z.strictObject({
-	_id: z.instanceof(Types.ObjectId),
 	__v: z.number().min(0),
+	_id: z.instanceof(Types.ObjectId),
 });
 
 export const getModelSchema = <
