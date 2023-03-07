@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import type z from 'zod';
-import type { UserRole } from '~/models';
-import type { Jwt } from '~/types/general';
+import type { z } from 'zod';
+import type { UserRole } from '~/schemas/user';
+import type { Jwt } from '~/helpers/jwt';
+import type { Status } from '~/helpers/http';
 
 export type ZodRouteParams =
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
@@ -66,7 +67,7 @@ export interface DefaultRouteSchema {
 	body: Record<never, never>;
 	params: Record<never, never>;
 	query: Record<never, never>;
-	response: void;
+	response: undefined;
 }
 
 type UnAuthenticatedLocals = Record<never, never>;
@@ -117,12 +118,14 @@ export type AuthenticatedMiddleware = RequestHandler<
 	Partial<AuthenticatedLocals>
 >;
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export type _UnAuthenticatedHandler = UnAuthenticatedHandler<any>;
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export type _AuthenticatedHandler = AuthenticatedHandler<any>;
 
-export const routeMethods = ['get', 'post', 'put', 'patch', 'delete'] as const;
+export const ROUTE_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const;
 
-export type RouteMethod = (typeof routeMethods)[number];
+export type RouteMethod = (typeof ROUTE_METHODS)[number];
 
 interface BaseRoute {
 	method: RouteMethod;
