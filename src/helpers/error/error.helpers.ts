@@ -1,7 +1,8 @@
-import { STATUS } from '~/types';
+import { STATUS } from '~/helpers/http';
 import { ApiError } from '~/errors';
 
-import type { Status, ErrorResponse } from '~/types';
+import type { Status } from '~/helpers/http';
+import type { ErrorResponse } from '~/types';
 
 interface ErrorResponseAndCode {
 	status: Status;
@@ -28,6 +29,6 @@ export const getErrorResponseAndCode = (
 	defaultStatus: Status = STATUS.internalServerError
 ): ErrorResponseAndCode => {
 	const json = getErrorResponse(error);
-	if (error instanceof ApiError) return { json, status: error.statusCode };
+	if (error instanceof ApiError) return { json, status: error.status };
 	return { json, status: defaultStatus };
 };

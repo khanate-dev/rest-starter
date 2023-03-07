@@ -1,1 +1,1 @@
-export { default } from './logger.helpers';
+export * from './logger.helpers';

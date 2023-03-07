@@ -2,17 +2,14 @@ import crypto from 'crypto';
 
 import { CONFIG } from '~/config';
 
-const { iterations, pepper } = CONFIG.hashing;
-
 export const getHash = (password: string, salt: string): string => {
+	const { iterations, pepper } = CONFIG.hashing;
 	const hmac = crypto
 		.pbkdf2Sync(password, pepper, iterations, 64, 'sha512')
 		.toString('hex');
-
 	const hash = crypto
 		.pbkdf2Sync(hmac, salt, iterations, 64, 'sha512')
 		.toString('hex');
-
 	return hash;
 };
 

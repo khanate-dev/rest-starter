@@ -1,48 +1,36 @@
 import jwt from 'jsonwebtoken';
 
 import { CONFIG } from '~/config';
-import { assertJwt } from '~/helpers/type';
+import { MONGO_ID_SCHEMA } from '~/helpers/schema';
+import { USER_SANS_PASSWORD_SCHEMA } from '~/schemas/user';
 
-import type { Jwt } from '~/types';
+import type { z } from 'zod';
 
-const { publicKey, privateKey } = CONFIG;
+export const JWT_SCHEMA = USER_SANS_PASSWORD_SCHEMA.extend({
+	id: MONGO_ID_SCHEMA,
+	sessionId: MONGO_ID_SCHEMA,
+});
+
+export type Jwt = z.infer<typeof JWT_SCHEMA>;
 
 export const signJwt = (object: Jwt, options?: jwt.SignOptions) => {
-	return jwt.sign(object, privateKey, {
+	return jwt.sign(object, CONFIG.privateKey, {
 		...options,
 		algorithm: 'RS256',
 	});
 };
 
-interface VerifyJwtResponse {
-	valid: boolean;
-	expired: boolean;
-	decoded?: Jwt;
-}
+export type JwtVerification =
+	| { valid: false; expired: boolean }
+	| { valid: true; payload: Jwt };
 
-interface VerifyJwtSuccess extends VerifyJwtResponse {
-	valid: true;
-	expired: false;
-	decoded: Jwt;
-}
-interface VerifyJwtError extends VerifyJwtResponse {
-	valid: false;
-	expired: boolean;
-	decoded?: undefined;
-}
-
-export const verifyJwt = (token: string): VerifyJwtError | VerifyJwtSuccess => {
+export const verifyJwt = (token: string): JwtVerification => {
 	try {
-		const decoded = jwt.verify(token, publicKey);
-		assertJwt(decoded);
+		const payload = JWT_SCHEMA.parse(jwt.verify(token, CONFIG.publicKey));
+		return { payload, valid: true };
+	} catch (error) {
 		return {
-			decoded,
-			expired: false,
-			valid: true,
-		};
-	} catch (error: any) {
-		return {
-			expired: error.message === 'jwt expired',
+			expired: error instanceof Error && error.message === 'jwt expired',
 			valid: false,
 		};
 	}

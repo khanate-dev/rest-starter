@@ -1,1 +1,1 @@
-export { default } from './omit-key.helpers';
+export * from './omit-key.helpers';
