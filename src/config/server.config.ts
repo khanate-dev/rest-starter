@@ -1,6 +1,6 @@
 import { z, ZodError } from 'zod';
 
-import logger from '~/helpers/logger';
+import { LOGGER } from '~/helpers/logger';
 import { formatToken } from '~/helpers/string';
 
 import {
@@ -10,15 +10,13 @@ import {
 	PUBLIC_KEY_REGEX,
 } from './regex.config';
 
-import type { Config } from '~/types';
-
 /* eslint-disable @typescript-eslint/naming-convention */
 const ENVIRONMENT_SCHEMA = z.object({
 	ACCESS_TOKEN_AGE: z
 		.string()
 		.regex(AGE_REGEX, 'invalid time string')
 		.optional(),
-	DB_URI: z.string().regex(MONGO_URI_REGEX, 'invalid uri pattern'),
+	DATABASE_URL: z.string().regex(MONGO_URI_REGEX, 'invalid uri pattern'),
 	HASHING_ITERATIONS: z.preprocess(
 		(value) => Number(value as string) || value,
 		z.number().int().min(10000).max(10000000)
@@ -50,14 +48,14 @@ const DEFAULTS = {
 	refreshTokenAge: '1y',
 };
 
-const parseConfig = (): Config => {
+const parseConfig = () => {
 	try {
 		const env = ENVIRONMENT_SCHEMA.parse(process.env);
 
 		for (const key of OPTIONAL_ENVIRONMENT)
 			if (process.env[key] === undefined) {
 				const camelizedKey = formatToken(key, 'camel') as keyof typeof DEFAULTS;
-				logger.warn(
+				LOGGER.warn(
 					[
 						`Optional Environment Variable '${key}' not provided`,
 						`Using default: ${DEFAULTS[camelizedKey]}`,
@@ -67,7 +65,7 @@ const parseConfig = (): Config => {
 
 		return {
 			accessTokenAge: env.ACCESS_TOKEN_AGE ?? DEFAULTS.accessTokenAge,
-			dbUri: env.DB_URI,
+			dbUri: env.DATABASE_URL,
 			env: env.NODE_ENV,
 			hashing: {
 				iterations: env.HASHING_ITERATIONS,
@@ -77,7 +75,7 @@ const parseConfig = (): Config => {
 			privateKey: env.PRIVATE_KEY,
 			publicKey: env.PUBLIC_KEY,
 			refreshTokenAge: env.REFRESH_TOKEN_AGE ?? DEFAULTS.refreshTokenAge,
-		};
+		} as const;
 	} catch (error: any) {
 		if (error instanceof ZodError)
 			throw new Error(
@@ -88,5 +86,7 @@ const parseConfig = (): Config => {
 		throw new Error(`invalid environment: ${JSON.stringify(error)}`);
 	}
 };
+
+export type Config = ReturnType<typeof parseConfig>;
 
 export const CONFIG = parseConfig();
