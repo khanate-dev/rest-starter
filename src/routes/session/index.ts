@@ -1,1 +1,1 @@
-export { default } from './session.routes';
+export * from './session.routes';

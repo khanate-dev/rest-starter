@@ -4,34 +4,32 @@ import {
 	deleteSessionHandler,
 } from '~/controllers/session';
 import {
-	createSessionSchema,
-	getSessionsSchema,
-	deleteSessionSchema,
+	CREATE_SESSION_SCHEMA,
+	GET_SESSIONS_SCHEMA,
+	DELETE_SESSION_SCHEMA,
 } from '~/schemas/session';
 
 import type { Route } from '~/types';
 
-const sessionRoutes: Route[] = [
+export const ROUTES: Route[] = [
 	{
 		handler: createSessionHandler,
 		method: 'post',
 		path: '/',
-		schema: createSessionSchema,
+		schema: CREATE_SESSION_SCHEMA,
 	},
 	{
 		handler: getSessionsHandler,
 		isAuthenticated: true,
 		method: 'get',
 		path: '/',
-		schema: getSessionsSchema,
+		schema: GET_SESSIONS_SCHEMA,
 	},
 	{
 		handler: deleteSessionHandler,
 		isAuthenticated: true,
 		method: 'delete',
 		path: '/',
-		schema: deleteSessionSchema,
+		schema: DELETE_SESSION_SCHEMA,
 	},
 ];
-
-export default sessionRoutes;

@@ -1,1 +1,1 @@
-export { default } from './general.routes';
+export * from './general.routes';

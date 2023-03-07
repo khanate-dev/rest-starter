@@ -1,15 +1,13 @@
 import { echoHandler } from '~/controllers/general';
-import { echoSchema } from '~/schemas/general';
+import { ECHO_SCHEMA } from '~/schemas/general';
 
 import type { Route } from '~/types';
 
-const generalRoutes: Route[] = [
+export const ROUTES: Route[] = [
 	{
 		handler: echoHandler,
 		method: 'get',
 		path: '/echo',
-		schema: echoSchema,
+		schema: ECHO_SCHEMA,
 	},
 ];
-
-export default generalRoutes;

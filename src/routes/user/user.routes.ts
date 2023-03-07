@@ -4,19 +4,19 @@ import {
 	getUsersHandler,
 } from '~/controllers/user';
 import {
-	createUserSchema,
-	getUserSchema,
-	getUsersSchema,
+	CREATE_USER_SCHEMA,
+	GET_USERS_SCHEMA,
+	GET_USER_SCHEMA,
 } from '~/schemas/user';
 
 import type { Route } from '~/types';
 
-const userRoutes: Route[] = [
+export const ROUTES: Route[] = [
 	{
 		handler: createUserHandler,
 		method: 'post',
 		path: '/',
-		schema: createUserSchema,
+		schema: CREATE_USER_SCHEMA,
 	},
 	{
 		availableTo: 'admin',
@@ -24,7 +24,7 @@ const userRoutes: Route[] = [
 		isAuthenticated: true,
 		method: 'get',
 		path: '/',
-		schema: getUsersSchema,
+		schema: GET_USERS_SCHEMA,
 	},
 	{
 		availableTo: 'admin',
@@ -32,8 +32,6 @@ const userRoutes: Route[] = [
 		isAuthenticated: true,
 		method: 'get',
 		path: '/:_id',
-		schema: getUserSchema,
+		schema: GET_USER_SCHEMA,
 	},
 ];
-
-export default userRoutes;
