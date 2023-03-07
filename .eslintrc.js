@@ -65,15 +65,11 @@ const config = {
 				'@typescript-eslint/no-require-imports': 'error',
 				'@typescript-eslint/no-shadow': [
 					'error',
-					{
-						builtinGlobals: true,
-					},
+					{ allow: ['Request', 'Response'], builtinGlobals: true },
 				],
 				'@typescript-eslint/no-unnecessary-condition': [
 					'error',
-					{
-						allowConstantLoopConditions: true,
-					},
+					{ allowConstantLoopConditions: true },
 				],
 				'@typescript-eslint/no-unused-expressions': [
 					'error',
