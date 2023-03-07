@@ -50,10 +50,10 @@ declare global {
 		RepeatedTuple<unknown, N>
 	>;
 
-	type AssertFunction<Type> = (value: any) => asserts value is Type;
+	type AssertFunction<Type> = (value: unknown) => asserts value is Type;
 
 	type AssertArrayFunction<Type> = (
-		value: any,
+		value: unknown,
 		onlyCheckFirst?: boolean
 	) => asserts value is Type;
 }

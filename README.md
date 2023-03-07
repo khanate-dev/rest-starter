@@ -4,12 +4,13 @@ A boilerplate to quickly get started with building a REST api.
 
 ## Stack
 
--   Typescript
--   Express
--   Mongo with Mongoose
--   Zod
--   Pino
--   pnpm for package management
+- Typescript
+- Express
+- MongoDB
+- Prisma
+- Zod
+- Pino
+- PNPM for package management
 
 ---
 
