@@ -1,6 +1,6 @@
 import { ApiError } from '~/errors';
 import { createUser, findUserById, findUsers } from '~/services/user';
-import { STATUS } from '~/types';
+import { STATUS } from '~/helpers/http';
 
 import type {
 	CreateUserSchema,
@@ -8,7 +8,6 @@ import type {
 	GetUsersSchema,
 } from '~/schemas/user';
 import type { UnAuthenticatedHandler, AuthenticatedHandler } from '~/types';
-
 
 export const createUserHandler: UnAuthenticatedHandler<
 	CreateUserSchema

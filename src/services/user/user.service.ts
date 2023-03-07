@@ -1,60 +1,53 @@
-
 import { comparePassword } from '~/helpers/crypto';
-import omitKey from '~/helpers/omit-key';
-import { UserModel } from '~/models/user';
+import { omitKey } from '~/helpers/omit-key';
+import { prisma } from '~/prisma-client';
 
-import type { UserSansMeta, UserSansPassword } from '~/models/user';
-import type { DocumentDefinition, FilterQuery, QueryOptions, Types } from 'mongoose';
+import type { UserSansMeta, UserSansPassword } from '~/schemas/user';
 
 export const createUser = async (
-	input: DocumentDefinition<UserSansMeta>
+	data: UserSansMeta
 ): Promise<UserSansPassword> => {
-	const user = (await UserModel.create(input)).toJSON();
+	const user = await prisma.user.create({ data });
 	return omitKey(user, 'password');
 };
 
-export const validatePassword = async (
-	{ email, password }: Pick<UserSansMeta, 'email' | 'password'>
-): Promise<UserSansPassword | false> => {
-
-	const user = await UserModel.findOne({ email }).lean();
+export const validatePassword = async ({
+	email,
+	password,
+}: Pick<UserSansMeta, 'email' | 'password'>): Promise<
+	UserSansPassword | false
+> => {
+	const user = await prisma.user.findFirst({
+		where: { email },
+	});
 	if (!user) return false;
 
 	if (!comparePassword(password, user.password)) return false;
 
 	return omitKey(user, 'password');
-
 };
 
 export const findUsers = async (
-	query?: FilterQuery<UserSansMeta>,
-	options?: QueryOptions
+	where?: UserSansMeta
 ): Promise<UserSansPassword[]> => {
-	const users = await UserModel.find(
-		query ?? {},
-		{},
-		options
-	).lean();
-	return users.map(user => omitKey(user, 'password'));
+	const users = await prisma.user.findMany({ where });
+	return users.map((user) => omitKey(user, 'password'));
 };
 
 export const findUser = async (
-	query: FilterQuery<UserSansMeta>,
-	options?: QueryOptions
+	where: UserSansMeta
 ): Promise<UserSansPassword | null> => {
-	const user = await UserModel.findOne(
-		query,
-		{},
-		options
-	).lean();
+	const user = await prisma.user.findFirst({ where });
 	if (!user) return null;
 	return omitKey(user, 'password');
 };
 
 export const findUserById = async (
-	id: Types.ObjectId | string
+	id: string
 ): Promise<UserSansPassword | null> => {
-	const user = await UserModel.findById(id).lean();
+	const user = await prisma.user.findUnique({
+		where: { id },
+	});
 	if (!user) return null;
 	return omitKey(user, 'password');
 };

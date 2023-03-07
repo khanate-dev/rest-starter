@@ -1,47 +1,29 @@
-import { SessionModel } from '~/models/session';
+import { prisma } from '~/prisma-client';
 
-import type {
-	FilterQuery,
-	QueryOptions,
-	Types,
-	UpdateQuery,
-} from 'mongoose';
-import type { Session } from '~/models/session';
+import type { Session, SessionSansMeta } from '~/schemas/session';
 
 export const createSession = async (
-	userId: Types.ObjectId,
+	userId: string,
 	userAgent: string
 ): Promise<Session> => {
-	const session = (await SessionModel.create({
-		user: userId,
-		userAgent,
-	})).toJSON();
-	return session;
+	return prisma.session.create({
+		data: { userAgent, userId },
+	});
 };
 
 export const findSessions = async (
-	query: FilterQuery<Session>,
-	options?: QueryOptions
+	where: Partial<SessionSansMeta>
 ): Promise<Session[]> => {
-	const sessions = await SessionModel.find(
-		query,
-		{},
-		options
-	).lean();
-	return sessions;
+	return prisma.session.findMany({ where });
 };
 
-export const findSessionById = async (
-	id: Types.ObjectId | string
-): Promise<Session | null> => {
-	const session = await SessionModel.findById(id).lean();
-	return session;
+export const findSessionById = async (id: string): Promise<Session | null> => {
+	return prisma.session.findUnique({ where: { id } });
 };
 
 export const updateSession = async (
-	query: FilterQuery<Session>,
-	update: UpdateQuery<Session>
+	id: string,
+	data: Partial<SessionSansMeta>
 ): Promise<Session | null> => {
-	const updatedSession = await SessionModel.findOneAndUpdate(query, update).lean();
-	return updatedSession;
+	return prisma.session.update({ data, where: { id } });
 };
