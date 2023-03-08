@@ -2,13 +2,12 @@ import { z, ZodError } from 'zod';
 
 import { LOGGER } from '~/helpers/logger';
 import { formatToken } from '~/helpers/string';
-
 import {
 	AGE_REGEX,
 	MONGO_URI_REGEX,
 	PRIVATE_KEY_REGEX,
 	PUBLIC_KEY_REGEX,
-} from './regex.config';
+} from '~/constants';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const ENVIRONMENT_SCHEMA = z.object({
