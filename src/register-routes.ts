@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { LOGGER } from '~/helpers/logger';
+import { LOGGER } from '~/logger';
 import { getErrorMessage, getErrorResponseAndCode } from '~/helpers/error';
 import { assertRoutes, isDetailedResponse } from '~/helpers/type';
 import { STATUS } from '~/helpers/http';

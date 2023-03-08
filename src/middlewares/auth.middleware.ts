@@ -1,11 +1,12 @@
 import { ApiError } from '~/errors';
 import { getErrorResponseAndCode } from '~/helpers/error';
-import { signJwt, verifyJwt } from '~/helpers/jwt';
+import { signJwt, verifyJwt } from '~/helpers/auth';
 import { STATUS } from '~/helpers/http';
-import { findSessionById, findUserById } from '~/services';
+import { findSessionById } from '~/services/session';
+import { findUserById } from '~/services/user';
 import { CONFIG } from '~/config';
 
-import type { Jwt } from '~/helpers/jwt';
+import type { Jwt } from '~/helpers/auth';
 import type { AuthenticatedMiddleware, AuthenticatedRoute } from '~/types';
 
 const reIssueAccessToken: (

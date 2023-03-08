@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import type { z } from 'zod';
 import type { UserRole } from '~/schemas/user';
-import type { Jwt } from '~/helpers/jwt';
+import type { Jwt } from '~/helpers/auth';
 import type { Status } from '~/helpers/http';
 
 export type ZodRouteParams =

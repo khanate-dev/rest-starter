@@ -1,6 +1,6 @@
 import { z, ZodError } from 'zod';
 
-import { LOGGER } from '~/helpers/logger';
+import { LOGGER } from '~/logger';
 import { formatToken } from '~/helpers/string';
 import {
 	AGE_REGEX,

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { CONFIG } from '~/config';
-import { LOGGER } from '~/helpers/logger';
+import { LOGGER } from '~/logger';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const prisma = new PrismaClient({

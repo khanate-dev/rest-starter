@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import pinoHttp from 'pino-http';
 
 import { CONFIG } from '~/config';
-import { LOGGER } from '~/helpers/logger';
+import { LOGGER } from '~/logger';
 import { registerRoutes } from '~/register-routes';
 
 const app = express();

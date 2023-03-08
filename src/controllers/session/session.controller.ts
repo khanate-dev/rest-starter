@@ -1,11 +1,11 @@
 import { CONFIG } from '~/config';
 import { ApiError } from '~/errors';
-import { signJwt } from '~/helpers/jwt';
+import { signJwt } from '~/helpers/auth';
 import { createSession, findSessions, updateSession } from '~/services/session';
 import { validatePassword } from '~/services/user';
 import { STATUS } from '~/helpers/http';
 
-import type { Jwt } from '~/helpers/jwt';
+import type { Jwt } from '~/helpers/auth';
 import type { AuthenticatedHandler, UnAuthenticatedHandler } from '~/types';
 import type {
 	CreateSessionSchema,

@@ -1,5 +1,5 @@
 import { comparePassword } from '~/helpers/crypto';
-import { omitKey } from '~/helpers/omit-key';
+import { omitKey } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
 
 import type { UserSansMeta, UserSansPassword } from '~/schemas/user';
