@@ -1,18 +1,14 @@
 # Typescript-Express-Mongo-Zod REST Boilerplate
 
+![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-2D3748?style=for-the-badge&logo=zod&logoColor=white)
+![Pino](https://img.shields.io/badge/Pino-2D3748?style=for-the-badge&logo=pino&logoColor=white)
+![PNPM](https://img.shields.io/badge/PNPM-2D3748?style=for-the-badge&logo=pnpm&logoColor=white)
+
 A boilerplate to quickly get started with building a REST api.
-
-## Stack
-
-- Typescript
-- Express
-- MongoDB
-- Prisma
-- Zod
-- Pino
-- PNPM for package management
-
----
 
 ## Scripts
 
