@@ -13,9 +13,10 @@
 		"test": "jest --runInBand",
 		"env:login": "dotenv-vault login -y",
 		"env:push": "dotenv-vault push",
-		"env:pull": "dotenv-vault pull && dotenv-vault pull example .env.example",
+		"env:pull": "dotenv-vault pull",
 		"env:open": "dotenv-vault open -y",
-		"prisma": "prisma"
+		"prisma": "prisma",
+		"dotenv-vault": "dotenv-vault"
 	},
 	"dependencies": {
 		"@prisma/client": "^4.11.0",
