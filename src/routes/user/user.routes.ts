@@ -11,7 +11,7 @@ import {
 
 import type { Route } from '~/types';
 
-export const ROUTES: Route[] = [
+export const userRoutes: Route[] = [
 	{
 		handler: createUserHandler,
 		method: 'post',

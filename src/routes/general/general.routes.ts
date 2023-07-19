@@ -3,7 +3,7 @@ import { ECHO_SCHEMA } from '~/schemas/general';
 
 import type { Route } from '~/types';
 
-export const ROUTES: Route[] = [
+export const generalRoutes: Route[] = [
 	{
 		handler: echoHandler,
 		method: 'get',

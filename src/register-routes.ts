@@ -1,10 +1,12 @@
-import fs from 'fs';
-
 import { getErrorMessage, getErrorResponseAndCode } from '~/helpers/error';
 import { STATUS } from '~/helpers/http';
-import { assertRoutes, isDetailedResponse } from '~/helpers/type';
+import { isDetailedResponse } from '~/helpers/type';
 import { LOGGER } from '~/logger';
 import { validateAuth, validateRequest } from '~/middlewares';
+
+import { generalRoutes } from './routes/general';
+import { sessionRoutes } from './routes/session';
+import { userRoutes } from './routes/user';
 
 import type { Express, RequestHandler } from 'express';
 import type {
@@ -56,34 +58,27 @@ const setupRoute = (app: Express, route: Route) => {
 	LOGGER.info(`Registered Route:\t${route.method.toUpperCase()}\t${routePath}`);
 };
 
-export const registerRoutes = async (app: Express) => {
-	const files = fs.readdirSync('./src/routes', {
-		encoding: 'utf-8',
-		withFileTypes: true,
-	});
-	const folders = files
-		.filter((file) => file.isDirectory())
-		.map((file) => file.name);
+export const registerRoutes = (app: Express) => {
+	const routeMap = {
+		user: userRoutes,
+		general: generalRoutes,
+		session: sessionRoutes,
+	};
 
-	const routes: Route[] = (
-		await Promise.all(
-			folders.map(async (name) => {
-				try {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-					const importedRoutes = (await import(`~/routes/${name}`)).ROUTES;
-					assertRoutes(importedRoutes);
-					const prefix = name === 'general' ? '' : name;
-					return importedRoutes.map((route) => ({
-						...route,
-						path: `${prefix}${route.path}`.replace(/^\/|\/$/u, ''),
-					}));
-				} catch (error) {
-					LOGGER.error(`Invalid ${name} routes: ${getErrorMessage(error)}`);
-					return [];
-				}
-			}),
-		)
-	).flat();
+	const routes = Object.entries(routeMap)
+		.map<Route[]>(([name, routeArray]) => {
+			try {
+				const prefix = name === 'general' ? '' : name;
+				return routeArray.map((route) => ({
+					...route,
+					path: `${prefix}${route.path}`.replace(/^\/|\/$/u, ''),
+				}));
+			} catch (error) {
+				LOGGER.error(`Invalid ${name} routes: ${getErrorMessage(error)}`);
+				return [];
+			}
+		})
+		.flat();
 
 	for (const route of routes) setupRoute(app, route);
 
