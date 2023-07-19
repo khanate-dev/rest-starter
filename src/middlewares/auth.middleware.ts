@@ -50,7 +50,6 @@ export const validateAuth =
 				? await reIssueAccessToken(request, response, next)
 				: verification.payload;
 
-			// eslint-disable-next-line require-atomic-updates
 			response.locals.user = user;
 
 			const availableTo = route.availableTo

@@ -267,7 +267,7 @@ export const STATUS = {
 	 * and is not expected to be implemented by actual HTTP servers. The RFC specifies this code should be returned by
 	 * teapots requested to brew coffee. This HTTP status is used as an Easter egg in some websites, including Google.com.
 	 */
-	// eslint-disable-next-line @typescript-eslint/naming-convention
+
 	iAmATeapot: 418,
 
 	/**

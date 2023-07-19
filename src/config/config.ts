@@ -9,7 +9,6 @@ import {
 import { formatToken } from '~/helpers/string';
 import { LOGGER } from '~/logger';
 
-/* eslint-disable @typescript-eslint/naming-convention */
 const ENVIRONMENT_SCHEMA = z.object({
 	ACCESS_TOKEN_AGE: z
 		.string()
