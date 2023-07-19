@@ -1,8 +1,8 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import type { z } from 'zod';
-import type { UserRole } from '~/schemas/user';
 import type { Jwt } from '~/helpers/auth';
 import type { Status } from '~/helpers/http';
+import type { UserRole } from '~/schemas/user';
 
 export type ZodRouteParams =
 	| z.ZodEffects<z.ZodObject<Record<string, any>, 'strict'>>
@@ -29,58 +29,58 @@ export type ZodRouteResponse =
 	| z.ZodObject<Record<string, any>, 'strict'>
 	| z.ZodVoid;
 
-export interface RouteSchemaInput<
+export type RouteSchemaInput<
 	Body extends ZodRouteBody,
 	Params extends ZodRouteParams,
 	Query extends ZodRouteQuery,
-	Response extends ZodRouteResponse
-> {
+	Res extends ZodRouteResponse,
+> = {
 	body?: Body;
 	params?: Params;
 	query?: Query;
-	response?: Response;
-}
+	response?: Res;
+};
 
-export interface ErrorResponse {
+export type ErrorResponse = {
 	type: string;
 	message: string;
-}
+};
 
 export type ZodRouteSchema<
 	Body extends ZodRouteBody = ZodRouteBody,
 	Params extends ZodRouteParams = ZodRouteParams,
 	Query extends ZodRouteQuery = ZodRouteQuery,
-	Response extends ZodRouteResponse = ZodRouteResponse
+	Res extends ZodRouteResponse = ZodRouteResponse,
 > = z.ZodObject<
 	{
 		body: Body;
 		params: Params;
 		query: Query;
-		response: Response;
+		response: Res;
 	},
 	'strict'
 >;
 
 type RouteSchema = z.infer<ZodRouteSchema>;
 
-export interface DefaultRouteSchema {
+export type DefaultRouteSchema = {
 	body: Record<never, never>;
 	params: Record<never, never>;
 	query: Record<never, never>;
 	response: undefined;
-}
+};
 
 type UnAuthenticatedLocals = Record<never, never>;
 type AuthenticatedLocals = Record<'user', Jwt>;
 
-export interface DetailedResponse<Json extends RouteSchema['response']> {
+export type DetailedResponse<Json extends RouteSchema['response']> = {
 	status: Status;
 	json: Json;
-}
+};
 
 export type CustomHandler<
 	Locals extends AuthenticatedLocals | UnAuthenticatedLocals,
-	Schema extends RouteSchema
+	Schema extends RouteSchema,
 > = (
 	request: Request<
 		Schema['params'],
@@ -90,7 +90,7 @@ export type CustomHandler<
 		Locals
 	>,
 	response: Response<Schema['response'], Locals>,
-	next: NextFunction
+	next: NextFunction,
 ) => Promise<DetailedResponse<Schema['response']> | Schema['response']>;
 
 export type UnAuthenticatedHandler<Schema extends RouteSchema> = CustomHandler<
@@ -118,16 +118,15 @@ export type AuthenticatedMiddleware = RequestHandler<
 	Partial<AuthenticatedLocals>
 >;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export type _UnAuthenticatedHandler = UnAuthenticatedHandler<any>;
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export type _AuthenticatedHandler = AuthenticatedHandler<any>;
 
 export const ROUTE_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const;
 
 export type RouteMethod = (typeof ROUTE_METHODS)[number];
 
-interface BaseRoute {
+type BaseRoute = {
 	method: RouteMethod;
 	path: string;
 	schema: ZodRouteSchema;
@@ -135,18 +134,18 @@ interface BaseRoute {
 	handler: _AuthenticatedHandler | _UnAuthenticatedHandler;
 	isAuthenticated?: boolean;
 	availableTo?: UserRole | UserRole[];
-}
+};
 
-export interface UnAuthenticatedRoute extends BaseRoute {
+export type UnAuthenticatedRoute = {
 	handler: _UnAuthenticatedHandler;
 	isAuthenticated?: undefined;
 	availableTo?: undefined;
-}
+} & BaseRoute;
 
-export interface AuthenticatedRoute extends BaseRoute {
+export type AuthenticatedRoute = {
 	handler: _AuthenticatedHandler;
 	isAuthenticated: true;
 	availableTo?: UserRole | UserRole[];
-}
+} & BaseRoute;
 
 export type Route = AuthenticatedRoute | UnAuthenticatedRoute;

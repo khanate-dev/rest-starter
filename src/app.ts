@@ -25,7 +25,7 @@ app.use(pinoHttp({ logger: LOGGER }));
 
 const SERVER = app.listen(CONFIG.port, () => {
 	LOGGER.info(`App is running at http://localhost:${CONFIG.port}`);
-	// eslint-disable-next-line @typescript-eslint/no-floating-promises
+
 	registerRoutes(app);
 });
 

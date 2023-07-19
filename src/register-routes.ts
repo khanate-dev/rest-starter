@@ -1,21 +1,21 @@
 import fs from 'fs';
 
-import { LOGGER } from '~/logger';
 import { getErrorMessage, getErrorResponseAndCode } from '~/helpers/error';
-import { assertRoutes, isDetailedResponse } from '~/helpers/type';
 import { STATUS } from '~/helpers/http';
-import { validateRequest, validateAuth } from '~/middlewares';
+import { assertRoutes, isDetailedResponse } from '~/helpers/type';
+import { LOGGER } from '~/logger';
+import { validateAuth, validateRequest } from '~/middlewares';
 
+import type { Express, RequestHandler } from 'express';
 import type {
 	Route,
 	_AuthenticatedHandler,
 	_UnAuthenticatedHandler,
 } from './types';
-import type { Express, RequestHandler } from 'express';
 
 const asyncHandler =
 	(
-		handler: _AuthenticatedHandler | _UnAuthenticatedHandler
+		handler: _AuthenticatedHandler | _UnAuthenticatedHandler,
 	): RequestHandler<any, any, any, any, any> =>
 	async (request, response, next) => {
 		try {
@@ -50,7 +50,7 @@ const setupRoute = (app: Express, route: Route) => {
 		routePath,
 		validateRequest(schema),
 		...middlewares,
-		asyncHandler(handler)
+		asyncHandler(handler),
 	);
 
 	LOGGER.info(`Registered Route:\t${route.method.toUpperCase()}\t${routePath}`);
@@ -81,7 +81,7 @@ export const registerRoutes = async (app: Express) => {
 					LOGGER.error(`Invalid ${name} routes: ${getErrorMessage(error)}`);
 					return [];
 				}
-			})
+			}),
 		)
 	).flat();
 

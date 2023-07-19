@@ -3,25 +3,25 @@ import '@total-typescript/ts-reset';
 type IRepeatedTuple<
 	T,
 	N extends number,
-	R extends unknown[]
+	R extends unknown[],
 > = R['length'] extends N ? R : IRepeatedTuple<T, N, [T, ...R]>;
 
 type DropFirst<T extends readonly unknown[]> = T extends readonly [
 	any?,
-	...infer U
+	...infer U,
 ]
 	? U
 	: [...T];
 
 type IRepeatedString<
 	S extends string,
-	T extends unknown[]
+	T extends unknown[],
 > = T['length'] extends 1 ? S : `${S}${IRepeatedString<S, DropFirst<T>>}`;
 
 type IRepeatedTuple<
 	T,
 	N extends number,
-	R extends unknown[]
+	R extends unknown[],
 > = R['length'] extends N ? R : IRepeatedTuple<T, N, [T, ...R]>;
 
 declare global {
@@ -54,6 +54,6 @@ declare global {
 
 	type AssertArrayFunction<Type> = (
 		value: unknown,
-		onlyCheckFirst?: boolean
+		onlyCheckFirst?: boolean,
 	) => asserts value is Type;
 }

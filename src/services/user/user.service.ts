@@ -1,14 +1,14 @@
 import { comparePassword } from '~/helpers/crypto';
-import { omitKey } from '~/helpers/object';
+import { omit } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
 
 import type { UserSansMeta, UserSansPassword } from '~/schemas/user';
 
 export const createUser = async (
-	data: UserSansMeta
+	data: UserSansMeta,
 ): Promise<UserSansPassword> => {
 	const user = await prisma.user.create({ data });
-	return omitKey(user, 'password');
+	return omit(user, 'password');
 };
 
 export const validatePassword = async ({
@@ -24,30 +24,30 @@ export const validatePassword = async ({
 
 	if (!comparePassword(password, user.password)) return false;
 
-	return omitKey(user, 'password');
+	return omit(user, 'password');
 };
 
 export const findUsers = async (
-	where?: UserSansMeta
+	where?: UserSansMeta,
 ): Promise<UserSansPassword[]> => {
 	const users = await prisma.user.findMany({ where });
-	return users.map((user) => omitKey(user, 'password'));
+	return users.map((user) => omit(user, 'password'));
 };
 
 export const findUser = async (
-	where: UserSansMeta
+	where: UserSansMeta,
 ): Promise<UserSansPassword | null> => {
 	const user = await prisma.user.findFirst({ where });
 	if (!user) return null;
-	return omitKey(user, 'password');
+	return omit(user, 'password');
 };
 
 export const findUserById = async (
-	id: string
+	id: string,
 ): Promise<UserSansPassword | null> => {
 	const user = await prisma.user.findUnique({
 		where: { id },
 	});
 	if (!user) return null;
-	return omitKey(user, 'password');
+	return omit(user, 'password');
 };

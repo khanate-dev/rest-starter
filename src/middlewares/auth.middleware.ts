@@ -1,10 +1,10 @@
+import { CONFIG } from '~/config';
 import { ApiError } from '~/errors';
-import { getErrorResponseAndCode } from '~/helpers/error';
 import { signJwt, verifyJwt } from '~/helpers/auth';
+import { getErrorResponseAndCode } from '~/helpers/error';
 import { STATUS } from '~/helpers/http';
 import { findSessionById } from '~/services/session';
 import { findUserById } from '~/services/user';
-import { CONFIG } from '~/config';
 
 import type { Jwt } from '~/helpers/auth';
 import type { AuthenticatedMiddleware, AuthenticatedRoute } from '~/types';
@@ -14,7 +14,7 @@ const reIssueAccessToken: (
 ) => Promise<Jwt> = async ({ headers }, response) => {
 	const refreshHeader = headers['x-refresh'];
 	const refreshToken = verifyJwt(
-		(Array.isArray(refreshHeader) ? refreshHeader[0] : refreshHeader) ?? ''
+		(Array.isArray(refreshHeader) ? refreshHeader[0] : refreshHeader) ?? '',
 	);
 	if (!refreshToken.valid && refreshToken.expired)
 		throw new Error('Refresh token expired');
@@ -40,7 +40,7 @@ export const validateAuth =
 	async (request, response, next) => {
 		try {
 			const verification = verifyJwt(
-				request.headers.authorization?.replace(/^Bearer\s/u, '') ?? ''
+				request.headers.authorization?.replace(/^Bearer\s/u, '') ?? '',
 			);
 
 			if (!verification.valid && !verification.expired)
@@ -59,18 +59,18 @@ export const validateAuth =
 					: [route.availableTo]
 				: [];
 
-			if (availableTo.length > 0 && !availableTo.includes(user.role))
+			if (availableTo.length > 0 && !availableTo.includes(user.role)) {
 				throw new ApiError(
 					STATUS.forbidden,
-					'You do not have access to this resource'
+					'You do not have access to this resource',
 				);
+			}
 
 			next();
-			return;
 		} catch (error: any) {
 			const { status, json } = getErrorResponseAndCode(
 				error,
-				STATUS.unauthorized
+				STATUS.unauthorized,
 			);
 			return response.status(status).json(json);
 		}

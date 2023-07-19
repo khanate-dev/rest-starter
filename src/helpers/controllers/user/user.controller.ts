@@ -1,13 +1,13 @@
 import { ApiError } from '~/errors';
-import { createUser, findUserById, findUsers } from '~/services/user';
 import { STATUS } from '~/helpers/http';
+import { createUser, findUserById, findUsers } from '~/services/user';
 
 import type {
 	CreateUserSchema,
 	GetUserSchema,
 	GetUsersSchema,
 } from '~/schemas/user';
-import type { UnAuthenticatedHandler, AuthenticatedHandler } from '~/types';
+import type { AuthenticatedHandler, UnAuthenticatedHandler } from '~/types';
 
 export const createUserHandler: UnAuthenticatedHandler<
 	CreateUserSchema
@@ -27,7 +27,7 @@ export const getUsersHandler: AuthenticatedHandler<
 };
 
 export const getUserHandler: AuthenticatedHandler<GetUserSchema> = async (
-	request
+	request,
 ) => {
 	const user = await findUserById(request.params._id);
 	if (!user)

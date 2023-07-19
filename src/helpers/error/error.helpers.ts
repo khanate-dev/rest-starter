@@ -1,13 +1,13 @@
-import { STATUS } from '~/helpers/http';
 import { ApiError } from '~/errors';
+import { STATUS } from '~/helpers/http';
 
 import type { Status } from '~/helpers/http';
 import type { ErrorResponse } from '~/types';
 
-interface ErrorResponseAndCode {
+type ErrorResponseAndCode = {
 	status: Status;
 	json: ErrorResponse;
-}
+};
 
 export const getErrorMessage = (error: any) => {
 	if (error instanceof Error) return error.message;
@@ -26,7 +26,7 @@ export const getErrorResponse = (error: any): ErrorResponse => {
 
 export const getErrorResponseAndCode = (
 	error: any,
-	defaultStatus: Status = STATUS.internalServerError
+	defaultStatus: Status = STATUS.internalServerError,
 ): ErrorResponseAndCode => {
 	const json = getErrorResponse(error);
 	if (error instanceof ApiError) return { json, status: error.status };

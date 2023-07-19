@@ -1,17 +1,17 @@
 import { CONFIG } from '~/config';
 import { ApiError } from '~/errors';
 import { signJwt } from '~/helpers/auth';
+import { STATUS } from '~/helpers/http';
 import { createSession, findSessions, updateSession } from '~/services/session';
 import { validatePassword } from '~/services/user';
-import { STATUS } from '~/helpers/http';
 
 import type { Jwt } from '~/helpers/auth';
-import type { AuthenticatedHandler, UnAuthenticatedHandler } from '~/types';
 import type {
 	CreateSessionSchema,
 	DeleteSessionSchema,
 	GetSessionsSchema,
 } from '~/schemas/session';
+import type { AuthenticatedHandler, UnAuthenticatedHandler } from '~/types';
 
 export const createSessionHandler: UnAuthenticatedHandler<
 	CreateSessionSchema

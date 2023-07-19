@@ -2,7 +2,7 @@ import {
 	createUserHandler,
 	getUserHandler,
 	getUsersHandler,
-} from '~/controllers/user';
+} from '~/helpers/controllers/user';
 import {
 	CREATE_USER_SCHEMA,
 	GET_USERS_SCHEMA,

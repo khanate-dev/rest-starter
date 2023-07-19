@@ -1,13 +1,13 @@
 import { z, ZodError } from 'zod';
 
-import { LOGGER } from '~/logger';
-import { formatToken } from '~/helpers/string';
 import {
 	AGE_REGEX,
 	MONGO_URI_REGEX,
 	PRIVATE_KEY_REGEX,
 	PUBLIC_KEY_REGEX,
 } from '~/constants';
+import { formatToken } from '~/helpers/string';
+import { LOGGER } from '~/logger';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const ENVIRONMENT_SCHEMA = z.object({
@@ -18,13 +18,13 @@ const ENVIRONMENT_SCHEMA = z.object({
 	DATABASE_URL: z.string().regex(MONGO_URI_REGEX, 'invalid uri pattern'),
 	HASHING_ITERATIONS: z.preprocess(
 		(value) => Number(value as string) || value,
-		z.number().int().min(10000).max(10000000)
+		z.number().int().min(10000).max(10000000),
 	),
 	HASHING_PEPPER: z.string().min(32),
 	NODE_ENV: z.enum(['development', 'production', 'test']),
 	PORT: z.preprocess(
 		(value) => Number(value as string) || value,
-		z.number().int().positive().min(1024).max(65535).optional()
+		z.number().int().positive().min(1024).max(65535).optional(),
 	),
 	PRIVATE_KEY: z.string().regex(PRIVATE_KEY_REGEX, 'invalid key'),
 	PUBLIC_KEY: z.string().regex(PUBLIC_KEY_REGEX, 'invalid key'),
@@ -51,16 +51,17 @@ const parseConfig = () => {
 	try {
 		const env = ENVIRONMENT_SCHEMA.parse(process.env);
 
-		for (const key of OPTIONAL_ENVIRONMENT)
+		for (const key of OPTIONAL_ENVIRONMENT) {
 			if (process.env[key] === undefined) {
-				const camelizedKey = formatToken(key, 'camel') as keyof typeof DEFAULTS;
+				const camelizedKey = formatToken(key, 'camel');
 				LOGGER.warn(
 					[
 						`Optional Environment Variable '${key}' not provided`,
 						`Using default: ${DEFAULTS[camelizedKey]}`,
-					].join('. ')
+					].join('. '),
 				);
 			}
+		}
 
 		return {
 			accessTokenAge: env.ACCESS_TOKEN_AGE ?? DEFAULTS.accessTokenAge,
@@ -76,12 +77,13 @@ const parseConfig = () => {
 			refreshTokenAge: env.REFRESH_TOKEN_AGE ?? DEFAULTS.refreshTokenAge,
 		} as const;
 	} catch (error: any) {
-		if (error instanceof ZodError)
+		if (error instanceof ZodError) {
 			throw new Error(
 				`invalid environment:\n${error.issues
 					.map((issue) => `'${issue.path[0] ?? ''}': ${issue.message}`)
-					.join('\n')}`
+					.join('\n')}`,
 			);
+		}
 		throw new Error(`invalid environment: ${JSON.stringify(error)}`);
 	}
 };

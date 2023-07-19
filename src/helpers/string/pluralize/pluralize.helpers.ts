@@ -6,9 +6,9 @@ export const pluralize = (
 	...inputExpressions: (
 		| number
 		| string
-		| [number, (arg: number) => string | null]
-		| [number, string | null]
 		| [number]
+		| [number, null | string]
+		| [number, (arg: number) => null | string]
 	)[]
 ): string => {
 	const expressions = inputExpressions.map((value) => {
@@ -29,7 +29,7 @@ export const pluralize = (
 						const array = options.split('|');
 						toShow = (array[number - 1] ?? array.at(-1) ?? '').replace(
 							/\$1/gu,
-							number.toString()
+							number.toString(),
 						);
 						break;
 					}
@@ -47,11 +47,12 @@ export const pluralize = (
 
 	const replaceQuantity = (input: string): string => {
 		if (!lastQuantifier) return input;
-		const [number, value] = lastQuantifier;
-		let trimmed = input;
-		if (!value) trimmed = input.replace(/^\s+/u, '');
 
-		return trimmed.replace(/\[(([^|]*\|?)+)\]/gu, (_, string: string) => {
+		let replaced = input;
+		const [number, value] = lastQuantifier;
+		if (!value) replaced = input.replace(/^\s+/u, '');
+
+		return replaced.replace(/\[(([^|]*\|?)+)\]/gu, (_, string: string) => {
 			const matches = string.split('|');
 			return matches[number - 1] ?? matches.at(-1) ?? '';
 		});
@@ -62,10 +63,11 @@ export const pluralize = (
 
 		const lastExpression = expressions.shift();
 		if (!lastExpression) break;
+
 		result.push(
 			typeof lastExpression === 'string'
 				? replaceQuantity(lastExpression)
-				: lastExpression[1]
+				: lastExpression[1],
 		);
 		lastQuantifier = quantifiers.shift() ?? lastQuantifier;
 	}

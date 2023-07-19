@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 import type {
-	ZodRouteSchema,
 	RouteSchemaInput,
-	ZodRouteParams,
-	ZodRouteResponse,
-	ZodRouteQuery,
 	ZodRouteBody,
+	ZodRouteParams,
+	ZodRouteQuery,
+	ZodRouteResponse,
+	ZodRouteSchema,
 } from '~/types';
 
 export const MONGO_ID_SCHEMA = z.string();
@@ -19,9 +19,9 @@ export const MONGO_META_SCHEMA = z.strictObject({
 
 export const createModelSchema = <
 	Key extends string,
-	Schema extends Record<Key, z.ZodTypeAny>
+	Schema extends Record<Key, z.ZodTypeAny>,
 >(
-	schema: Schema
+	schema: Schema,
 ) => {
 	const sansMetaModelSchema = z.strictObject(schema);
 
@@ -43,7 +43,7 @@ export const createRouteSchema = <
 	Body extends ZodRouteBody = DefaultObject,
 	Params extends ZodRouteParams = DefaultObject,
 	Query extends ZodRouteQuery = DefaultObject,
-	Response extends ZodRouteResponse = DefaultResponse
+	Response extends ZodRouteResponse = DefaultResponse,
 >({
 	body = DEFAULT_OBJECT as Body,
 	query = DEFAULT_OBJECT as Query,

@@ -7,7 +7,7 @@ const MONGO_URI_COLLECTION_REGEX = /\/?[a-zA-Z0-9-_.]*/iu;
 const MONGO_URI_PARAMS_REGEX = /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/iu;
 export const MONGO_URI_REGEX = new RegExp(
 	`^${MONGO_URI_PREFIX_REGEX.source}${MONGO_URI_HOST_REGEX.source}${MONGO_URI_COLLECTION_REGEX.source}${MONGO_URI_PARAMS_REGEX.source}$`,
-	'iu'
+	'iu',
 );
 
 const AGE_UNITS = [
@@ -46,7 +46,7 @@ const AGE_UNITS = [
 
 export const AGE_REGEX = new RegExp(
 	`^[0-9]+s?(${AGE_UNITS.join('|')})?$`,
-	'iu'
+	'iu',
 );
 
 export const PUBLIC_KEY_REGEX =

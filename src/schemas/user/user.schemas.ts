@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 import {
-	createRouteSchema,
-	createModelSchema,
 	MONGO_ID_SCHEMA,
+	createModelSchema,
+	createRouteSchema,
 } from '~/helpers/schema';
 
 export const USER_ROLES = ['user', 'admin', 'guest'] as const;

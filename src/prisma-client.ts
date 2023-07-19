@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { CONFIG } from '~/config';
 import { LOGGER } from '~/logger';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const prisma = new PrismaClient({
 	errorFormat: CONFIG.env === 'development' ? 'pretty' : undefined,
 	log: [

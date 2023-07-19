@@ -1,11 +1,19 @@
-export const LOWER_CASE = 'abcdefghijklmnopqrstuvwxyz' as const;
+import type { Utils } from '~/types/utils';
 
-export const UPPER_CASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' as const;
+export const lowerAlphabet = 'abcdefghijklmnopqrstuvwxyz' as const;
+export type LowerAlphabet = Utils.stringToUnion<typeof lowerAlphabet>;
 
-export const NUMBERS = '0123456789' as const;
+export const upperAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' as const;
+export type UpperAlphabet = Utils.stringToUnion<typeof upperAlphabet>;
 
-export const ALPHABET = `${LOWER_CASE}${UPPER_CASE}` as const;
+export const numeric = '0123456789' as const;
+export type Numeric = Utils.stringToUnion<typeof numeric>;
 
-export const WORD_SEPARATORS = ` \n-_${NUMBERS}` as const;
+export const alphabet = `${lowerAlphabet}${upperAlphabet}` as const;
+export type Alphabet = LowerAlphabet | UpperAlphabet;
 
-export const ALPHA_NUMERIC = `${ALPHABET}${NUMBERS}` as const;
+export const wordSeparators = ` \n-_.${numeric}` as const;
+export type WordSeparators = Utils.stringToUnion<typeof wordSeparators>;
+
+export const alphaNumeric = `${alphabet}${numeric}` as const;
+export type AlphaNumeric = Alphabet | Numeric;

@@ -1,13 +1,13 @@
 import {
-	ALPHABET,
-	LOWER_CASE,
-	WORD_SEPARATORS,
-	UPPER_CASE,
+	alphabet,
+	lowerAlphabet,
+	upperAlphabet,
+	wordSeparators,
 } from '~/helpers/string/string-literals';
 
-export const HUMANIZE_CASES = ['lower', 'sentence', 'title', 'upper'] as const;
+export const humanizeCases = ['lower', 'sentence', 'title', 'upper'] as const;
 
-export type HumanizeCase = (typeof HUMANIZE_CASES)[number];
+export type HumanizeCase = (typeof humanizeCases)[number];
 
 /**
  * Takes a token name and returns a human readable string
@@ -17,7 +17,7 @@ export type HumanizeCase = (typeof HUMANIZE_CASES)[number];
  */
 export const humanizeToken = (
 	input: string,
-	casing: HumanizeCase = 'title'
+	casing: HumanizeCase = 'title',
 ): string => {
 	const string = input.trim();
 	if (!string.trim()) return '';
@@ -28,7 +28,7 @@ export const humanizeToken = (
 		const current = string[index] as string;
 		const last = string[index - 1] as string;
 
-		if (!ALPHABET.includes(current)) continue;
+		if (!alphabet.includes(current)) continue;
 
 		if (!formatted) {
 			switch (casing) {
@@ -44,8 +44,8 @@ export const humanizeToken = (
 				}
 			}
 		} else if (
-			(ALPHABET.includes(current) && WORD_SEPARATORS.includes(last)) ||
-			(UPPER_CASE.includes(current) && LOWER_CASE.includes(last))
+			(alphabet.includes(current) && wordSeparators.includes(last)) ||
+			(upperAlphabet.includes(current) && lowerAlphabet.includes(last))
 		) {
 			formatted += ' ';
 			switch (casing) {
