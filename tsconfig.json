@@ -1,51 +1,56 @@
 {
 	"compilerOptions": {
+		// type checking
 		"strict": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": true,
 		"noImplicitOverride": true,
-		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"noUncheckedIndexedAccess": true,
-		"noUnusedLocals": true,
 		"strictFunctionTypes": true,
 		"strictBindCallApply": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
 		"useUnknownInCatchVariables": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
 
-		"baseUrl": "./src",
-		"module": "CommonJS",
+		// modules
+		"module": "esnext",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
+		"types": ["vitest/globals"],
 		"paths": {
-			"~/*": ["./*"]
+			"~/*": ["./src/*"]
 		},
 
+		// emit
 		"downlevelIteration": true,
 		"noEmit": true,
-		"importsNotUsedAsValues": "error",
 
+		// javascript support
 		"allowJs": true,
 		"checkJs": true,
 
+		// interop constraints
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
-		"jsx": "react-jsx",
+		"verbatimModuleSyntax": true,
+
+		// language and environment
 		"lib": ["esnext"],
 		"target": "esnext",
 
+		// output formatting
+		"noErrorTruncation": true,
+
+		// completeness
 		"skipLibCheck": true
 	},
-	"exclude": [
-		"node_modules/**/*",
-		"build/**/*",
-		"dist/**/*",
-		"coverage/*",
-		"public"
-	]
+	"include": ["**/*", "**/*.*.cjs"],
+	"exclude": ["node_modules", "build", "dist", "coverage", "public"]
 }
