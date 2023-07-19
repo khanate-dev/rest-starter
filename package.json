@@ -1,14 +1,14 @@
 {
 	"name": "typescript-express-boilerplate",
 	"version": "1.0.0",
-	"main": "build/src/app.js",
 	"author": "Saad Khan",
 	"license": "MIT",
+	"type": "module",
 	"scripts": {
-		"start": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --require dotenv/config src/app.ts",
+		"start": "tsx --watch --require dotenv/config src/app.ts",
 		"build": "rimraf ./build && tsc",
 		"start:production": "node --require tsconfig-paths/register build/src/app.js",
-		"lint": "eslint . --fix && pnpm format",
+		"lint": "eslint . --fix --report-unused-disable-directives && pnpm format",
 		"format": "prettier --write .",
 		"test": "vitest watch",
 		"test-ui": "vitest --ui",
@@ -57,6 +57,7 @@
 		"rimraf": "^5.0.1",
 		"ts-node-dev": "^2.0.0",
 		"tsconfig-paths": "^4.2.0",
+		"tsx": "^3.12.7",
 		"typescript": "^5.1.6",
 		"vite-tsconfig-paths": "^4.2.0",
 		"vitest": "^0.33.0"
