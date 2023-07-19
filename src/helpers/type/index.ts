@@ -1,1 +1,1 @@
-export * from './types.helpers';
+export * from './type.helpers';

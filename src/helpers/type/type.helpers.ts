@@ -61,7 +61,7 @@ export const isDetailedResponse = <Type extends Record<string, any>>(
 	return true;
 };
 
-export const assertRoute: AssertFunction<Route> = (value) => {
+export const assertRoute: Utils.assertFunction<Route> = (value) => {
 	if (!isObject(value))
 		throw new TypeError(`expected 'object', received ${readableTypeOf(value)}`);
 
@@ -97,7 +97,7 @@ export const assertRoute: AssertFunction<Route> = (value) => {
 	}
 };
 
-export const assertRoutes: AssertFunction<Route[]> = (value) => {
+export const assertRoutes: Utils.assertFunction<Route[]> = (value) => {
 	if (!Array.isArray(value)) {
 		throw new TypeError(
 			`expected 'array', received '${readableTypeOf(value)}'`,
