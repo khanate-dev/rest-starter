@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		// type checking
 		"strict": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
@@ -17,7 +16,6 @@
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 
-		// modules
 		"module": "esnext",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
@@ -26,29 +24,23 @@
 			"~/*": ["./src/*"]
 		},
 
-		// emit
 		"downlevelIteration": true,
 		"noEmit": true,
 
-		// javascript support
 		"allowJs": true,
 		"checkJs": true,
 
-		// interop constraints
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"verbatimModuleSyntax": true,
 
-		// language and environment
 		"lib": ["esnext"],
 		"target": "esnext",
 
-		// output formatting
 		"noErrorTruncation": true,
 
-		// completeness
 		"skipLibCheck": true
 	},
 	"include": ["**/*", "**/*.*.cjs"],
