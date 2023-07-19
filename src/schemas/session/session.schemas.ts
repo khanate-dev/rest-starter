@@ -1,15 +1,15 @@
 import { z } from 'zod';
 
 import {
-	createRouteSchema,
-	createModelSchema,
 	MONGO_ID_SCHEMA,
+	createModelSchema,
+	createRouteSchema,
 } from '~/helpers/schema';
 
 export const [SESSION_SANS_META_SCHEMA, SESSION_SCHEMA] = createModelSchema({
 	userAgent: z.string(),
 	userId: MONGO_ID_SCHEMA,
-	valid: z.boolean(),
+	valid: z.boolean().nullable(),
 });
 
 export type SessionSansMeta = z.infer<typeof SESSION_SANS_META_SCHEMA>;
