@@ -6,8 +6,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "tsx --watch --require dotenv/config src/app.ts",
-		"build": "rimraf ./build && tsc",
-		"start:production": "node --require tsconfig-paths/register build/src/app.js",
+		"build": "rimraf ./build && tsc -p tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src",
+		"start:production": "node --experimental-specifier-resolution=node --require dotenv/config build/app.js",
 		"lint": "eslint . --fix --report-unused-disable-directives && pnpm format",
 		"format": "prettier --write .",
 		"test": "vitest watch",
