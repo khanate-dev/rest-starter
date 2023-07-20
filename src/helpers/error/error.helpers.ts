@@ -2,19 +2,19 @@ import { ApiError } from '~/errors';
 import { STATUS } from '~/helpers/http';
 
 import type { Status } from '~/helpers/http';
-import type { ErrorResponse } from '~/types';
+import type { ErrorResponse } from '~/helpers/route';
 
 type ErrorResponseAndCode = {
 	status: Status;
 	json: ErrorResponse;
 };
 
-export const getErrorMessage = (error: any) => {
+export const getErrorMessage = (error: unknown) => {
 	if (error instanceof Error) return error.message;
 	return String(error);
 };
 
-export const getErrorResponse = (error: any): ErrorResponse => {
+export const getErrorResponse = (error: unknown): ErrorResponse => {
 	if (error instanceof Error)
 		return { message: error.message, type: error.name };
 
@@ -25,7 +25,7 @@ export const getErrorResponse = (error: any): ErrorResponse => {
 };
 
 export const getErrorResponseAndCode = (
-	error: any,
+	error: unknown,
 	defaultStatus: Status = STATUS.internalServerError,
 ): ErrorResponseAndCode => {
 	const json = getErrorResponse(error);
