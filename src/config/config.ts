@@ -7,7 +7,7 @@ import {
 	PUBLIC_KEY_REGEX,
 } from '~/constants';
 import { formatToken } from '~/helpers/string';
-import { LOGGER } from '~/logger';
+import { logger } from '~/logger';
 
 const ENVIRONMENT_SCHEMA = z.object({
 	ACCESS_TOKEN_AGE: z
@@ -53,7 +53,7 @@ const parseConfig = () => {
 		for (const key of OPTIONAL_ENVIRONMENT) {
 			if (process.env[key] === undefined) {
 				const camelizedKey = formatToken(key, 'camel');
-				LOGGER.warn(
+				logger.warn(
 					[
 						`Optional Environment Variable '${key}' not provided`,
 						`Using default: ${DEFAULTS[camelizedKey]}`,
@@ -89,4 +89,4 @@ const parseConfig = () => {
 
 export type Config = ReturnType<typeof parseConfig>;
 
-export const CONFIG = parseConfig();
+export const config = parseConfig();
