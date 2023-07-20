@@ -1,10 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CONFIG } from '~/config';
-import { LOGGER } from '~/logger';
+import { config } from '~/config';
+import { logger } from '~/logger';
 
 export const prisma = new PrismaClient({
-	errorFormat: CONFIG.env === 'development' ? 'pretty' : undefined,
+	errorFormat: config.env === 'development' ? 'pretty' : undefined,
 	log: [
 		{
 			emit: 'event',
@@ -25,7 +25,7 @@ export const prisma = new PrismaClient({
 	],
 });
 
-prisma.$on('query', LOGGER.info);
-prisma.$on('info', LOGGER.info);
-prisma.$on('error', LOGGER.warn);
-prisma.$on('warn', LOGGER.error);
+prisma.$on('query', logger.info);
+prisma.$on('info', logger.info);
+prisma.$on('error', logger.warn);
+prisma.$on('warn', logger.error);

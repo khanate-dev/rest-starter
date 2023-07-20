@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-export const LOGGER = pino({
+export const logger = pino({
 	base: {
 		pid: false,
 	},

@@ -4,7 +4,7 @@ import type { Session, SessionSansMeta } from '~/schemas/session';
 
 export const createSession = async (
 	userId: string,
-	userAgent: string,
+	userAgent?: string,
 ): Promise<Session> => {
 	return prisma.session.create({
 		data: { userAgent, userId },
