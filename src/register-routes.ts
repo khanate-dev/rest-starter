@@ -4,17 +4,19 @@ import { logger } from '~/logger';
 
 import { objectValues } from './helpers/object';
 import { generalRoutes } from './routes/general';
+import { sessionRoutes } from './routes/session';
+import { userRoutes } from './routes/user';
 
 import type { Express } from 'express';
-import type { Route } from './helpers/route';
+import type { Route, Routes } from './helpers/route';
+
+const routeMap: Record<string, Routes<any>> = {
+	user: userRoutes,
+	general: generalRoutes,
+	session: sessionRoutes,
+};
 
 export const registerRoutes = (app: Express) => {
-	const routeMap = {
-		// user: userRoutes,
-		general: generalRoutes,
-		// session: sessionRoutes,
-	};
-
 	const routes = Object.entries(routeMap)
 		.map<Route[]>(([name, routeArray]) => {
 			try {
@@ -22,7 +24,7 @@ export const registerRoutes = (app: Express) => {
 				return objectValues(routeArray).map((route) => ({
 					...route,
 					path: `${prefix}${route.path}`.replace(/^\/|\/$/u, ''),
-				}));
+				})) as never;
 			} catch (error) {
 				logger.error(`Invalid ${name} routes: ${getErrorMessage(error)}`);
 				return [];
