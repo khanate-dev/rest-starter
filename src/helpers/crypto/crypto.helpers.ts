@@ -1,11 +1,11 @@
 import crypto from 'crypto';
 
-import { CONFIG } from '~/config';
+import { config } from '~/config';
 
 const HASH_LENGTH = 64;
 
 export const getHash = (password: string, salt: string): string => {
-	const { iterations, pepper } = CONFIG.hashing;
+	const { iterations, pepper } = config.hashing;
 	const hmac = crypto
 		.pbkdf2Sync(password, pepper, iterations, HASH_LENGTH, 'sha512')
 		.toString('hex');
