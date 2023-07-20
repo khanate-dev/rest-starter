@@ -1,8 +1,8 @@
 import { getErrorMessage } from '~/helpers/error';
 import { STATUS_CODES } from '~/helpers/http';
-import { ROUTE_METHODS } from '~/types';
+import { routeMethods } from '~/helpers/route';
 
-import type { DetailedResponse, Route } from '~/types';
+import type { DetailedResponse, Route } from '~/helpers/route';
 import type { Utils } from '~/types/utils';
 
 export const readableTypeOf = (value: any) => {
@@ -48,10 +48,14 @@ export const assertArray: AssertArray = (value, checker) => {
 	}
 };
 
-export const isDetailedResponse = <Type extends Record<string, any>>(
-	value: DetailedResponse<Type> | Type,
-): value is DetailedResponse<Type> => {
+export const isDetailedResponse = (
+	value: unknown,
+): value is DetailedResponse<Obj | Obj[] | undefined> => {
 	if (
+		typeof value !== 'object' ||
+		!value ||
+		!('status' in value) ||
+		!('json' in value) ||
 		typeof value.status !== 'number' ||
 		!STATUS_CODES.includes(value.status) ||
 		!value.json ||
@@ -78,12 +82,9 @@ export const assertRoute: Utils.assertFunction<Route> = (value) => {
 
 		if (
 			typeof value.method !== 'string' ||
-			!ROUTE_METHODS.includes(value.method)
-		) {
-			throw new TypeError(
-				`method must be one of [${ROUTE_METHODS.join(', ')}]`,
-			);
-		}
+			!routeMethods.includes(value.method)
+		)
+			throw new TypeError(`method must be one of [${routeMethods.join(', ')}]`);
 
 		if (typeof value.handler !== 'function')
 			throw new TypeError('handler must be an async function');
