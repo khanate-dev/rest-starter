@@ -1,13 +1,22 @@
-import { echoHandler } from '~/helpers/controllers/general';
-import { ECHO_SCHEMA } from '~/schemas/general';
+import { z } from 'zod';
 
-import type { Route } from '~/types';
+import { createContract, createRoutes } from '~/helpers/route';
 
-export const generalRoutes: Route[] = [
-	{
-		handler: echoHandler,
+export const generalContract = createContract({
+	echo: {
 		method: 'get',
+		auth: true,
 		path: '/echo',
-		schema: ECHO_SCHEMA,
+		params: { first: 'number' },
+		response: z.strictObject({ message: z.string(), success: z.boolean() }),
 	},
-];
+});
+
+export const generalRoutes = createRoutes(generalContract, {
+	echo: async () => {
+		return Promise.resolve({
+			message: 'Hello World',
+			success: true,
+		});
+	},
+});
