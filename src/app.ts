@@ -1,12 +1,14 @@
+import { createExpressEndpoints } from '@ts-rest/express';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import pinoHttp from 'pino-http';
 
 import { config } from '~/config';
-import { logger } from '~/logger';
+import { logger, stylized } from '~/logger';
 
-import { registerRoutes } from './register-routes';
+import { dayjsFormatPatterns, dayjsUtc } from './helpers/date';
+import { contract, router } from './routes';
 
 const app = express();
 
@@ -24,9 +26,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(pinoHttp({ logger }));
 
+createExpressEndpoints(contract, router, app, {
+	logInitialization: true,
+	requestValidationErrorHandler: 'combined',
+	responseValidation: true,
+	globalMiddleware: [
+		(req, _res, next) => {
+			console.info(
+				dayjsUtc().format(dayjsFormatPatterns.datetime),
+				'=>',
+				stylized(req.method, 'green'),
+				req.originalUrl,
+			);
+			next();
+		},
+	],
+});
+
+app.use((_request, response) =>
+	response
+		.status(404)
+		.json({ name: 'NotFoundError', message: 'Resource Not Found!' }),
+);
+
 const SERVER = app.listen(config.port, () => {
-	logger.info(`App is running at http://localhost:${config.port}`);
-	registerRoutes(app);
+	logger.info(`Server is running at http://localhost:${config.port}`);
 });
 
 SERVER.on('error', (error) => {
