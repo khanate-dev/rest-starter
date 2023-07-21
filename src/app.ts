@@ -2,7 +2,6 @@ import { createExpressEndpoints } from '@ts-rest/express';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import pinoHttp from 'pino-http';
 
 import { config } from '~/config';
 import { logger, stylized } from '~/logger';
@@ -24,7 +23,6 @@ app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(pinoHttp({ logger }));
 
 createExpressEndpoints(contract, router, app, {
 	logInitialization: true,
