@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-import { createModelSchema, mongoIdSchema } from '~/helpers/schema';
+import { createModelSchema, dbIdSchema } from '~/helpers/schema';
 
 export const [sessionSansMetaSchema, sessionSchema] = createModelSchema({
-	userAgent: z.string().nullable(),
-	userId: mongoIdSchema,
+	user_agent: z.string().nullable(),
+	user_id: dbIdSchema,
 	valid: z.boolean().nullable(),
 });
 

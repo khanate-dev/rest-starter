@@ -1,22 +1,25 @@
+import { initContract } from '@ts-rest/core';
+import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
-import { createContract, createRoutes } from '~/helpers/route';
+const c = initContract();
+const r = initServer();
 
-export const generalContract = createContract({
+export const generalContract = c.router({
 	echo: {
-		method: 'get',
-		auth: true,
+		method: 'GET',
 		path: '/echo',
-		params: { first: 'number' },
-		response: z.strictObject({ message: z.string(), success: z.boolean() }),
+		responses: {
+			200: z.strictObject({ message: z.string(), success: z.boolean() }),
+		},
 	},
 });
 
-export const generalRoutes = createRoutes(generalContract, {
+export const generalRouter = r.router(generalContract, {
 	echo: async () => {
 		return Promise.resolve({
-			message: 'Hello World',
-			success: true,
+			status: 200,
+			body: { message: 'Hello World', success: true },
 		});
 	},
 });

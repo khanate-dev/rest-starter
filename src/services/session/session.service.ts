@@ -3,11 +3,11 @@ import { prisma } from '~/prisma-client';
 import type { Session, SessionSansMeta } from '~/schemas/session';
 
 export const createSession = async (
-	userId: string,
-	userAgent?: string,
+	user_id: string,
+	user_agent?: string,
 ): Promise<Session> => {
 	return prisma.session.create({
-		data: { userAgent, userId },
+		data: { user_agent, user_id },
 	});
 };
 
