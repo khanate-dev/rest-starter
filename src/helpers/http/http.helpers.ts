@@ -4,7 +4,7 @@ import { objectKeys, objectValues } from '~/helpers/object';
  * Hypertext Transfer Protocol (HTTP) response status codes.
  * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}
  */
-export const STATUS = {
+export const httpStatus = {
 	/**
 	 * The server has received the request headers and the client should proceed to send the request body
 	 * (in the case of a request for which a body needs to be sent; for example, a POST request).
@@ -267,7 +267,6 @@ export const STATUS = {
 	 * and is not expected to be implemented by actual HTTP servers. The RFC specifies this code should be returned by
 	 * teapots requested to brew coffee. This HTTP status is used as an Easter egg in some websites, including Google.com.
 	 */
-
 	iAmATeapot: 418,
 
 	/**
@@ -380,7 +379,8 @@ export const STATUS = {
 	networkAuthenticationRequired: 511,
 } as const;
 
-export type Status = (typeof STATUS)[keyof typeof STATUS];
+export type HttpStatus = (typeof httpStatus)[keyof typeof httpStatus];
 
-export const STATUS_CODES = objectValues(STATUS);
-export const STATUS_NAMES = objectKeys(STATUS);
+export const httpStatusCodes = objectValues(httpStatus);
+
+export const httpStatusNames = objectKeys(httpStatus);
