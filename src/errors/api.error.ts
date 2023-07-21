@@ -1,18 +1,34 @@
-import type { Status } from '~/helpers/http';
+import type { HttpStatus } from '~/helpers/http';
 
-const DEFAULT_MESSAGE = 'Something went wrong';
+const defaultHttpMessage = 'Something went wrong';
 
-const MESSAGES: Partial<Record<Status, string>> = {
+const httpMessages: Partial<Record<HttpStatus, string>> = {
 	401: 'Not logged in',
 	403: 'You do not have permission to perform this action',
 	404: 'Resource not found',
 };
-/* eslint-enable @typescript-eslint/naming-convention */
 
 export class ApiError extends Error {
-	status: Status;
-	constructor(status: Status, message?: string, options?: ErrorOptions) {
-		super(message ?? MESSAGES[status] ?? DEFAULT_MESSAGE, options);
+	type = 'api-error';
+	status: HttpStatus;
+	constructor(status: HttpStatus, message?: string, options?: ErrorOptions) {
+		super(message ?? httpMessages[status] ?? defaultHttpMessage, options);
 		this.status = status;
 	}
 }
+
+/**
+ * @description
+ * This function is used to get the error message from the error object.
+ *
+ * - If the error is an instance of `Error`, it will return the error message.
+ * - If the error is an `object`, it will return the stringified version of the object.
+ * - If the error is a `string`, it will return the string.
+ * - If the error is anything else, it will return the stringified version of the error.
+ * @param error
+ */
+export const getCatchMessage = (error: unknown): string => {
+	if (error instanceof Error) return error.message;
+	if (typeof error === 'object') return JSON.stringify(error);
+	return String(error);
+};
