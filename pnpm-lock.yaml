@@ -8,15 +8,18 @@ dependencies:
   '@prisma/client':
     specifier: ^5.0.0
     version: 5.0.0(prisma@5.0.0)
+  '@ts-rest/core':
+    specifier: ^3.26.4
+    version: 3.26.4(zod@3.21.4)
+  '@ts-rest/express':
+    specifier: ^3.26.4
+    version: 3.26.4(@ts-rest/core@3.26.4)(express@4.18.2)(zod@3.21.4)
   cors:
     specifier: ^2.8.5
     version: 2.8.5
   dayjs:
     specifier: ^1.11.9
     version: 1.11.9
-  dotenv:
-    specifier: ^16.3.1
-    version: 16.3.1
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -931,6 +934,32 @@ packages:
   /@total-typescript/ts-reset@0.4.2:
     resolution: {integrity: sha512-vqd7ZUDSrXFVT1n8b2kc3LnklncDQFPvR58yUS1kEP23/nHPAO9l1lMjUfnPrXYYk4Hj54rrLKMW5ipwk7k09A==}
     dev: true
+
+  /@ts-rest/core@3.26.4(zod@3.21.4):
+    resolution: {integrity: sha512-mgDkGKnE+N67dtD2xkHh9vstlUI++p1INj93hFhQYsT9Awx+oUBY2GwzU4fSaJybKFIvQEC9NEMMWx1/E+7kiQ==}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      zod: 3.21.4
+    dev: false
+
+  /@ts-rest/express@3.26.4(@ts-rest/core@3.26.4)(express@4.18.2)(zod@3.21.4):
+    resolution: {integrity: sha512-F9Xv25E/B3y4st1dWg4xfQO7i3hF3sNzgytJ7Uyh/s9AT+LM4Qgyj3g5xKK4gvSV6hG2aCzoQzuI7NkCN2wYIQ==}
+    peerDependencies:
+      '@ts-rest/core': 3.26.4
+      express: ^4.0.0
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ts-rest/core': 3.26.4(zod@3.21.4)
+      express: 4.18.2
+      zod: 3.21.4
+    dev: false
 
   /@tsconfig/node10@1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -2119,6 +2148,7 @@ packages:
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
+    dev: true
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
