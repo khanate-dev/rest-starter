@@ -1,16 +1,11 @@
-export const PHONE_REGEX =
-	/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/u;
+export const jwtSecret = '57731062324a678ae936796f625cb6fd';
 
-const MONGO_URI_PREFIX_REGEX = /mongodb(\+srv)?:\/\//iu;
-const MONGO_URI_HOST_REGEX = /[a-zA-Z0-9-_.:@]+/iu;
-const MONGO_URI_COLLECTION_REGEX = /\/?[a-zA-Z0-9-_.]*/iu;
-const MONGO_URI_PARAMS_REGEX = /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/iu;
-export const MONGO_URI_REGEX = new RegExp(
-	`^${MONGO_URI_PREFIX_REGEX.source}${MONGO_URI_HOST_REGEX.source}${MONGO_URI_COLLECTION_REGEX.source}${MONGO_URI_PARAMS_REGEX.source}$`,
-	'iu',
-);
+export const encryption = {
+	iterations: 1000000,
+	pepper: '4c62017971d2a8f68f86bc96b4b95e70556592c4',
+};
 
-const AGE_UNITS = [
+const ageUnits = [
 	'years',
 	'year',
 	'yrs',
@@ -44,12 +39,23 @@ const AGE_UNITS = [
 	'm',
 ] as const;
 
-export const AGE_REGEX = new RegExp(
-	`^[0-9]+s?(${AGE_UNITS.join('|')})?$`,
-	'iu',
-);
+const mongo = {
+	prefix: /mongodb(\+srv)?:\/\//iu,
+	host: /[a-zA-Z0-9-_.:@]+/iu,
+	collection: /\/?[a-zA-Z0-9-_.]*/iu,
+	params: /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/iu,
+};
 
-export const PUBLIC_KEY_REGEX =
-	/^-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----$/su;
-export const PRIVATE_KEY_REGEX =
-	/^-----BEGIN PRIVATE KEY-----.+-----END PRIVATE KEY-----$/su;
+export const regex = {
+	phone:
+		/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/u,
+	age: new RegExp(`^[0-9]+s?(${ageUnits.join('|')})?$`, 'iu'),
+	publicKey: /^-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----$/su,
+	privateKey: /^-----BEGIN PRIVATE KEY-----.+-----END PRIVATE KEY-----$/su,
+	mongoId: new RegExp(
+		`^${Object.values(mongo)
+			.map((r) => r.source)
+			.join('')}$`,
+		'iu',
+	),
+};
