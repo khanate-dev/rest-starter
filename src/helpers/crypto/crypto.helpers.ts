@@ -2,25 +2,25 @@ import crypto from 'crypto';
 
 import { config } from '~/config';
 
-const HASH_LENGTH = 64;
+const hashLength = 64;
 
-export const getHash = (password: string, salt: string): string => {
+export const getHash = (password: string, salt: string) => {
 	const { iterations, pepper } = config.hashing;
 	const hmac = crypto
-		.pbkdf2Sync(password, pepper, iterations, HASH_LENGTH, 'sha512')
+		.pbkdf2Sync(password, pepper, iterations, hashLength, 'sha512')
 		.toString('hex');
 	const hash = crypto
-		.pbkdf2Sync(hmac, salt, iterations, HASH_LENGTH, 'sha512')
+		.pbkdf2Sync(hmac, salt, iterations, hashLength, 'sha512')
 		.toString('hex');
 	return hash;
 };
 
-/** get a cryptographically strong hex string of given length */
-export const getRandomString = (length: number): string =>
-	crypto.randomBytes(length / 2).toString('hex');
+export const getRandomString = (length: number) => {
+	return crypto.randomBytes(length / 2).toString('hex');
+};
 
-export const getHashedPassword = (password: string): string => {
-	const salt = getRandomString(HASH_LENGTH);
+export const getHashedPassword = (password: string) => {
+	const salt = getRandomString(hashLength);
 	const hash = getHash(password, salt);
 	return `${hash} ${salt}`;
 };
