@@ -4,9 +4,8 @@ import { config } from '~/config';
 import { getCatchMessage } from '~/errors';
 import { httpStatus } from '~/helpers/http';
 import { dbIdSchema } from '~/helpers/schema';
+import { prisma } from '~/prisma-client';
 import { userSansPasswordSchema } from '~/schemas/user';
-import { findSessionById } from '~/services/session';
-import { findUserById } from '~/services/user';
 
 import type { Request, Response } from 'express';
 import type { SignOptions } from 'jsonwebtoken';
@@ -56,10 +55,12 @@ const reIssueAccessToken = async (
 		throw new Error('Refresh token expired');
 	if (!refreshToken.valid) throw new Error('Invalid refresh token');
 
-	const session = await findSessionById(refreshToken.payload.session_id);
+	const session = await prisma.session.findUnique({
+		where: { id: refreshToken.payload.session_id },
+	});
 	if (!session?.valid) throw new Error('Session is no longer valid');
 
-	const user = await findUserById(session.user_id);
+	const user = await prisma.user.findUnique({ where: { id: session.user_id } });
 	if (!user) throw new Error('user not found');
 
 	const payload: JwtPayload = {
@@ -90,13 +91,13 @@ export const validateAuth = async (
 
 		response.locals.user = user;
 
-		const availableToArray = availableTo
+		const authArray = availableTo
 			? Array.isArray(availableTo)
 				? availableTo
 				: [availableTo]
 			: [];
 
-		if (availableToArray.length > 0 && !availableToArray.includes(user.role)) {
+		if (authArray.length > 0 && !authArray.includes(user.role)) {
 			return response.status(httpStatus.forbidden).json({
 				message: 'You do not have access to this resource',
 				type: 'unauthorized',

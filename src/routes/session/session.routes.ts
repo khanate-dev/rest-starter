@@ -4,10 +4,11 @@ import { z } from 'zod';
 
 import { config } from '~/config';
 import { createJwt, jwtPayloadSchema } from '~/helpers/auth';
+import { comparePassword } from '~/helpers/crypto';
 import { httpStatus } from '~/helpers/http';
+import { omit } from '~/helpers/object';
+import { prisma } from '~/prisma-client';
 import { sessionSchema } from '~/schemas/session';
-import { createSession, findSessions, updateSession } from '~/services/session';
-import { validatePassword } from '~/services/user';
 
 import type { JwtPayload } from '~/helpers/auth';
 
@@ -29,7 +30,6 @@ export const sessionContract = c.router({
 		body: z.undefined(),
 		responses: {
 			200: z.strictObject({ accessToken: z.null(), refreshToken: z.null() }),
-			404: z.null(),
 		},
 	},
 	post: {
@@ -52,28 +52,33 @@ export const sessionContract = c.router({
 export const sessionRouter = r.router(sessionContract, {
 	get: async ({ res }) => {
 		const userId = jwtPayloadSchema.parse(res.locals.user).id;
-		const body = await findSessions({
-			user_id: userId,
-			valid: true,
+		const body = await prisma.session.findMany({
+			where: { user_id: userId, valid: true },
 		});
 		return { status: 200, body };
 	},
 	delete: async ({ res }) => {
-		const sessionId = jwtPayloadSchema.parse(res.locals.user).session_id;
-		const updatedSession = await updateSession(sessionId, {
-			valid: false,
+		const id = jwtPayloadSchema.parse(res.locals.user).session_id;
+		await prisma.session.update({
+			data: { valid: false },
+			where: { id },
 		});
-		if (!updatedSession) return { status: 404, body: null };
 		return { status: 200, body: { accessToken: null, refreshToken: null } };
 	},
 	post: async ({ body, headers }) => {
-		const user = await validatePassword(body);
+		const user = await prisma.user.findUnique({ where: { email: body.email } });
 
-		if (!user) return { status: httpStatus.unauthorized, body: null };
+		if (!user || !comparePassword(body.password, user.password))
+			return { status: httpStatus.unauthorized, body: null };
 
-		const session = await createSession(user.id, headers['user-agent']);
+		const session = await prisma.session.create({
+			data: { user_agent: headers['user-agent'], user_id: user.id },
+		});
 
-		const payload: JwtPayload = { ...user, session_id: session.id };
+		const payload: JwtPayload = {
+			...omit(user, 'password'),
+			session_id: session.id,
+		};
 
 		const accessToken = createJwt(payload);
 		const refreshToken = createJwt(payload, {

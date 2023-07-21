@@ -2,8 +2,9 @@ import { initContract } from '@ts-rest/core';
 import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
+import { omit } from '~/helpers/object';
+import { prisma } from '~/prisma-client';
 import { userSansMetaSchema, userSansPasswordSchema } from '~/schemas/user';
-import { createUser, findUserById, findUsers } from '~/services/user';
 
 const c = initContract();
 const r = initServer();
@@ -47,16 +48,21 @@ export const userContract = c.router(
 
 export const userRouter = r.router(userContract, {
 	get: async () => {
-		const body = await findUsers();
+		const users = await prisma.user.findMany();
+		const body = users.map((user) => omit(user, 'password'));
 		return { status: 200, body };
 	},
 	getOne: async ({ params }) => {
-		const body = await findUserById(params.id);
-		if (!body) return { status: 404, body: null };
+		const user = await prisma.user.findUnique({
+			where: { id: params.id },
+		});
+		if (!user) return { status: 404, body: null };
+		const body = omit(user, 'password');
 		return { status: 200, body };
 	},
-	post: async (request) => {
-		const body = await createUser(request.body);
-		return { status: 201, body };
+	post: async ({ body }) => {
+		const user = await prisma.user.create({ data: body });
+		const res = omit(user, 'password');
+		return { status: 201, body: res };
 	},
 });
