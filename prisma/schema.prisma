@@ -17,22 +17,22 @@ enum UserRole {
 }
 
 model User {
-    id        String    @id @default(auto()) @map("_id") @db.ObjectId
-    email     String    @unique
-    name      String
-    password  String
-    role      UserRole
-    sessions  Session[]
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    email      String    @unique
+    name       String
+    password   String
+    role       UserRole
+    sessions   Session[]
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
 }
 
 model Session {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    userId    String   @db.ObjectId
-    user      User     @relation(fields: [userId], references: [id])
-    valid     Boolean? @default(true)
-    userAgent String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    user_id    String   @db.ObjectId
+    user       User     @relation(fields: [user_id], references: [id])
+    valid      Boolean? @default(true)
+    user_agent String?
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
 }
