@@ -109,3 +109,8 @@ export const validateAuth = async (
 			.json(getCatchMessage(error));
 	}
 };
+
+export const getLocalUser = (response: Response) => {
+	if (!response.locals.user) throw new Error('No user found');
+	return response.locals.user;
+};
