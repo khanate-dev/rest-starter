@@ -2,6 +2,7 @@ import { initContract } from '@ts-rest/core';
 import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
+import { validatedHandler } from '~/helpers/auth';
 import { omit } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
 import { userSansMetaSchema, userSansPasswordSchema } from '~/schemas/user';
@@ -47,19 +48,19 @@ export const userContract = c.router(
 );
 
 export const userRouter = r.router(userContract, {
-	get: async () => {
+	get: validatedHandler(async () => {
 		const users = await prisma.user.findMany();
 		const body = users.map((user) => omit(user, 'password'));
 		return { status: 200, body };
-	},
-	getOne: async ({ params }) => {
+	}),
+	getOne: validatedHandler(async ({ params }) => {
 		const user = await prisma.user.findUnique({
 			where: { id: params.id },
 		});
 		if (!user) return { status: 404, body: null };
 		const body = omit(user, 'password');
 		return { status: 200, body };
-	},
+	}),
 	post: async ({ body }) => {
 		const user = await prisma.user.create({ data: body });
 		const res = omit(user, 'password');

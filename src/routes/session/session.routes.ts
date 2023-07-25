@@ -3,7 +3,7 @@ import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
 import { config } from '~/config';
-import { createJwt, jwtPayloadSchema } from '~/helpers/auth';
+import { createJwt, getLocalUser, validatedHandler } from '~/helpers/auth';
 import { comparePassword } from '~/helpers/crypto';
 import { httpStatus } from '~/helpers/http';
 import { omit } from '~/helpers/object';
@@ -50,21 +50,21 @@ export const sessionContract = c.router({
 });
 
 export const sessionRouter = r.router(sessionContract, {
-	get: async ({ res }) => {
-		const userId = jwtPayloadSchema.parse(res.locals.user).id;
+	get: validatedHandler(async ({ res }) => {
+		const userId = getLocalUser(res).id;
 		const body = await prisma.session.findMany({
 			where: { user_id: userId, valid: true },
 		});
 		return { status: 200, body };
-	},
-	delete: async ({ res }) => {
-		const id = jwtPayloadSchema.parse(res.locals.user).session_id;
+	}),
+	delete: validatedHandler(async ({ res }) => {
+		const id = getLocalUser(res).session_id;
 		await prisma.session.update({
 			data: { valid: false },
 			where: { id },
 		});
 		return { status: 200, body: { accessToken: null, refreshToken: null } };
-	},
+	}),
 	post: async ({ body, headers }) => {
 		const user = await prisma.user.findUnique({ where: { email: body.email } });
 
