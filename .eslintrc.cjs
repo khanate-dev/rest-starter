@@ -228,6 +228,12 @@ const config = {
 				'import/no-commonjs': 'off',
 			},
 		},
+		{
+			files: ['**/*.d.ts'],
+			rules: {
+				'@typescript-eslint/consistent-type-definitions': 'off',
+			},
+		},
 	],
 };
 
