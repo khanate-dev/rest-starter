@@ -7,7 +7,9 @@ import { dbIdSchema } from '~/helpers/schema';
 import { prisma } from '~/prisma-client';
 import { userSansPasswordSchema } from '~/schemas/user';
 
-import type { Request, Response } from 'express';
+import type { AppRoute } from '@ts-rest/core';
+import type { AppRouteOptions } from '@ts-rest/express/src/lib/types';
+import type { Request, RequestHandler, Response } from 'express';
 import type { SignOptions } from 'jsonwebtoken';
 import type { z } from 'zod';
 import type { UserRole } from '~/schemas/user';
@@ -72,42 +74,49 @@ const reIssueAccessToken = async (
 	return payload;
 };
 
-export const validateAuth = async (
-	request: Request,
-	response: Response,
+export const validateAuth = (
 	availableTo?: UserRole | UserRole[],
-) => {
-	try {
-		const verification = verifyJwt(
-			request.headers.authorization?.replace(/^Bearer\s/u, '') ?? '',
-		);
+): RequestHandler => {
+	return async (request, response, next) => {
+		try {
+			const verification = verifyJwt(
+				request.headers.authorization?.replace(/^Bearer\s/u, '') ?? '',
+			);
 
-		if (!verification.valid && !verification.expired)
-			throw new Error('Invalid or missing access token');
+			if (!verification.valid && !verification.expired)
+				throw new Error('Invalid or missing access token');
 
-		const user = !verification.valid
-			? await reIssueAccessToken(request, response)
-			: verification.payload;
+			const user = !verification.valid
+				? await reIssueAccessToken(request, response)
+				: verification.payload;
 
-		response.locals.user = user;
+			response.locals.user = user;
 
-		const authArray = availableTo
-			? Array.isArray(availableTo)
-				? availableTo
-				: [availableTo]
-			: [];
+			const authArray = availableTo
+				? Array.isArray(availableTo)
+					? availableTo
+					: [availableTo]
+				: [];
 
-		if (authArray.length > 0 && !authArray.includes(user.role)) {
-			return response.status(httpStatus.forbidden).json({
-				message: 'You do not have access to this resource',
-				type: 'unauthorized',
-			});
+			if (authArray.length > 0 && !authArray.includes(user.role)) {
+				return response.status(httpStatus.forbidden).json({
+					message: 'You do not have access to this resource',
+					type: 'unauthorized',
+				});
+			}
+			next();
+		} catch (error) {
+			return response
+				.status(httpStatus.unauthorized)
+				.json(getCatchMessage(error));
 		}
-	} catch (error) {
-		return response
-			.status(httpStatus.unauthorized)
-			.json(getCatchMessage(error));
-	}
+	};
+};
+
+export const validatedHandler = <T extends AppRoute>(
+	handler: AppRouteOptions<T>['handler'],
+): AppRouteOptions<T> => {
+	return { middleware: [validateAuth()], handler };
 };
 
 export const getLocalUser = (response: Response) => {
