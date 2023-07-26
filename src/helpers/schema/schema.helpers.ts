@@ -19,8 +19,8 @@ export type DbId = z.infer<ZodDbId>;
 
 export const dbMetaSchema = z.strictObject({
 	id: dbIdSchema,
-	created_at: z.date(),
-	updated_at: z.date(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const createModelSchema = <
