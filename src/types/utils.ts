@@ -120,7 +120,7 @@ export declare namespace Utils {
 		: never;
 
 	/** matches a type to another exactly. Used with generic functions to make sure the object type matches exactly */
-	type Strictly<T, Shape> = Shape & {
+	type strictly<T, Shape> = Shape & {
 		[k in keyof T]: k extends keyof Shape ? Shape[k] : never;
 	};
 
