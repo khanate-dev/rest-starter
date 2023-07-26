@@ -123,4 +123,15 @@ export declare namespace Utils {
 	type Strictly<T, Shape> = Shape & {
 		[k in keyof T]: k extends keyof Shape ? Shape[k] : never;
 	};
+
+	/** remove index signatures from an object type */
+	type removeIndexSignature<T extends Obj> = {
+		[k in keyof T as string extends k
+			? never
+			: number extends k
+			? never
+			: symbol extends k
+			? never
+			: k]: T[k];
+	};
 }

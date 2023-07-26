@@ -1,11 +1,13 @@
+import { createExpressEndpoints } from '@ts-rest/express';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import pinoHttp from 'pino-http';
 
-import { CONFIG } from '~/config';
-import { LOGGER } from '~/logger';
-import { registerRoutes } from '~/register-routes';
+import { config } from '~/config';
+import { logger, stylized } from '~/logger';
+
+import { dayjsFormatPatterns, dayjsUtc } from './helpers/date';
+import { contract, router } from './routes';
 
 const app = express();
 
@@ -15,20 +17,40 @@ const CORS_OPTIONS: cors.CorsOptions = {
 };
 
 // TODO Modify origin to correct production origin
-if (CONFIG.env === 'production') CORS_OPTIONS.origin = 'example.com';
+if (config.env === 'production') CORS_OPTIONS.origin = 'example.com';
 
 app.use(cors(CORS_OPTIONS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(pinoHttp({ logger: LOGGER }));
 
-const SERVER = app.listen(CONFIG.port, () => {
-	LOGGER.info(`App is running at http://localhost:${CONFIG.port}`);
+createExpressEndpoints(contract, router, app, {
+	logInitialization: true,
+	requestValidationErrorHandler: 'combined',
+	responseValidation: true,
+	globalMiddleware: [
+		(req, _res, next) => {
+			console.info(
+				dayjsUtc().format(dayjsFormatPatterns.datetime),
+				'=>',
+				stylized(req.method, 'green'),
+				req.originalUrl,
+			);
+			next();
+		},
+	],
+});
 
-	registerRoutes(app);
+app.use((_request, response) =>
+	response
+		.status(404)
+		.json({ name: 'NotFoundError', message: 'Resource Not Found!' }),
+);
+
+const SERVER = app.listen(config.port, () => {
+	logger.info(`Server is running at http://localhost:${config.port}`);
 });
 
 SERVER.on('error', (error) => {
-	LOGGER.fatal(error);
+	logger.fatal(error);
 });

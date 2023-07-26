@@ -1,31 +1,19 @@
 import { PrismaClient } from '@prisma/client';
 
-import { CONFIG } from '~/config';
-import { LOGGER } from '~/logger';
+import { config } from '~/config';
 
 export const prisma = new PrismaClient({
-	errorFormat: CONFIG.env === 'development' ? 'pretty' : undefined,
+	errorFormat: config.env === 'development' ? 'pretty' : undefined,
 	log: [
-		{
-			emit: 'event',
-			level: 'query',
-		},
-		{
-			emit: 'event',
-			level: 'error',
-		},
-		{
-			emit: 'event',
-			level: 'info',
-		},
-		{
-			emit: 'event',
-			level: 'warn',
-		},
+		{ emit: 'event', level: 'query' },
+		{ emit: 'event', level: 'error' },
+		{ emit: 'event', level: 'info' },
+		{ emit: 'event', level: 'warn' },
 	],
 });
 
-prisma.$on('query', LOGGER.info);
-prisma.$on('info', LOGGER.info);
-prisma.$on('error', LOGGER.warn);
-prisma.$on('warn', LOGGER.error);
+// TODO figure out the issue with the logging
+// prisma.$on('query', logger.info);
+// prisma.$on('info', logger.info);
+// prisma.$on('error', logger.warn);
+// prisma.$on('warn', logger.error);

@@ -1,37 +1,74 @@
-import {
-	createUserHandler,
-	getUserHandler,
-	getUsersHandler,
-} from '~/helpers/controllers/user';
-import {
-	CREATE_USER_SCHEMA,
-	GET_USERS_SCHEMA,
-	GET_USER_SCHEMA,
-} from '~/schemas/user';
+import { initContract } from '@ts-rest/core';
+import { initServer } from '@ts-rest/express';
+import { z } from 'zod';
 
-import type { Route } from '~/types';
+import { validatedHandler } from '~/helpers/auth';
+import { getHashedPassword } from '~/helpers/crypto';
+import { omit } from '~/helpers/object';
+import { prisma } from '~/prisma-client';
+import { userSansMetaSchema, userSansPasswordSchema } from '~/schemas/user';
 
-export const userRoutes: Route[] = [
+const c = initContract();
+const r = initServer();
+
+export const userContract = c.router(
 	{
-		handler: createUserHandler,
-		method: 'post',
-		path: '/',
-		schema: CREATE_USER_SCHEMA,
+		get: {
+			method: 'GET',
+			path: '/user',
+			responses: {
+				200: z.array(userSansPasswordSchema),
+			},
+		},
+		getOne: {
+			method: 'GET',
+			path: '/user/:id',
+			pathParams: z.strictObject({ id: z.string() }),
+			responses: {
+				200: userSansPasswordSchema,
+				404: z.null(),
+			},
+		},
+		post: {
+			method: 'POST',
+			path: '/user',
+			body: userSansMetaSchema
+				.extend({ passwordConfirmation: z.string() })
+				.refine((data) => data.password === data.passwordConfirmation, {
+					message: 'Incorrect password confirmation',
+					path: ['passwordConfirmation'],
+				})
+				.transform((data) => omit(data, 'passwordConfirmation')),
+			responses: {
+				201: userSansPasswordSchema,
+			},
+		},
 	},
-	{
-		availableTo: 'admin',
-		handler: getUsersHandler,
-		isAuthenticated: true,
-		method: 'get',
-		path: '/',
-		schema: GET_USERS_SCHEMA,
+	{ strictStatusCodes: true },
+);
+
+export const userRouter = r.router(userContract, {
+	get: validatedHandler(async () => {
+		const users = await prisma.user.findMany();
+		const body = users.map((user) => omit(user, 'password'));
+		return { status: 200, body };
+	}),
+	getOne: validatedHandler(async ({ params }) => {
+		const user = await prisma.user.findUnique({
+			where: { id: params.id },
+		});
+		if (!user) return { status: 404, body: null };
+		const body = omit(user, 'password');
+		return { status: 200, body };
+	}),
+	post: async ({ body }) => {
+		const user = await prisma.user.create({
+			data: {
+				...omit(body, 'password'),
+				password: getHashedPassword(body.password),
+			},
+		});
+		const res = omit(user, 'password');
+		return { status: 201, body: res };
 	},
-	{
-		availableTo: 'admin',
-		handler: getUserHandler,
-		isAuthenticated: true,
-		method: 'get',
-		path: '/:_id',
-		schema: GET_USER_SCHEMA,
-	},
-];
+});

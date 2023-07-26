@@ -1,20 +1,26 @@
 import { z } from 'zod';
 
-import type {
-	RouteSchemaInput,
-	ZodRouteBody,
-	ZodRouteParams,
-	ZodRouteQuery,
-	ZodRouteResponse,
-	ZodRouteSchema,
-} from '~/types';
+import { regex } from '~/constants';
 
-export const MONGO_ID_SCHEMA = z.string();
+import type { Utils } from '~/types/utils';
 
-export const MONGO_META_SCHEMA = z.strictObject({
-	createdAt: z.date(),
-	id: MONGO_ID_SCHEMA,
-	updatedAt: z.date(),
+export const portSchema = z.coerce
+	.number()
+	.int()
+	.positive()
+	.min(1024)
+	.max(65535);
+
+export const dbIdSchema = z.string().regex(regex.mongoId);
+
+export type ZodDbId = typeof dbIdSchema;
+
+export type DbId = z.infer<ZodDbId>;
+
+export const dbMetaSchema = z.strictObject({
+	id: dbIdSchema,
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export const createModelSchema = <
@@ -26,39 +32,29 @@ export const createModelSchema = <
 	const sansMetaModelSchema = z.strictObject(schema);
 
 	const modelSchema = z.strictObject({
-		...MONGO_META_SCHEMA.shape,
+		...dbMetaSchema.shape,
 		...schema,
 	});
 
 	return [sansMetaModelSchema, modelSchema] as const;
 };
 
-const DEFAULT_OBJECT = z.strictObject({});
-type DefaultObject = typeof DEFAULT_OBJECT;
-
-const DEFAULT_RESPONSE = z.void();
-type DefaultResponse = typeof DEFAULT_RESPONSE;
-
-export const createRouteSchema = <
-	Body extends ZodRouteBody = DefaultObject,
-	Params extends ZodRouteParams = DefaultObject,
-	Query extends ZodRouteQuery = DefaultObject,
-	Response extends ZodRouteResponse = DefaultResponse,
->({
-	body = DEFAULT_OBJECT as Body,
-	query = DEFAULT_OBJECT as Query,
-	params = DEFAULT_OBJECT as Params,
-	response = DEFAULT_RESPONSE as Response,
-}: RouteSchemaInput<Body, Params, Query, Response>): ZodRouteSchema<
-	Body,
-	Params,
-	Query,
-	Response
+export const zodAllOrNone = <T extends Record<string, z.Schema>>(
+	shape: T,
+): z.Schema<
+	Utils.allOrNone<
+		Utils.makeUndefinedOptional<{ [k in keyof T]: T[k]['_output'] }>
+	>
 > => {
-	return z.strictObject({
-		body,
-		params,
-		query,
-		response,
-	});
+	return z.strictObject(shape).or(
+		z.object(
+			Object.keys(shape).reduce(
+				(acc, key) => {
+					acc[key] = z.undefined();
+					return acc;
+				},
+				{} as Record<string, z.ZodUndefined>,
+			),
+		),
+	);
 };

@@ -1,18 +1,15 @@
-import { getErrorMessage } from '~/helpers/error';
-import { STATUS_CODES } from '~/helpers/http';
-import { ROUTE_METHODS } from '~/types';
+import { getCatchMessage } from '~/errors';
 
-import type { DetailedResponse, Route } from '~/types';
 import type { Utils } from '~/types/utils';
 
-export const readableTypeOf = (value: any) => {
+export const readableTypeOf = (value: unknown) => {
 	if (typeof value !== 'object') return typeof value;
 	if (value === null) return 'null';
 	if (Array.isArray(value)) return 'array';
 	return 'object';
 };
 
-export const isObject = (value: any): value is Obj =>
+export const isObject = (value: unknown): value is Obj =>
 	readableTypeOf(value) === 'object';
 
 export const assertObject: Utils.assertFunction<Obj> = (value) => {
@@ -22,14 +19,14 @@ export const assertObject: Utils.assertFunction<Obj> = (value) => {
 };
 
 export const isArray = <Type = unknown>(
-	value: any,
-	checker?: (value: any) => value is Type,
+	value: unknown,
+	checker?: (value: unknown) => value is Type,
 ): value is Type[] => {
 	return Array.isArray(value) && (!checker || value.every(checker));
 };
 
 type AssertArray = <Type = unknown>(
-	value: any,
+	value: unknown,
 	checker?: Utils.assertFunction<Type>,
 ) => asserts value is Type[];
 
@@ -39,69 +36,23 @@ export const assertArray: AssertArray = (value, checker) => {
 	try {
 		if (!value.length || !checker) return;
 		value.forEach(checker);
-	} catch (error: any) {
-		throw new TypeError(
-			`Invalid array member. ${
-				error instanceof Error ? error.message : JSON.stringify(error)
-			}`,
-		);
-	}
-};
-
-export const isDetailedResponse = <Type extends Record<string, any>>(
-	value: DetailedResponse<Type> | Type,
-): value is DetailedResponse<Type> => {
-	if (
-		typeof value.status !== 'number' ||
-		!STATUS_CODES.includes(value.status) ||
-		!value.json ||
-		typeof value.json !== 'object'
-	)
-		return false;
-	return true;
-};
-
-export const assertRoute: Utils.assertFunction<Route> = (value) => {
-	if (!isObject(value))
-		throw new TypeError(`expected 'object', received ${readableTypeOf(value)}`);
-
-	const pathType = readableTypeOf(value.path);
-	if (pathType !== 'string')
-		throw new TypeError(`path must be string, received ${pathType}`);
-
-	try {
-		if (
-			typeof value.path !== 'string' ||
-			!/^\/[a-z0-9/\-_:]*$/iu.test(value.path)
-		)
-			throw new TypeError("path must start with '/' and be a valid uri string");
-
-		if (
-			typeof value.method !== 'string' ||
-			!ROUTE_METHODS.includes(value.method)
-		) {
-			throw new TypeError(
-				`method must be one of [${ROUTE_METHODS.join(', ')}]`,
-			);
-		}
-
-		if (typeof value.handler !== 'function')
-			throw new TypeError('handler must be an async function');
-
-		if (typeof value.schema !== 'object')
-			throw new TypeError('schema must be a zod route schema object');
 	} catch (error) {
-		throw new TypeError(
-			`path '${String(value.path)}': ${getErrorMessage(error)}`,
-		);
+		throw new TypeError(`Invalid array member. ${getCatchMessage(error)}`);
 	}
 };
 
-export const assertRoutes: Utils.assertFunction<Route[]> = (value) => {
-	if (!Array.isArray(value)) {
-		throw new TypeError(
-			`expected 'array', received '${readableTypeOf(value)}'`,
-		);
-	}
-	value.forEach(assertRoute);
+export const excludeString = <
+	const T extends string | undefined,
+	const U extends string,
+>(
+	input: T,
+	excludeList: U | Readonly<U[]>,
+) => {
+	return (
+		(Array.isArray(excludeList) &&
+			excludeList.includes(input as unknown as U)) ||
+		(excludeList as string) === input
+			? undefined
+			: input
+	) as T extends U ? Exclude<T, U> | undefined : T;
 };
