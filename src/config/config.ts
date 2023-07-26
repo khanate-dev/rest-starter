@@ -11,7 +11,7 @@ const envSchema = z
 			.string()
 			.regex(regex.age, 'invalid time string')
 			.default('15m'),
-		DATABASE_URL: z.string().url(),
+		DATABASE_URL: z.string().regex(regex.mongoSrv),
 		HASHING_ITERATIONS: z.preprocess(
 			(value) => Number(value as string) || value,
 			z.number().int().min(10000).max(10000000),

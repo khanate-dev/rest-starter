@@ -3,6 +3,7 @@ import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
 import { validatedHandler } from '~/helpers/auth';
+import { getHashedPassword } from '~/helpers/crypto';
 import { omit } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
 import { userSansMetaSchema, userSansPasswordSchema } from '~/schemas/user';
@@ -32,13 +33,12 @@ export const userContract = c.router(
 			method: 'POST',
 			path: '/user',
 			body: userSansMetaSchema
-				.extend({
-					passwordConfirmation: z.string(),
-				})
+				.extend({ passwordConfirmation: z.string() })
 				.refine((data) => data.password === data.passwordConfirmation, {
-					message: 'Passwords do not match',
+					message: 'Incorrect password confirmation',
 					path: ['passwordConfirmation'],
-				}),
+				})
+				.transform((data) => omit(data, 'passwordConfirmation')),
 			responses: {
 				201: userSansPasswordSchema,
 			},
@@ -62,7 +62,12 @@ export const userRouter = r.router(userContract, {
 		return { status: 200, body };
 	}),
 	post: async ({ body }) => {
-		const user = await prisma.user.create({ data: body });
+		const user = await prisma.user.create({
+			data: {
+				...omit(body, 'password'),
+				password: getHashedPassword(body.password),
+			},
+		});
 		const res = omit(user, 'password');
 		return { status: 201, body: res };
 	},

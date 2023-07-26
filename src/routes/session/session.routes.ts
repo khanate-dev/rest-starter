@@ -25,16 +25,15 @@ export const sessionContract = c.router({
 	},
 	delete: {
 		method: 'DELETE',
-		path: '/session/:id',
-		pathParams: z.strictObject({ id: z.string() }),
-		body: z.undefined(),
+		path: '/session',
+		body: z.strictObject({}),
 		responses: {
 			200: z.strictObject({ accessToken: z.null(), refreshToken: z.null() }),
 		},
 	},
 	post: {
 		method: 'POST',
-		path: '/',
+		path: '/session',
 		body: z.strictObject({
 			email: z.string().email(),
 			password: z.string(),
