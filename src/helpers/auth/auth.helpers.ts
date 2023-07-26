@@ -35,7 +35,8 @@ export type JwtVerification =
 
 export const verifyJwt = (token: string): JwtVerification => {
 	try {
-		const payload = jwtPayloadSchema.parse(jwt.verify(token, config.publicKey));
+		const decoded = jwt.verify(token, config.publicKey);
+		const payload = jwtPayloadSchema.strip().parse(decoded);
 		return { payload, valid: true };
 	} catch (error) {
 		return {
@@ -82,7 +83,6 @@ export const validateAuth = (
 			const verification = verifyJwt(
 				request.headers.authorization?.replace(/^Bearer\s/u, '') ?? '',
 			);
-
 			if (!verification.valid && !verification.expired)
 				throw new Error('Invalid or missing access token');
 
