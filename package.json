@@ -17,7 +17,7 @@
 		"env:push": "dotenv-vault push",
 		"env:pull": "dotenv-vault pull",
 		"env:open": "dotenv-vault open -y",
-		"key:generate": "ssh-keygen -t rsa -b 4096 -m PEM -f .rsa.key && openssl rsa -in .rsa.key -pubout -outform PEM -out .rsa.key.pub"
+		"keygen": "ssh-keygen -t rsa -b 4096 -m PEM -f .rsa.key && openssl rsa -in .rsa.key -pubout -outform PEM -out .rsa.key.pub"
 	},
 	"dependencies": {
 		"@prisma/client": "^5.0.0",
