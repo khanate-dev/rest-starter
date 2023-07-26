@@ -51,11 +51,13 @@ export const regex = {
 		/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/u,
 	age: new RegExp(`^[0-9]+s?(${ageUnits.join('|')})?$`, 'iu'),
 	publicKey: /^-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----$/su,
-	privateKey: /^-----BEGIN PRIVATE KEY-----.+-----END PRIVATE KEY-----$/su,
-	mongoId: new RegExp(
+	privateKey:
+		/^-----BEGIN RSA PRIVATE KEY-----.+-----END RSA PRIVATE KEY-----$/su,
+	mongoSrv: new RegExp(
 		`^${Object.values(mongo)
 			.map((r) => r.source)
 			.join('')}$`,
 		'iu',
 	),
+	mongoId: /^[a-f\d]{24}$/iu,
 };
