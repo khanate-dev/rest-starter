@@ -7,3 +7,5 @@ build
 !.env.vault
 !.env.example
 .flaskenv*
+.rsa.key
+.rsa.key.pub
