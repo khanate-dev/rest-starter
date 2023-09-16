@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { regex } from '~/constants';
 
-import type { Utils } from '~/types/utils';
+import type { Utils } from '~/types/utils.types';
 
 export const portSchema = z.coerce
 	.number()
