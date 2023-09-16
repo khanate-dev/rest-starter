@@ -7,7 +7,7 @@ import { config } from '~/config';
 import { logger, stylized } from '~/logger';
 
 import { dayjsFormatPatterns, dayjsUtc } from './helpers/date';
-import { contract, router } from './routes';
+import { contract, router } from './routes/routes';
 
 const app = express();
 
