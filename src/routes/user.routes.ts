@@ -2,9 +2,9 @@ import { initContract } from '@ts-rest/core';
 import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
-import { validatedHandler } from '~/helpers/auth';
-import { getHashedPassword } from '~/helpers/crypto';
-import { omit } from '~/helpers/object';
+import { validatedHandler } from '~/helpers/auth.helpers';
+import { getHashedPassword } from '~/helpers/crypto.helpers';
+import { omit } from '~/helpers/object.helpers';
 import { prisma } from '~/prisma-client';
 import {
 	userSansMetaSchema,

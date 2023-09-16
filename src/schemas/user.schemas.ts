@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createModelSchema } from '~/helpers/schema';
+import { createModelSchema } from '~/helpers/schema.helpers';
 
 export const userRoles = ['user', 'admin', 'guest'] as const;
 

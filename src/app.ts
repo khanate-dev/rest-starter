@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import { config } from '~/config';
 import { logger, stylized } from '~/logger';
 
-import { dayjsFormatPatterns, dayjsUtc } from './helpers/date';
+import { dayjsFormatPatterns, dayjsUtc } from './helpers/date.helpers';
 import { contract, router } from './routes/routes';
 
 const app = express();

@@ -1,4 +1,4 @@
-import type { JwtPayload } from '~/helpers/auth';
+import type { JwtPayload } from '~/helpers/auth.helpers';
 
 declare global {
 	namespace Express {

@@ -1,4 +1,4 @@
-import { isObject } from '~/helpers/type';
+import { isObject } from '~/helpers/type.helpers';
 
 import type { Utils } from '~/types/utils.types';
 

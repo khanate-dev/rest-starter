@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createModelSchema, dbIdSchema } from '~/helpers/schema';
+import { createModelSchema, dbIdSchema } from '~/helpers/schema.helpers';
 
 export const [sessionSansMetaSchema, sessionSchema] = createModelSchema({
 	user_agent: z.string().nullable(),

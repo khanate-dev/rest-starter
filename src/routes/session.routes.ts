@@ -3,14 +3,18 @@ import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
 import { config } from '~/config';
-import { createJwt, getLocalUser, validatedHandler } from '~/helpers/auth';
-import { comparePassword } from '~/helpers/crypto';
-import { httpStatus } from '~/helpers/http';
-import { omit } from '~/helpers/object';
+import {
+	createJwt,
+	getLocalUser,
+	validatedHandler,
+} from '~/helpers/auth.helpers';
+import { comparePassword } from '~/helpers/crypto.helpers';
+import { httpStatus } from '~/helpers/http.helpers';
+import { omit } from '~/helpers/object.helpers';
 import { prisma } from '~/prisma-client';
 import { sessionSchema } from '~/schemas/session.schemas';
 
-import type { JwtPayload } from '~/helpers/auth';
+import type { JwtPayload } from '~/helpers/auth.helpers';
 
 const c = initContract();
 const r = initServer();

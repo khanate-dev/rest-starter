@@ -2,8 +2,8 @@ import { default as jwt } from 'jsonwebtoken';
 
 import { config } from '~/config';
 import { getCatchMessage } from '~/errors';
-import { httpStatus } from '~/helpers/http';
-import { dbIdSchema } from '~/helpers/schema';
+import { httpStatus } from '~/helpers/http.helpers';
+import { dbIdSchema } from '~/helpers/schema.helpers';
 import { prisma } from '~/prisma-client';
 import { userSansPasswordSchema } from '~/schemas/user.schemas';
 
