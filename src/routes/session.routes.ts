@@ -8,7 +8,7 @@ import { comparePassword } from '~/helpers/crypto';
 import { httpStatus } from '~/helpers/http';
 import { omit } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
-import { sessionSchema } from '~/schemas/session';
+import { sessionSchema } from '~/schemas/session.schemas';
 
 import type { JwtPayload } from '~/helpers/auth';
 

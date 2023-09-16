@@ -5,14 +5,14 @@ import { getCatchMessage } from '~/errors';
 import { httpStatus } from '~/helpers/http';
 import { dbIdSchema } from '~/helpers/schema';
 import { prisma } from '~/prisma-client';
-import { userSansPasswordSchema } from '~/schemas/user';
+import { userSansPasswordSchema } from '~/schemas/user.schemas';
 
 import type { AppRoute } from '@ts-rest/core';
 import type { AppRouteOptions } from '@ts-rest/express/src/lib/types';
 import type { Request, RequestHandler, Response } from 'express';
 import type { SignOptions } from 'jsonwebtoken';
 import type { z } from 'zod';
-import type { UserRole } from '~/schemas/user';
+import type { UserRole } from '~/schemas/user.schemas';
 
 export const jwtPayloadSchema = userSansPasswordSchema.extend({
 	id: dbIdSchema,

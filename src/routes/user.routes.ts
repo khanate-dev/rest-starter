@@ -6,7 +6,10 @@ import { validatedHandler } from '~/helpers/auth';
 import { getHashedPassword } from '~/helpers/crypto';
 import { omit } from '~/helpers/object';
 import { prisma } from '~/prisma-client';
-import { userSansMetaSchema, userSansPasswordSchema } from '~/schemas/user';
+import {
+	userSansMetaSchema,
+	userSansPasswordSchema,
+} from '~/schemas/user.schemas';
 
 const c = initContract();
 const r = initServer();
