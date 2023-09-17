@@ -1,4 +1,4 @@
-import { formatToken } from './format-token.helpers';
+import { formatToken } from './format-token.helpers.js';
 
 test('test formatToken against the 1st test string', () => {
 	const input = 'thisIsSomeTestString' as const;

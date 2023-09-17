@@ -16,8 +16,8 @@
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 
-		"module": "esnext",
-		"moduleResolution": "node",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"resolveJsonModule": true,
 		"types": ["vitest/globals"],
 		"paths": {
@@ -38,6 +38,7 @@
 
 		"lib": ["esnext"],
 		"target": "esnext",
+		"moduleDetection": "force",
 
 		"noErrorTruncation": true,
 

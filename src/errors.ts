@@ -1,4 +1,4 @@
-import type { HttpStatus } from '~/helpers/http.helpers';
+import type { HttpStatus } from '~/helpers/http.helpers.js';
 
 const defaultHttpMessage = 'Something went wrong';
 

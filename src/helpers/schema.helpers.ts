@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { regex } from '~/constants';
+import { regex } from '~/constants.js';
 
-import type { Utils } from '~/types/utils.types';
+import type { Utils } from '~/types/utils.types.js';
 
 export const portSchema = z.coerce
 	.number()

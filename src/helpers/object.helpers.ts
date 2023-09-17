@@ -1,6 +1,6 @@
-import { isObject } from '~/helpers/type.helpers';
+import { isObject } from '~/helpers/type.helpers.js';
 
-import type { Utils } from '~/types/utils.types';
+import type { Utils } from '~/types/utils.types.js';
 
 export const objectEntries = <T extends Obj>(
 	object: T,

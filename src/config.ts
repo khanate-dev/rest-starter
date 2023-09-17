@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { regex } from '~/constants';
-import { objectEntries } from '~/helpers/object.helpers';
-import { portSchema } from '~/helpers/schema.helpers';
-import { logger } from '~/logger';
+import { regex } from '~/constants.js';
+import { objectEntries } from '~/helpers/object.helpers.js';
+import { portSchema } from '~/helpers/schema.helpers.js';
+import { logger } from '~/logger.js';
 
 const envSchema = z
 	.object({

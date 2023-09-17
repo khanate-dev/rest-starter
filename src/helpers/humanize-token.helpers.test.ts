@@ -1,6 +1,6 @@
-import { humanizeCases, humanizeToken } from './humanize-token.helpers';
+import { humanizeCases, humanizeToken } from './humanize-token.helpers.js';
 
-import type { HumanizeCase } from './humanize-token.helpers';
+import type { HumanizeCase } from './humanize-token.helpers.js';
 
 type Test = {
 	input: string;

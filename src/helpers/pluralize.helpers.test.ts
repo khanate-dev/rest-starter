@@ -3,7 +3,7 @@
 /* eslint-disable vitest/no-conditional-tests */
 /** cSpell: disable */
 
-import { pluralize } from './pluralize.helpers';
+import { pluralize } from './pluralize.helpers.js';
 
 test('testing pluralize with simple number quantifier', () => {
 	expect(pluralize`I have ${1} kitt[en|ies]`).toBe('I have 1 kitten');

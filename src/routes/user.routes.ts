@@ -2,14 +2,14 @@ import { initContract } from '@ts-rest/core';
 import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
-import { validatedHandler } from '~/helpers/auth.helpers';
-import { getHashedPassword } from '~/helpers/crypto.helpers';
-import { omit } from '~/helpers/object.helpers';
-import { prisma } from '~/prisma-client';
+import { validatedHandler } from '~/helpers/auth.helpers.js';
+import { getHashedPassword } from '~/helpers/crypto.helpers.js';
+import { omit } from '~/helpers/object.helpers.js';
+import { prisma } from '~/prisma-client.js';
 import {
 	userSansMetaSchema,
 	userSansPasswordSchema,
-} from '~/schemas/user.schemas';
+} from '~/schemas/user.schemas.js';
 
 const c = initContract();
 const r = initServer();

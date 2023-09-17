@@ -1,4 +1,4 @@
-import { replaceString } from './replace-string.helpers';
+import { replaceString } from './replace-string.helpers.js';
 
 test('test replaceString', () => {
 	const first = {

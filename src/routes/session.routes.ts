@@ -2,19 +2,19 @@ import { initContract } from '@ts-rest/core';
 import { initServer } from '@ts-rest/express';
 import { z } from 'zod';
 
-import { config } from '~/config';
+import { config } from '~/config.js';
 import {
 	createJwt,
 	getLocalUser,
 	validatedHandler,
-} from '~/helpers/auth.helpers';
-import { comparePassword } from '~/helpers/crypto.helpers';
-import { httpStatus } from '~/helpers/http.helpers';
-import { omit } from '~/helpers/object.helpers';
-import { prisma } from '~/prisma-client';
-import { sessionSchema } from '~/schemas/session.schemas';
+} from '~/helpers/auth.helpers.js';
+import { comparePassword } from '~/helpers/crypto.helpers.js';
+import { httpStatus } from '~/helpers/http.helpers.js';
+import { omit } from '~/helpers/object.helpers.js';
+import { prisma } from '~/prisma-client.js';
+import { sessionSchema } from '~/schemas/session.schemas.js';
 
-import type { JwtPayload } from '~/helpers/auth.helpers';
+import type { JwtPayload } from '~/helpers/auth.helpers.js';
 
 const c = initContract();
 const r = initServer();

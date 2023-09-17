@@ -5,7 +5,7 @@ import {
 	objectValues,
 	omit,
 	pick,
-} from './object.helpers';
+} from './object.helpers.js';
 
 test('testing objectEntries', () => {
 	const object = { first: 1, second: 2 } as const;

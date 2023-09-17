@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { config } from '~/config';
+import { config } from '~/config.js';
 
 export const prisma = new PrismaClient({
 	errorFormat: config.env === 'development' ? 'pretty' : undefined,

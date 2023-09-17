@@ -1,4 +1,4 @@
-import { objectKeys, objectValues } from '~/helpers/object.helpers';
+import { objectKeys, objectValues } from '~/helpers/object.helpers.js';
 
 /**
  * Hypertext Transfer Protocol (HTTP) response status codes.
