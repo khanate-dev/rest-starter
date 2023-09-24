@@ -1,4 +1,4 @@
-# Typescript-Express-Mongo-Zod REST Boilerplate
+# Typescript-Express-Mongo-Zod REST Starter
 
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
