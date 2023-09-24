@@ -9,3 +9,4 @@ build
 .flaskenv*
 .rsa.key
 .rsa.key.pub
+trace
