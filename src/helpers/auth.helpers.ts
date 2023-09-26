@@ -1,7 +1,7 @@
 import { default as jwt } from 'jsonwebtoken';
 
 import { config } from '~/config.js';
-import { getCatchMessage } from '~/errors.js';
+import { stringifyError } from '~/errors.js';
 import { httpStatus } from '~/helpers/http.helpers.js';
 import { dbIdSchema } from '~/helpers/schema.helpers.js';
 import { prisma } from '~/prisma-client.js';
@@ -108,7 +108,7 @@ export const validateAuth = (
 		} catch (error) {
 			return response
 				.status(httpStatus.unauthorized)
-				.json(getCatchMessage(error));
+				.json(stringifyError(error));
 		}
 	};
 };

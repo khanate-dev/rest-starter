@@ -27,7 +27,7 @@ export class ApiError extends Error {
  * - If the error is anything else, it will return the stringified version of the error.
  * @param error
  */
-export const getCatchMessage = (error: unknown): string => {
+export const stringifyError = (error: unknown): string => {
 	if (error instanceof Error) return error.message;
 	if (typeof error === 'object') return JSON.stringify(error);
 	return String(error);
