@@ -104,6 +104,11 @@ const config = {
 		'prefer-template': 'warn',
 		'require-unicode-regexp': 'warn',
 		yoda: 'warn',
+		'no-restricted-globals': [
+			'warn',
+			{ name: '__dirname', message: 'Import __dirname from config instead' },
+			{ name: '__filename', message: 'Import __filename from config instead' },
+		],
 
 		'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
 		'import/extensions': [
@@ -223,9 +228,10 @@ const config = {
 			},
 		},
 		{
-			files: ['**/*.cjs', '**/*.js'],
+			files: ['**/*.cjs'],
 			rules: {
 				'import/no-commonjs': 'off',
+				'no-restricted-globals': 'off',
 			},
 		},
 		{
