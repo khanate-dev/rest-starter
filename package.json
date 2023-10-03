@@ -1,7 +1,11 @@
 {
 	"name": "rest-starter",
 	"version": "1.0.0",
-	"author": "author-name",
+	"author": {
+		"name": "Khanate",
+		"email": "dev@khanate.pk",
+		"url": "https://khanate.pk"
+	},
 	"license": "MIT",
 	"type": "module",
 	"scripts": {
