@@ -1,10 +1,3 @@
-export const jwtSecret = '57731062324a678ae936796f625cb6fd';
-
-export const encryption = {
-	iterations: 1000000,
-	pepper: '4c62017971d2a8f68f86bc96b4b95e70556592c4',
-};
-
 const ageUnits = [
 	'years',
 	'year',
@@ -40,10 +33,10 @@ const ageUnits = [
 ] as const;
 
 const mongo = {
-	prefix: /mongodb(\+srv)?:\/\//iu,
-	host: /[a-zA-Z0-9-_.:@]+/iu,
-	collection: /\/?[a-zA-Z0-9-_.]*/iu,
-	params: /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/iu,
+	prefix: /mongodb(\+srv)?:\/\//iu.source,
+	host: /[a-zA-Z0-9-_.:@]+/iu.source,
+	collection: /\/?[a-zA-Z0-9-_.]*/iu.source,
+	params: /(\?([a-zA-Z0-9-_.]+=[a-zA-Z0-9-_.]+&?)*)?/iu.source,
 };
 
 export const regex = {
@@ -54,9 +47,7 @@ export const regex = {
 	privateKey:
 		/^-----BEGIN RSA PRIVATE KEY-----.+-----END RSA PRIVATE KEY-----$/su,
 	mongoSrv: new RegExp(
-		`^${Object.values(mongo)
-			.map((r) => r.source)
-			.join('')}$`,
+		`^${mongo.prefix}${mongo.host}${mongo.collection}${mongo.params}$`,
 		'iu',
 	),
 	mongoId: /^[a-f\d]{24}$/iu,
