@@ -113,7 +113,7 @@ const config = {
 
 		'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
 		'import/first': 'warn',
-		'import/newline-after-import': ['warn', { considerComments: true }],
+		'import/newline-after-import': 'warn',
 		'import/no-commonjs': 'warn',
 		'import/no-default-export': 'warn',
 		'import/no-deprecated': 'off',
@@ -155,15 +155,13 @@ const config = {
 		'@typescript-eslint/default-param-last': 'warn',
 		'no-dupe-class-members': 'off',
 		'@typescript-eslint/no-dupe-class-members': 'warn',
-		'@typescript-eslint/no-explicit-any': 'off',
+		'@typescript-eslint/no-explicit-any': ['warn', { ignoreRestArgs: true }],
 		'@typescript-eslint/no-floating-promises': 'off',
 		'@typescript-eslint/no-inferrable-types': 'off',
 		'@typescript-eslint/no-loop-func': 'warn',
 		'@typescript-eslint/no-misused-promises': [
 			'warn',
-			{
-				checksVoidReturn: false,
-			},
+			{ checksVoidReturn: false },
 		],
 		'@typescript-eslint/no-redundant-type-constituents': 'warn',
 		'@typescript-eslint/no-shadow': 'warn',
