@@ -1,3 +1,7 @@
+/* eslint-disable n/no-process-env */
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
 import { z } from 'zod';
 
 import { regex } from '~/constants.js';
@@ -69,4 +73,10 @@ const parseConfig = () => {
 
 export type Config = ReturnType<typeof parseConfig>;
 
-export const config = parseConfig();
+const filename = fileURLToPath(import.meta.url);
+
+export const config = {
+	...parseConfig(),
+	filename,
+	dirname: dirname(filename),
+};

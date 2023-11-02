@@ -17,7 +17,5 @@ export type UserSansMeta = z.infer<typeof userSansMetaSchema>;
 
 export type User = z.infer<typeof userSchema>;
 
-export const userSansPasswordSchema = userSchema.omit({
-	password: true,
-});
+export const userSansPasswordSchema = userSchema.omit({ password: true });
 export type UserSansPassword = z.infer<typeof userSansPasswordSchema>;

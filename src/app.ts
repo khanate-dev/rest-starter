@@ -10,15 +10,14 @@ import { contract, router } from '~/routes/routes.js';
 
 const app = express();
 
-const CORS_OPTIONS: cors.CorsOptions = {
-	allowedHeaders: ['x-refresh', 'Content-Type', 'Authorization'],
-	exposedHeaders: ['x-access-token'],
-};
-
-// TODO Modify origin to correct production origin
-if (config.env === 'production') CORS_OPTIONS.origin = 'example.com';
-
-app.use(cors(CORS_OPTIONS));
+app.use(
+	cors({
+		allowedHeaders: ['x-refresh', 'Content-Type', 'Authorization'],
+		exposedHeaders: ['x-access-token'],
+		// TODO Modify origin to correct production origin
+		origin: config.env === 'production' ? 'example.com' : undefined,
+	}),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
