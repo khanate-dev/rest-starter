@@ -20,6 +20,7 @@
 		"coverage",
 		"build",
 		"dist",
-		"trace"
+		"trace",
+		"tsconfig.vitest-temp.json"
 	]
 }

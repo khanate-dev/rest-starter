@@ -3,3 +3,4 @@ coverage
 dist
 build
 trace
+tsconfig.vitest-temp.json

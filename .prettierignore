@@ -6,3 +6,4 @@ dist
 build
 pnpm-lock.yaml
 trace
+tsconfig.vitest-temp.json
