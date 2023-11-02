@@ -1,6 +1,6 @@
-import { stringifyError } from '~/errors.js';
+import { stringifyError } from '../errors.js';
 
-import type { Utils } from '~/types/utils.types.js';
+import type { Utils } from '../types/utils.types.js';
 
 export const readableTypeOf = (value: unknown) => {
 	if (typeof value !== 'object') return typeof value;

@@ -1,18 +1,19 @@
 import { default as jwt } from 'jsonwebtoken';
 
-import { config } from '~/config.js';
-import { stringifyError } from '~/errors.js';
-import { httpStatus } from '~/helpers/http.helpers.js';
-import { dbIdSchema } from '~/helpers/schema.helpers.js';
-import { prisma } from '~/prisma-client.js';
-import { userSansPasswordSchema } from '~/schemas/user.schemas.js';
+import { httpStatus } from './http.helpers.js';
+import { dbIdSchema } from './schema.helpers.js';
+
+import { config } from '../config.js';
+import { stringifyError } from '../errors.js';
+import { prisma } from '../prisma-client.js';
+import { userSansPasswordSchema } from '../schemas/user.schemas.js';
 
 import type { AppRoute } from '@ts-rest/core';
 import type { AppRouteOptions } from '@ts-rest/express';
 import type { Request, RequestHandler, Response } from 'express';
 import type { SignOptions } from 'jsonwebtoken';
 import type { z } from 'zod';
-import type { UserRole } from '~/schemas/user.schemas.js';
+import type { UserRole } from '../schemas/user.schemas.js';
 
 export const jwtPayloadSchema = userSansPasswordSchema.extend({
 	id: dbIdSchema,

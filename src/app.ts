@@ -3,10 +3,10 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 
-import { config } from '~/config.js';
-import { dayjsFormatPatterns, dayjsUtc } from '~/helpers/date.helpers.js';
-import { logger, stylized } from '~/logger.js';
-import { contract, router } from '~/routes/routes.js';
+import { config } from './config.js';
+import { dayjsFormatPatterns, dayjsUtc } from './helpers/date.helpers.js';
+import { logger, stylized } from './logger.js';
+import { contract, router } from './routes/routes.js';
 
 const app = express();
 

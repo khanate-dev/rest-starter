@@ -20,9 +20,6 @@
 		"moduleResolution": "NodeNext",
 		"resolveJsonModule": true,
 		"types": ["vitest/globals"],
-		"paths": {
-			"~/*": ["./src/*"]
-		},
 
 		"downlevelIteration": true,
 		"noEmit": true,

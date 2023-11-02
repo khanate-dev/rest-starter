@@ -4,10 +4,10 @@ import { fileURLToPath } from 'url';
 
 import { z } from 'zod';
 
-import { regex } from '~/constants.js';
-import { objectEntries } from '~/helpers/object.helpers.js';
-import { portSchema } from '~/helpers/schema.helpers.js';
-import { logger } from '~/logger.js';
+import { regex } from './constants.js';
+import { objectEntries } from './helpers/object.helpers.js';
+import { portSchema } from './helpers/schema.helpers.js';
+import { logger } from './logger.js';
 
 const envSchema = z
 	.object({
