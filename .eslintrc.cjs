@@ -1,16 +1,14 @@
 /** @type {import('eslint').Linter.Config} */
 const config = {
-	env: {
-		es2021: true,
-		node: true,
-	},
+	env: { es2021: true, node: true },
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/strict-type-checked',
 		'plugin:@typescript-eslint/stylistic-type-checked',
-		'prettier',
 		'plugin:import/recommended',
 		'plugin:import/typescript',
+		'plugin:n/recommended',
+		'prettier',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -32,7 +30,6 @@ const config = {
 		'default-case-last': 'warn',
 		eqeqeq: 'error',
 		'func-names': ['warn', 'never'],
-		'func-style': 'warn',
 		'guard-for-in': 'warn',
 		indent: 'off',
 		'logical-assignment-operators': 'warn',
@@ -62,13 +59,11 @@ const config = {
 		'no-param-reassign': 'warn',
 		'no-promise-executor-return': 'warn',
 		'no-restricted-imports': [
-			'error',
+			'warn',
 			{
-				patterns: [
-					{
-						group: ['../*'],
-						message: 'Do not use parent imports',
-					},
+				paths: [
+					{ name: 'buffer', message: 'Use Uint8Array instead.' },
+					{ name: 'node:buffer', message: 'Use Uint8Array instead.' },
 				],
 			},
 		],
@@ -99,25 +94,26 @@ const config = {
 		'prefer-numeric-literals': 'warn',
 		'prefer-object-has-own': 'warn',
 		'prefer-object-spread': 'warn',
+		'prefer-const': 'warn',
 		'prefer-promise-reject-errors': 'warn',
 		'prefer-regex-literals': ['warn', { disallowRedundantWrapping: true }],
 		'prefer-template': 'warn',
 		'require-unicode-regexp': 'warn',
 		yoda: 'warn',
+		strict: ['error', 'global'],
 		'no-restricted-globals': [
 			'warn',
 			{ name: '__dirname', message: 'Import __dirname from config instead' },
 			{ name: '__filename', message: 'Import __filename from config instead' },
+			{ name: 'Buffer', message: 'Use Uint8Array instead.' },
 		],
+		'n/no-process-env': 'warn',
+		'n/no-unpublished-import': 'off',
+		'n/no-missing-import': 'off',
 
 		'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
-		'import/extensions': [
-			'warn',
-			'never',
-			{ helpers: 'always', json: 'always', styles: 'always', test: 'always' },
-		],
 		'import/first': 'warn',
-		'import/newline-after-import': 'warn',
+		'import/newline-after-import': ['warn', { considerComments: true }],
 		'import/no-commonjs': 'warn',
 		'import/no-default-export': 'warn',
 		'import/no-deprecated': 'off',
@@ -155,7 +151,7 @@ const config = {
 
 		'@typescript-eslint/consistent-type-exports': 'warn',
 		'@typescript-eslint/consistent-type-imports': 'warn',
-		'@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
+		'@typescript-eslint/consistent-type-definitions': 'off',
 		'@typescript-eslint/default-param-last': 'warn',
 		'no-dupe-class-members': 'off',
 		'@typescript-eslint/no-dupe-class-members': 'warn',
@@ -184,9 +180,10 @@ const config = {
 				enforceForJSX: true,
 			},
 		],
-		'@typescript-eslint/no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': 'warn',
 		'@typescript-eslint/no-use-before-define': 'warn',
 		'@typescript-eslint/no-useless-empty-export': 'warn',
+		'@typescript-eslint/no-var-requires': 'off',
 		'@typescript-eslint/non-nullable-type-assertion-style': 'off',
 		'@typescript-eslint/prefer-nullish-coalescing': 'off',
 		'@typescript-eslint/prefer-reduce-type-parameter': 'off',
@@ -208,12 +205,22 @@ const config = {
 				types: {
 					'{}': false,
 					extendDefaults: true,
+					Buffer: {
+						message: 'Use Uint8Array instead.',
+						suggest: ['Uint8Array'],
+					},
 				},
 			},
 		],
 		'@typescript-eslint/no-namespace': ['warn', { allowDeclarations: true }],
 	},
 	overrides: [
+		{
+			files: ['src/routes/**/*', 'src/plugins/**/*'],
+			rules: {
+				'import/no-default-export': 'off',
+			},
+		},
 		{
 			files: ['*.test.ts'],
 			parserOptions: {
@@ -232,12 +239,6 @@ const config = {
 			rules: {
 				'import/no-commonjs': 'off',
 				'no-restricted-globals': 'off',
-			},
-		},
-		{
-			files: ['**/*.d.ts'],
-			rules: {
-				'@typescript-eslint/consistent-type-definitions': 'off',
 			},
 		},
 	],
